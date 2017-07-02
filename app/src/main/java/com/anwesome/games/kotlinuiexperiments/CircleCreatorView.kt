@@ -9,17 +9,23 @@ import java.util.*
 
 class CircleCreatorView(ctx:Context):View(ctx) {
     var animationHandler:AnimationHandler?=null
+    var time:Int = 0
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
+        if(time == 0) {
+            animationHandler = AnimationHandler(this)
+        }
         val w = canvas.width
         val h = canvas.height
-
+        time++
+        canvas.drawColor(Color.parseColor("#212121"))
+        animationHandler?.draw_animate(canvas,paint,Math.min(w,h)*1.0f)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when(event?.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                animationHandler?.add_circle(event.x,event.y)
             }
         }
         return true
@@ -65,7 +71,7 @@ class AnimationHandler {
     fun draw_animate(canvas:Canvas,paint:Paint,size:Float) {
         if(animated) {
             circles.forEach { circle ->
-                circle.draw(canvas, paint, size / 10)
+                circle.draw(canvas, paint, size / 20)
                 circle.update()
                 if (circle.stopped()) {
                     circles.remove(circle)
