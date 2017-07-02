@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
-import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class CircleCreatorView(ctx:Context):View(ctx) {
     var animationHandler:AnimationHandler?=null
@@ -57,12 +57,12 @@ class CircleCreatorView(ctx:Context):View(ctx) {
         fun update() {
             deg += 20.0f
         }
-        fun stopped():Boolean = deg == 0.0f
+        fun stopped():Boolean = deg >= 360.0f
         override fun hashCode(): Int = x.toInt()+y.toInt()
     }
 }
 class AnimationHandler {
-    val circles:LinkedList<CircleCreatorView.Circle> = LinkedList()
+    val circles:ConcurrentLinkedQueue<CircleCreatorView.Circle> = ConcurrentLinkedQueue()
     var animated:Boolean = false
     var v:View?=null
     constructor(v:View) {
