@@ -11,6 +11,7 @@ class CircleCreatorView(ctx:Context):View(ctx) {
     var animationHandler:AnimationHandler?=null
     var time:Int = 0
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onCompletionListener:OnCompletionListener?=null
     override fun onDraw(canvas:Canvas) {
         if(time == 0) {
             animationHandler = AnimationHandler(this)
@@ -57,15 +58,20 @@ class CircleCreatorView(ctx:Context):View(ctx) {
         fun update() {
             deg += 20.0f
         }
-        fun stopped():Boolean = deg >= 360.0f
+        fun stopped():Boolean = deg > 360.0f
         override fun hashCode(): Int = x.toInt()+y.toInt()
+    }
+    interface OnCompletionListener {
+        fun onCompleted(x:Float,y:Float) {
+
+        }
     }
 }
 class AnimationHandler {
     val circles:ConcurrentLinkedQueue<CircleCreatorView.Circle> = ConcurrentLinkedQueue()
     var animated:Boolean = false
-    var v:View?=null
-    constructor(v:View) {
+    var v:CircleCreatorView?=null
+    constructor(v:CircleCreatorView) {
         this.v = v
     }
     fun draw_animate(canvas:Canvas,paint:Paint,size:Float) {
@@ -74,6 +80,7 @@ class AnimationHandler {
                 circle.draw(canvas, paint, size / 20)
                 circle.update()
                 if (circle.stopped()) {
+                    v?.onCompletionListener?.onCompleted(circle.x,circle.y)
                     circles.remove(circle)
                     if(circles.size == 0) {
                         animated = false
