@@ -5,8 +5,10 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
 
 class CircleCreatorView(ctx:Context):View(ctx) {
+    var animationHandler:AnimationHandler?=null
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
         val w = canvas.width
@@ -51,5 +53,41 @@ class CircleCreatorView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0.0f
         override fun hashCode(): Int = x.toInt()+y.toInt()
+    }
+}
+class AnimationHandler {
+    val circles:LinkedList<CircleCreatorView.Circle> = LinkedList()
+    var animated:Boolean = false
+    var v:View?=null
+    constructor(v:View) {
+        this.v = v
+    }
+    fun draw_animate(canvas:Canvas,paint:Paint,size:Float) {
+        if(animated) {
+            circles.forEach { circle ->
+                circle.draw(canvas, paint, size / 10)
+                circle.update()
+                if (circle.stopped()) {
+                    circles.remove(circle)
+                    if(circles.size == 0) {
+                        animated = false
+                    }
+                }
+            }
+            try {
+                Thread.sleep(50)
+                v.invalidate()
+            }
+            catch (ex:Exception) {
+
+            }
+        }
+    }
+    fun add_circle(x:Float,y:Float) {
+        circles.add(CircleCreatorView.Circle(x,y))
+        if(circles.size == 1 && !animated) {
+            animated = true
+            v.postInvalidate()
+        }
     }
 }
