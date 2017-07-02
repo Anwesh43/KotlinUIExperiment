@@ -46,8 +46,8 @@ class CircleCreatorView(ctx:Context):View(ctx) {
             path.moveTo(0.0f,0.0f)
             var i = 0.0f
             while(i<=deg) {
-                val x:Double = r*Math.cos(i*Math.PI/180)
-                val y:Double = r*Math.sin(i*Math.PI/180)
+                val x:Double = r*Math.cos((i-90)*Math.PI/180)
+                val y:Double = r*Math.sin((i-90)*Math.PI/180)
                 path.lineTo(x.toFloat(),y.toFloat())
                 i+=10
             }
@@ -82,7 +82,7 @@ class AnimationHandler {
             }
             try {
                 Thread.sleep(50)
-                v.invalidate()
+                v?.invalidate()
             }
             catch (ex:Exception) {
 
@@ -93,7 +93,7 @@ class AnimationHandler {
         circles.add(CircleCreatorView.Circle(x,y))
         if(circles.size == 1 && !animated) {
             animated = true
-            v.postInvalidate()
+            v?.postInvalidate()
         }
     }
 }
