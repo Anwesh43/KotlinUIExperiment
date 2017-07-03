@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 03/07/17.
@@ -40,5 +42,27 @@ class TappingBallView(ctx:Context):View(ctx) {
             y += 20.0f
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y <= this.y +r
+    }
+    data class FrameController(var w:Float,var h:Float) {
+        val balls:ConcurrentLinkedQueue<Ball> = ConcurrentLinkedQueue()
+        fun render(canvas:Canvas,paint:Paint) {
+            balls.forEach { ball ->
+                ball.draw(canvas,paint)
+                ball.update()
+            }
+
+        }
+        fun createBall() {
+            var random = Random()
+            var r = random.nextInt((w/20))*1.0f
+            balls.add(Ball(random.nextInt(w)*1.0f,-r,r))
+        }
+        fun handleTap(x:Float,y:Float) {
+            balls.forEach { ball->
+                if(ball.handleTap(x,y)) {
+                    balls.remove(ball)
+                }
+            }
+        }
     }
 }
