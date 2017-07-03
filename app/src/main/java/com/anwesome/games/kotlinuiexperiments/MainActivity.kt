@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import CircleCreatorView
+import android.view.WindowManager
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
@@ -13,6 +14,8 @@ class MainActivity : AppCompatActivity() {
 //        val completionListener = CompletionListener(this)
         var view:TappingBallView = TappingBallView(this)
         //view.onCompletionListener = completionListener
+        supportActionBar?.hide()
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(view)
     }
 }
