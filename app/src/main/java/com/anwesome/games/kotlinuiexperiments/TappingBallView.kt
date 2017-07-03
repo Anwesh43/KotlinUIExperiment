@@ -54,8 +54,8 @@ class TappingBallView(ctx:Context):View(ctx) {
         }
         fun createBall() {
             var random = Random()
-            var r = random.nextInt((w/20))*1.0f
-            balls.add(Ball(random.nextInt(w)*1.0f,-r,r))
+            var r = random.nextInt((w.toInt()/20)).toFloat()
+            balls.add(Ball(random.nextInt(w.toInt()).toFloat(),-r,r))
         }
         fun handleTap(x:Float,y:Float) {
             balls.forEach { ball->
@@ -63,6 +63,23 @@ class TappingBallView(ctx:Context):View(ctx) {
                     balls.remove(ball)
                 }
             }
+        }
+    }
+    class ViewRenderer {
+        var time = 0
+        var frameController:FrameController?=null
+        constructor(w:Int,h:Int) {
+            frameController = FrameController(w.toFloat(),h.toFloat())
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            frameController?.render(canvas,paint)
+            time++
+            if(time % 20 == 0) {
+                frameController?.createBall()
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            frameController?.handleTap(x,y)
         }
     }
 }
