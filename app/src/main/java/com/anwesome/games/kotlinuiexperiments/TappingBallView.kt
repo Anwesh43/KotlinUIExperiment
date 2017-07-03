@@ -14,13 +14,16 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 03/07/17.
  */
 class TappingBallView(ctx:Context):View(ctx) {
+    var viewRenderer:ViewRenderer = ViewRenderer()
+    val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
+        viewRenderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                viewRenderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -68,14 +71,21 @@ class TappingBallView(ctx:Context):View(ctx) {
     class ViewRenderer {
         var time = 0
         var frameController:FrameController?=null
-        constructor(w:Int,h:Int) {
-            frameController = FrameController(w.toFloat(),h.toFloat())
-        }
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,v:View) {
+            if(time == 0) {
+                frameController = FrameController(canvas.width.toFloat(),canvas.height.toFloat())
+            }
             frameController?.render(canvas,paint)
             time++
             if(time % 20 == 0) {
                 frameController?.createBall()
+            }
+            try {
+                Thread.sleep(50)
+                v.invalidate()
+            }
+            catch (ex:Exception) {
+
             }
         }
         fun handleTap(x:Float,y:Float) {
