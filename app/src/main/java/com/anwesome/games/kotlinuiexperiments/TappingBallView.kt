@@ -57,8 +57,8 @@ class TappingBallView(ctx:Context):View(ctx) {
         }
         fun createBall() {
             var random = Random()
-            var r = random.nextInt((w.toInt()/20)).toFloat()
-            balls.add(Ball(random.nextInt(w.toInt()).toFloat(),-r,r))
+            var r = w/30+random.nextInt((w.toInt()/30)).toFloat()
+            balls.add(Ball(r+random.nextInt((w-2*r).toInt()).toFloat(),-r,r))
         }
         fun handleTap(x:Float,y:Float) {
             balls.forEach { ball->
@@ -76,10 +76,10 @@ class TappingBallView(ctx:Context):View(ctx) {
                 frameController = FrameController(canvas.width.toFloat(),canvas.height.toFloat())
             }
             frameController?.render(canvas,paint)
-            time++
             if(time % 20 == 0) {
                 frameController?.createBall()
             }
+            time++
             try {
                 Thread.sleep(50)
                 v.invalidate()
