@@ -15,6 +15,7 @@ class TapAndFillView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer:Renderer = Renderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -63,7 +64,7 @@ class TapAndFillView(ctx:Context):View(ctx) {
         fun drawAndAnimate(canvas:Canvas,paint:Paint) {
             if(animated) {
                 balls.forEach { ball ->
-                    ball.draw(canvas,paint,Math.min(w,h)/30)
+                    ball.draw(canvas,paint,Math.min(w,h)/20)
                     ball.update()
                     if(ball.stopped(h)) {
                         balls.remove(ball)

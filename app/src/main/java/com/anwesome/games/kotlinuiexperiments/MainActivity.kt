@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        var view:CircleCreatorView = CircleCreatorView(this)
 //        val completionListener = CompletionListener(this)
-        var view:TappingBallView = TappingBallView(this)
+        var view:TapAndFillView = TapAndFillView(this)
         //view.onCompletionListener = completionListener
         supportActionBar?.hide()
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
