@@ -58,7 +58,7 @@ class TapAndFillView(ctx:Context):View(ctx) {
             this.h = h
             this.v = v
         }
-        fun render(canvas:Canvas,paint:Paint) {
+        fun drawAndAnimate(canvas:Canvas,paint:Paint) {
             if(animated) {
                 balls.forEach { ball ->
                     ball.draw(canvas,paint,Math.min(w,h)/30)
@@ -86,6 +86,20 @@ class TapAndFillView(ctx:Context):View(ctx) {
                 animated = true
                 this.v?.postInvalidate()
             }
+        }
+    }
+    class Renderer {
+        var time = 0
+        var animationHandler:AnimationHandler?=null
+        fun render(canvas:Canvas,paint:Paint,v:TapAndFillView) {
+            if(time == 0) {
+                animationHandler = AnimationHandler(canvas.width.toFloat(),canvas.height.toFloat(),v)
+            }
+            animationHandler?.drawAndAnimate(canvas,paint)
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animationHandler?.handleTap(x,y)
         }
     }
 }
