@@ -13,12 +13,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class TapAndFillView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer:Renderer = Renderer()
     override fun onDraw(canvas:Canvas) {
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
