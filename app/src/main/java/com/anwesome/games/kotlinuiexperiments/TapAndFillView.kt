@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 04/07/17.
@@ -43,6 +44,47 @@ class TapAndFillView(ctx:Context):View(ctx) {
                 if(scale > 1) {
                     scale = 1.0f
                 }
+            }
+        }
+    }
+    class AnimationHandler {
+        var w:Float = 0.0f
+        var h:Float = 0.0f
+        var animated = false
+        var v:TapAndFillView?=null
+        var balls:ConcurrentLinkedQueue<GrowindBall> = ConcurrentLinkedQueue()
+        constructor(w:Float,h:Float,v:TapAndFillView) {
+            this.w = w
+            this.h = h
+            this.v = v
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            if(animated) {
+                balls.forEach { ball ->
+                    ball.draw(canvas,paint,Math.min(w,h)/30)
+                    ball.update()
+                    if(ball.stopped(h)) {
+                        balls.remove(ball)
+                        if(balls.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    v?.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+
+        }
+        fun handleTap(x:Float,y:Float) {
+            balls.add(GrowindBall(x,y))
+            if(balls.size == 1) {
+                animated = true
+                this.v?.postInvalidate()
             }
         }
     }
