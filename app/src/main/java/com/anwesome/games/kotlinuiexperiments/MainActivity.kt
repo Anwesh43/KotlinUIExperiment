@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         //view.onCompletionListener = completionListener
         supportActionBar?.hide()
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        view.onBallOutOfBoundListener = BallOutOfBoundListener(this)
         setContentView(view)
     }
 }
@@ -24,3 +25,8 @@ class MainActivity : AppCompatActivity() {
 //        Toast.makeText(activity,"at $x and $y circle's animation is completed",Toast.LENGTH_SHORT).show()
 //    }
 //}
+data class BallOutOfBoundListener(var activity: MainActivity):OnBallOutOfBoundListener {
+    override fun onOutOfBound(index: Int) {
+        Toast.makeText(activity,"$index number ball is out of index",Toast.LENGTH_SHORT).show()
+    }
+}
