@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class TapAndFillView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer:Renderer = Renderer()
+    var onBallOutOfBoundListener:OnBallOutOfBoundListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -55,6 +56,7 @@ class TapAndFillView(ctx:Context):View(ctx) {
         var h:Float = 0.0f
         var animated = false
         var v:TapAndFillView?=null
+        var count = 0
         var balls:ConcurrentLinkedQueue<GrowindBall> = ConcurrentLinkedQueue()
         constructor(w:Float,h:Float,v:TapAndFillView) {
             this.w = w
@@ -68,6 +70,8 @@ class TapAndFillView(ctx:Context):View(ctx) {
                     ball.update()
                     if(ball.stopped(h)) {
                         balls.remove(ball)
+                        count++
+                        v?.onBallOutOfBoundListener?.onOutOfBound(count)
                         if(balls.size == 0) {
                             animated = false
                         }
@@ -104,5 +108,10 @@ class TapAndFillView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             animationHandler?.handleTap(x,y)
         }
+    }
+}
+interface OnBallOutOfBoundListener {
+    fun onOutOfBound(index:Int) {
+
     }
 }
