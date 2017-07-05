@@ -11,16 +11,18 @@ import android.view.View
  */
 class ColorPageView(ctx:Context):View(ctx) {
     var colors:ArrayList<Int> = ArrayList()
+    var renderer:Renderer = Renderer()
+    val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     fun addColor(color:Int) {
         colors.add(color)
     }
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,colors,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action){
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
