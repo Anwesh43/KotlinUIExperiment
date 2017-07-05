@@ -28,7 +28,7 @@ class ColorPageView(ctx:Context):View(ctx) {
 }
 class Renderer {
     var time:Int = 0
-    fun render(canvas:Canvas,colors:List<Int>) {
+    fun render(canvas:Canvas,colors:List<Int>,v:ColorPageView) {
         if(time == 0) {
 
         }
@@ -50,6 +50,44 @@ data class ColorPage(var color:Int) {
         if(scale < 0) {
             scale = 0.0f
             dir = 0.0f
+        }
+    }
+}
+class AnimationHandler{
+    var colorPages:List<ColorPage>?=null
+    var animated = false
+    var curr:ColorPage?=null
+    var v:ColorPageView?=null
+    constructor(colors:ArrayList<Int>,v:ColorPageView) {
+        colorPages = colors.map{ color -> ColorPage(color) }
+        this.v = v
+    }
+    fun animate(canvas:Canvas,paint:Paint,w:Int,h:Int) {
+        colorPages?.forEach { colorPage ->
+            colorPage.draw(canvas,paint,w,h)
+        }
+        if(animated) {
+            curr?.update()
+            if(curr?.dir == 0.0f) {
+                animated = false
+                colorPages = colorPages.filter{ colorPage->
+                    colorPage!=curr
+                }
+            }
+            try {
+                Thread.sleep(50)
+                v?.invalidate()
+            }
+            catch (ex:Exception) {
+
+            }
+        }
+    }
+    fun startAnimation() {
+        if(!animated && !colorPages.isEmpty()) {
+            curr = colorPages?.get(0)
+            animated = true
+            v?.postInvalidate()
         }
     }
 }
