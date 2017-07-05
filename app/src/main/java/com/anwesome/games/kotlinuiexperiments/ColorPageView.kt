@@ -43,7 +43,7 @@ class Renderer {
     }
 }
 data class ColorPage(var color:Int) {
-    var scale:Float = 0.0f
+    var scale:Float = 1.0f
     var dir:Float = 0.0f
     fun draw(canvas:Canvas,paint:Paint,w:Int,h:Int) {
         paint.color = color
@@ -88,8 +88,9 @@ class AnimationHandler{
         }
     }
     fun startAnimation() {
-        if(!animated && colorPages?.isEmpty() == true) {
-            curr = colorPages?.get(0)
+        if(!animated && colorPages?.isEmpty() == false) {
+            curr = colorPages?.last()
+            curr?.dir = -1.0f
             animated = true
             v?.postInvalidate()
         }
