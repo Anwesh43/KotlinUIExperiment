@@ -47,5 +47,9 @@ data class ColorPage(var color:Int) {
     }
     fun update() {
         scale+=0.2f*dir
+        if(scale < 0) {
+            scale = 0.0f
+            dir = 0.0f
+        }
     }
 }
