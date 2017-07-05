@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 /**
@@ -26,7 +28,7 @@ class ColorPageView(ctx:Context):View(ctx) {
 }
 class Renderer {
     var time:Int = 0
-    fun render(colors:List<Int>) {
+    fun render(canvas:Canvas,colors:List<Int>) {
         if(time == 0) {
 
         }
@@ -34,5 +36,16 @@ class Renderer {
     }
     fun handleTap() {
 
+    }
+}
+data class ColorPage(var color:Int) {
+    var scale:Float = 0.0f
+    var dir:Float = 0.0f
+    fun draw(canvas:Canvas,paint:Paint,w:Int,h:Int) {
+        paint.color = color
+        canvas.drawRect(RectF(0.0f,0.0f,w.toFloat(),h*scale),paint)
+    }
+    fun update() {
+        scale+=0.2f*dir
     }
 }
