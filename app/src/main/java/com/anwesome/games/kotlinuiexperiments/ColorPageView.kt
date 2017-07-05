@@ -18,9 +18,21 @@ class ColorPageView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action){
             MotionEvent.ACTION_DOWN -> {
-                
+
             }
         }
         return true
+    }
+}
+class Renderer {
+    var time:Int = 0
+    fun render(colors:List<Int>) {
+        if(time == 0) {
+
+        }
+        time++
+    }
+    fun handleTap() {
+
     }
 }
