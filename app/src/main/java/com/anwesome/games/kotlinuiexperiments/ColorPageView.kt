@@ -28,14 +28,16 @@ class ColorPageView(ctx:Context):View(ctx) {
 }
 class Renderer {
     var time:Int = 0
-    fun render(canvas:Canvas,colors:List<Int>,v:ColorPageView) {
+    var animationHandler:AnimationHandler?=null
+    fun render(canvas:Canvas,paint:Paint,colors:List<Int>,v:ColorPageView) {
         if(time == 0) {
-
+            animationHandler = AnimationHandler(colors,v)
         }
+        animationHandler?.animate(canvas,paint,canvas.width,canvas.height)
         time++
     }
     fun handleTap() {
-
+        animationHandler?.startAnimation()
     }
 }
 data class ColorPage(var color:Int) {
@@ -58,7 +60,7 @@ class AnimationHandler{
     var animated = false
     var curr:ColorPage?=null
     var v:ColorPageView?=null
-    constructor(colors:ArrayList<Int>,v:ColorPageView) {
+    constructor(colors:List<Int>,v:ColorPageView) {
         colorPages = colors.map{ color -> ColorPage(color) }
         this.v = v
     }
@@ -70,7 +72,7 @@ class AnimationHandler{
             curr?.update()
             if(curr?.dir == 0.0f) {
                 animated = false
-                colorPages = colorPages.filter{ colorPage->
+                colorPages = colorPages?.filter{ colorPage->
                     colorPage!=curr
                 }
             }
@@ -84,7 +86,7 @@ class AnimationHandler{
         }
     }
     fun startAnimation() {
-        if(!animated && !colorPages.isEmpty()) {
+        if(!animated && colorPages?.isEmpty() == true) {
             curr = colorPages?.get(0)
             animated = true
             v?.postInvalidate()
