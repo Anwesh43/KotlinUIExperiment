@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 import java.util.*
@@ -16,13 +15,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class CircularLoaderListView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer:Renderer = Renderer()
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event: MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
