@@ -36,7 +36,7 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
                 loaderRendererController = LoaderRenderController(canvas.width,canvas.height,v)
             }
             loaderRendererController?.render(canvas,paint)
-            if(time % 12 == 0) {
+            if(time % 20 == 0) {
                 loaderRendererController?.createLoaders()
             }
             time++
