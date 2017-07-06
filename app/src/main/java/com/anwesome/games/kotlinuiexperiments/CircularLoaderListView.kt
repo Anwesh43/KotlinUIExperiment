@@ -8,6 +8,8 @@ import android.graphics.RectF
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 06/07/17.
@@ -27,20 +29,21 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
     }
     class Renderer {
         var time = 0
-        fun render(canvas:Canvas?,paint:Paint) {
+        fun render(canvas:Canvas?,paint:Paint,v:CircularLoaderListView) {
             if(time == 0) {
 
             }
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            
         }
     }
     data class CircularLoader(var x:Float,var y:Float,var r:Float) {
         var startDeg = 0.0f
         var endDeg = 0.0f
         var dir = 0.0f
+        var stopped = false
         fun draw(canvas:Canvas?,paint:Paint) {
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = r/40
@@ -62,8 +65,67 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
                 startDeg = 360.0f
                 endDeg = 0.0f
                 dir = 0.0f
+                stopped = true
             }
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x -r && x<=this.x+r && y>=this.y-r && y<=this.y+r 
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x -r && x<=this.x+r && y>=this.y-r && y<=this.y+r && dir == 0.0f
+    }
+    class LoaderRenderController {
+        var w:Int = 0
+        var h:Int = 0
+        var sizeOfEachLoader = 0.0f
+        var animated = false
+        var loaders:ConcurrentLinkedQueue<CircularLoader> = ConcurrentLinkedQueue()
+        var tappedLoaders:ConcurrentLinkedQueue<CircularLoader> = ConcurrentLinkedQueue()
+        var v:CircularLoaderListView?=null
+        constructor(w:Int,h:Int,v:CircularLoaderListView) {
+            this.w = w
+            this.h = h
+            this.sizeOfEachLoader = (Math.min(w,h)/20).toFloat()
+            this.v = v
+        }
+        fun render(canvas:Canvas?,paint:Paint) {
+            loaders.forEach { loader ->
+                loader.draw(canvas,paint)
+            }
+            if(animated) {
+                tappedLoaders?.forEach { tappedLoader ->
+                    tappedLoader.update()
+                    if(tappedLoader.stopped) {
+                        tappedLoaders.remove(tappedLoader)
+                        loaders.remove(tappedLoader)
+                        if(tappedLoaders.size == 1) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    v?.invalidate()
+                }
+                catch (e:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            loaders.forEach { loader->
+                if(loader.handleTap(x,y)) {
+                    tappedLoaders.add(loader)
+                    loader.dir = 1.0f
+                    if(tappedLoaders.size == 1) {
+                        animated = true
+                        v?.postInvalidate()
+                    }
+                }
+            }
+        }
+        fun createLoaders() {
+            var random = Random()
+            var x:Float = (sizeOfEachLoader+random.nextInt(w-2*sizeOfEachLoader.toInt()))
+            var y:Float = (sizeOfEachLoader+random.nextInt(w-2*sizeOfEachLoader.toInt()))
+            loaders.add(CircularLoader(x,y,sizeOfEachLoader))
+            v?.postInvalidate()
+        }
     }
 }
