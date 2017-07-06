@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class CircularLoaderListView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    override fun onDraw(canvas: Canvas?) {
-        canvas?.drawColor(Color.parseColor("#212121"))
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
     }
     override fun onTouchEvent(event: MotionEvent):Boolean {
         when(event.action) {
@@ -29,14 +29,19 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
     }
     class Renderer {
         var time = 0
-        fun render(canvas:Canvas?,paint:Paint,v:CircularLoaderListView) {
+        var loaderRendererController:LoaderRenderController?=null
+        fun render(canvas:Canvas,paint:Paint,v:CircularLoaderListView) {
             if(time == 0) {
-
+                loaderRendererController = LoaderRenderController(canvas.width,canvas.height,v)
+            }
+            loaderRendererController?.render(canvas,paint)
+            if(time % 12 == 0) {
+                loaderRendererController?.createLoaders()
             }
             time++
         }
         fun handleTap(x:Float,y:Float) {
-            
+            loaderRendererController?.handleTap(x,y)
         }
     }
     data class CircularLoader(var x:Float,var y:Float,var r:Float) {
@@ -84,7 +89,7 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
             this.sizeOfEachLoader = (Math.min(w,h)/20).toFloat()
             this.v = v
         }
-        fun render(canvas:Canvas?,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint) {
             loaders.forEach { loader ->
                 loader.draw(canvas,paint)
             }
