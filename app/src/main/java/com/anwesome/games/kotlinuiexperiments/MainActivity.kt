@@ -13,14 +13,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        var view:CircleCreatorView = CircleCreatorView(this)
 //        val completionListener = CompletionListener(this)
-        var view:ColorPageView = ColorPageView(this)
+        var view:CircularLoaderListView = CircularLoaderListView(this)
         //view.onCompletionListener = completionListener
         supportActionBar?.hide()
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        view.addColor(Color.parseColor("#E65100"))
-        view.addColor(Color.parseColor("#00ACC1"))
-        view.addColor(Color.parseColor("#f44336"))
-        view.addColor(Color.parseColor("#C2185B"))
         setContentView(view)
     }
 }

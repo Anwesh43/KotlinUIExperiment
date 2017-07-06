@@ -52,23 +52,27 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
         var stopped = false
         fun draw(canvas:Canvas?,paint:Paint) {
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = r/40
+            paint.strokeWidth = r/6
             canvas?.save()
             canvas?.translate(x,y)
+            paint.color = Color.GRAY
             canvas?.drawArc(RectF(-r,-r,r,r),0.0f,360.0f,false,paint)
             paint.color = Color.WHITE
             canvas?.drawArc(RectF(-r,-r,r,r),startDeg-90,endDeg,false,paint)
             canvas?.restore()
         }
         fun update() {
-            if(startDeg < 300) {
+            if(startDeg < 270 && endDeg < 90) {
                 endDeg+=10*dir
             }
-            if(endDeg >= 90) {
+            else {
                 startDeg+=10*dir
+                if(startDeg >= 270) {
+                    endDeg -= 10*dir
+                }
             }
             if(startDeg >= 360) {
-                startDeg = 360.0f
+                startDeg = 0.0f
                 endDeg = 0.0f
                 dir = 0.0f
                 stopped = true
@@ -80,49 +84,34 @@ class CircularLoaderListView(ctx:Context):View(ctx) {
         var w:Int = 0
         var h:Int = 0
         var sizeOfEachLoader = 0.0f
-        var animated = false
         var loaders:ConcurrentLinkedQueue<CircularLoader> = ConcurrentLinkedQueue()
-        var tappedLoaders:ConcurrentLinkedQueue<CircularLoader> = ConcurrentLinkedQueue()
         var v:CircularLoaderListView?=null
         constructor(w:Int,h:Int,v:CircularLoaderListView) {
             this.w = w
             this.h = h
-            this.sizeOfEachLoader = (Math.min(w,h)/20).toFloat()
+            this.sizeOfEachLoader = (Math.min(w,h)/10).toFloat()
             this.v = v
         }
         fun render(canvas:Canvas,paint:Paint) {
             loaders.forEach { loader ->
                 loader.draw(canvas,paint)
+                loader.update()
+                if(loader.stopped) {
+                    loaders.remove(loader)
+                }
             }
-            if(animated) {
-                tappedLoaders?.forEach { tappedLoader ->
-                    tappedLoader.update()
-                    if(tappedLoader.stopped) {
-                        tappedLoaders.remove(tappedLoader)
-                        loaders.remove(tappedLoader)
-                        if(tappedLoaders.size == 1) {
-                            animated = false
-                        }
-                    }
-                }
-                try {
-                    Thread.sleep(50)
-                    v?.invalidate()
-                }
-                catch (e:Exception) {
+            try {
+                Thread.sleep(50)
+                v?.invalidate()
+            }
+            catch (e:Exception) {
 
-                }
             }
         }
         fun handleTap(x:Float,y:Float) {
             loaders.forEach { loader->
                 if(loader.handleTap(x,y)) {
-                    tappedLoaders.add(loader)
                     loader.dir = 1.0f
-                    if(tappedLoaders.size == 1) {
-                        animated = true
-                        v?.postInvalidate()
-                    }
                 }
             }
         }
