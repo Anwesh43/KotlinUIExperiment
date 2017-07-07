@@ -14,7 +14,7 @@ class SidewiseBallMoverView(ctx:Context):View(ctx) {
     var renderer:Renderer = Renderer()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-        renderer.render(canvas,paint)
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -95,7 +95,7 @@ class SidewiseBallMoverView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.drawCircle(0,0,r,paint)
+            canvas.drawCircle(0.0f,0.0f,r,paint)
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean {
