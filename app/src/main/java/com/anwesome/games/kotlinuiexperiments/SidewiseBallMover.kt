@@ -54,4 +54,40 @@ class SidewiseBallMoverView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
         }
     }
+    data class SideWiseBall(var x:Float,var y:Float,var r:Float) {
+        var dir:Int = 0
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawCircle(0,0,r,paint)
+            canvas.restore()
+        }
+        fun handleTap(x:Float,y:Float):Boolean {
+            var condition = y>=this.y-r && y<=this.y+r && x>=this.x-r && x<=this.x+r && Math.abs(x-this.x)>=r
+            if(condition) {
+                dir = ((x-this.x)/(Math.abs(x-this.x))).toInt()
+            }
+            return condition
+        }
+        fun stopped():Boolean = dir == 0
+        fun update(bounds:Float) {
+            x+=dir*(bounds/5)
+            if(x>bounds-r) {
+                dir = 1
+                x = bounds-r
+            }
+            if(x < r) {
+                dir = 1
+                x = r
+            }
+            if(dir == 1 && x<bounds/2) {
+                x = bounds/2
+                dir = 0
+            }
+            if(dir == -1 && x>bounds/2) {
+                x = bounds/2
+                dir = 0
+            }
+        }
+    }
 }
