@@ -1,7 +1,9 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Notification
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
@@ -42,5 +44,42 @@ class TouchMeterView(ctx:Context):View(ctx){
                 }
             }
         }
+    }
+    data class TouchMeter(var x:Float,var y:Float,var size:Float) {
+        var scale = 0.0f
+        var dir = 0.0f
+        fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#FF5722")
+            paint.strokeWidth = size/8
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0.0f,0.0f,size/8,paint)
+            paint.style = Paint.Style.FILL
+            canvas.save()
+            canvas.scale(scale,scale)
+            canvas.drawCircle(0.0f,0.0f,size/8,paint)
+            canvas.restore()
+            for(i in 0..1) {
+                canvas.save()
+                canvas.scale(1.0f,(i*2-1)*1.0f)
+                paint.style = Paint.Style.STROKE
+                canvas.drawRect(-size/16,size/8,size/16,size/8+3*size/8,paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawRect(-size/16,size/8,size/16,size/8+(3*size/8)*scale,paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun startUpdating(dir:Float) {
+            this.dir = dir
+        }
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 1.0f
+            }
+        }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/8 && x<=this.x+size/8 && y>=this.y-size/8  && y<=this.y+size/8
     }
 }
