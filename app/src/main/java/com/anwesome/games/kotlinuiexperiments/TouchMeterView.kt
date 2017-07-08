@@ -55,7 +55,7 @@ class TouchMeterView(ctx:Context):View(ctx){
         var animated = false
         var v:TouchMeterView?=null
         constructor(w:Float,h:Float,v:TouchMeterView) {
-            touchMeter = TouchMeter(w/2,h/2,Math.min(w,h)/4)
+            touchMeter = TouchMeter(w/2,h/2,h/3)
             this.v = v
         }
         fun render(canvas:Canvas,paint:Paint) {
@@ -66,7 +66,7 @@ class TouchMeterView(ctx:Context):View(ctx){
                     animated = false
                 }
                 try {
-                    Thread.sleep(75)
+                    Thread.sleep(40)
                     v?.invalidate()
                 }
                 catch (ex:Exception) {
@@ -77,6 +77,7 @@ class TouchMeterView(ctx:Context):View(ctx){
         fun checkDown(x:Float,y:Float):Boolean {
             var condition = touchMeter?.handleTap(x,y)?:false
             if(condition) {
+                animated = true
                 touchMeter?.startUpdating(1.0f)
             }
             return condition
@@ -91,7 +92,7 @@ class TouchMeterView(ctx:Context):View(ctx){
         var dir = 0.0f
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#FF5722")
-            paint.strokeWidth = size/8
+            paint.strokeWidth = 5.0f
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
