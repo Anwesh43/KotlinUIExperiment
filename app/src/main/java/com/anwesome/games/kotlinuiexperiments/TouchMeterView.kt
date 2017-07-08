@@ -15,10 +15,10 @@ class TouchMeterView(ctx:Context):View(ctx){
     var renderer = TMVRenderer()
     val  paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-        renderer.render(canvas,paint)
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
-        renderer.handleTap(event.action)
+        renderer.handleTap(event.action,this)
         return true
     }
     class TMVRenderer {
