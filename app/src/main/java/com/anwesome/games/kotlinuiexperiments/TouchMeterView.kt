@@ -18,39 +18,42 @@ class TouchMeterView(ctx:Context):View(ctx){
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
-        renderer.handleTap(event.action,this)
+        renderer.handleTap(event,this)
         return true
     }
     class TMVRenderer {
         var time = 0
         var down = false
+        var drawingController:TMVDrawingController?=null
         fun render(canvas:Canvas,paint:Paint,v:TouchMeterView) {
             if(time == 0) {
-
+                drawingController = TMVDrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
+            drawingController?.render(canvas,paint)
             time++
         }
-        fun handleTap(action:Int,v:View) {
-            when(action) {
+        fun handleTap(event:MotionEvent,v:View) {
+            when(event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if(!down) {
-
+                    if(!down && drawingController?.checkDown(event.x,event.y)?:false) {
+                        down = true
+                        v?.postInvalidate()
                     }
                 }
                 MotionEvent.ACTION_UP -> {
                     if(down) {
-
+                        drawingController?.handleTouchUp()
+                        down = false
                     }
                 }
             }
         }
     }
     class TMVDrawingController {
-        var size:Float = 0.0f
         var touchMeter:TouchMeter?=null
         var animated = false
         var v:TouchMeterView?=null
-        constructor(w:Float,h:Float) {
+        constructor(w:Float,h:Float,v:TouchMeterView) {
             touchMeter = TouchMeter(w/2,h/2,Math.min(w,h)/4)
             this.v = v
         }
@@ -76,6 +79,9 @@ class TouchMeterView(ctx:Context):View(ctx){
                 touchMeter?.startUpdating(1.0f)
             }
             return condition
+        }
+        fun handleTouchUp() {
+            touchMeter?.startUpdating(-1.0f)
         }
 
     }
