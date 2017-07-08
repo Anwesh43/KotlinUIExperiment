@@ -24,13 +24,13 @@ class TouchMeterView(ctx:Context):View(ctx){
     class TMVRenderer {
         var time = 0
         var down = false
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,v:TouchMeterView) {
             if(time == 0) {
 
             }
             time++
         }
-        fun handleTap(action:Int) {
+        fun handleTap(action:Int,v:View) {
             when(action) {
                 MotionEvent.ACTION_DOWN -> {
                     if(!down) {
@@ -44,6 +44,40 @@ class TouchMeterView(ctx:Context):View(ctx){
                 }
             }
         }
+    }
+    class TMVDrawingController {
+        var size:Float = 0.0f
+        var touchMeter:TouchMeter?=null
+        var animated = false
+        var v:TouchMeterView?=null
+        constructor(w:Float,h:Float) {
+            touchMeter = TouchMeter(w/2,h/2,Math.min(w,h)/4)
+            this.v = v
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            touchMeter?.draw(canvas, paint)
+            if(animated) {
+                touchMeter?.update()
+                if(touchMeter?.stopped()?:false) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    v?.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun checkDown(x:Float,y:Float):Boolean {
+            var condition = touchMeter?.handleTap(x,y)?:false
+            if(condition) {
+                touchMeter?.startUpdating(1.0f)
+            }
+            return condition
+        }
+
     }
     data class TouchMeter(var x:Float,var y:Float,var size:Float) {
         var scale = 0.0f
@@ -79,7 +113,12 @@ class TouchMeterView(ctx:Context):View(ctx){
             if(scale > 1) {
                 scale = 1.0f
             }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0.0f
+            }
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/8 && x<=this.x+size/8 && y>=this.y-size/8  && y<=this.y+size/8
+        fun stopped():Boolean = dir == 0.0f
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/8 && x<=this.x+size/8 && y>=this.y-size/8  && y<=this.y+size/8 && dir == 0.0f && scale == 0.0f
     }
 }
