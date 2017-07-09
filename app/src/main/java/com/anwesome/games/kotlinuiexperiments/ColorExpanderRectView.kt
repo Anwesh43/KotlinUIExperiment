@@ -14,6 +14,7 @@ import android.view.View
 class ColorExpanderRectView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CERVRenderer()
+    val onExpandListener:OnExpandListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -109,6 +110,12 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
             if(animated) {
                 colorExpanderRect?.update()
                 if(colorExpanderRect?.dir == 0) {
+                    if(colorExpanderRect?.scale == 1.0f) {
+                        v?.onExpandListener?.onExpand()
+                    }
+                    else {
+                        v?.onExpandListener?.onShrink()
+                    }
                     animated = false
                 }
                 try {
@@ -128,5 +135,9 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
                 }
             }
         }
+    }
+    interface OnExpandListener {
+        fun onExpand();
+        fun onShrink();
     }
 }
