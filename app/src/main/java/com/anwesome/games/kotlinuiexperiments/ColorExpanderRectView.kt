@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -33,7 +35,35 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
         var scale = 0.0f
         var dir = 0
         fun draw(canvas:Canvas,paint:Paint) {
-
+            canvas.save()
+            canvas.translate(x,y)
+            paint.strokeWidth = 5.0f
+            paint.strokeCap = Paint.Cap.ROUND
+            paint.color = Color.WHITE
+            for(i in 0..3) {
+                canvas.save()
+                canvas.rotate((i*90.0f+45.0f))
+                canvas.save()
+                canvas.translate(size/10,0.0f)
+                canvas.rotate(180*scale)
+                for(j in 0..1) {
+                    canvas.save()
+                    canvas.rotate(j*90.0f)
+                    canvas.drawLine(0.0f,0.0f,0.0f,size/15,paint)
+                    canvas.restore()
+                }
+                canvas.restore()
+                canvas.restore()
+            }
+            paint.color = Color.parseColor("#E53935")
+            paint.style = Paint.Style.STROKE
+            canvas.drawRect(RectF(-size/2,size/2,size/2,size/2),paint)
+            canvas.save()
+            canvas.scale(scale,scale)
+            paint.style = Paint.Style.FILL
+            canvas.drawRect(RectF(-size/2,-size/2,size/2,size/2),paint)
+            canvas.restore()
+            canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean  {
             var condition = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10 && dir == 0
