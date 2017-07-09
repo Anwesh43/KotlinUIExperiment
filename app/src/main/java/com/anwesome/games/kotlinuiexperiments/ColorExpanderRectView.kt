@@ -46,32 +46,34 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            paint.strokeWidth = 5.0f
+            paint.strokeWidth = size/40
             paint.strokeCap = Paint.Cap.ROUND
-            paint.color = Color.WHITE
-            for(i in 0..3) {
-                canvas.save()
-                canvas.rotate((i*90.0f+45.0f))
-                canvas.save()
-                canvas.translate(size/10,0.0f)
-                canvas.rotate(180*scale)
-                for(j in 0..1) {
-                    canvas.save()
-                    canvas.rotate(j*90.0f)
-                    canvas.drawLine(0.0f,0.0f,0.0f,size/15,paint)
-                    canvas.restore()
-                }
-                canvas.restore()
-                canvas.restore()
-            }
             paint.color = Color.parseColor("#E53935")
             paint.style = Paint.Style.STROKE
-            canvas.drawRect(RectF(-size/2,size/2,size/2,size/2),paint)
+            canvas.drawRect(RectF(-size/2,-size/2,size/2,size/2),paint)
             canvas.save()
             canvas.scale(scale,scale)
             paint.style = Paint.Style.FILL
             canvas.drawRect(RectF(-size/2,-size/2,size/2,size/2),paint)
             canvas.restore()
+            paint.color = Color.WHITE
+
+            for(i in 0..3) {
+                canvas.save()
+                canvas.rotate((i*90.0f))
+                canvas.save()
+                canvas.translate(size/10,size/10)
+                canvas.rotate(180*scale)
+                for(j in 0..1) {
+                    canvas.save()
+                    canvas.rotate(j*90.0f)
+                    canvas.drawLine(0.0f,0.0f,-size/15,0.0f,paint)
+                    canvas.restore()
+                }
+                canvas.restore()
+                canvas.restore()
+            }
+
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean  {
@@ -110,7 +112,7 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
                     animated = false
                 }
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(30)
                     v?.invalidate()
                 }
                 catch(ex:Exception) {
