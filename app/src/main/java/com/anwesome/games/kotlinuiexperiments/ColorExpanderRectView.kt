@@ -17,4 +17,16 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         return true
     }
+    class CERVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
