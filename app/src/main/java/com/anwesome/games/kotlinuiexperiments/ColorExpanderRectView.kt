@@ -87,4 +87,35 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
             }
         }
     }
+    class CERVAnimationHandler(var w:Float,var h:Float,var v:ColorExpanderRectView) {
+        var animated = false
+        var colorExpanderRect:ColorExpanderRect? = null
+        init {
+            colorExpanderRect = ColorExpanderRect(w/2,h/2,Math.min(w,h)/2)
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            colorExpanderRect?.draw(canvas,paint)
+            if(animated) {
+                colorExpanderRect?.update()
+                if(colorExpanderRect?.dir == 0) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    v?.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                if(colorExpanderRect?.handleTap(x,y)?:false) {
+                    animated = true
+                    v?.postInvalidate()
+                }
+            }
+        }
+    }
 }
