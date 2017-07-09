@@ -15,7 +15,7 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CERVRenderer()
     override fun onDraw(canvas:Canvas) {
-        renderer.render(canvas,paint)
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -27,14 +27,16 @@ class ColorExpanderRectView(ctx:Context):View(ctx) {
     }
     class CERVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        var animationHandler:CERVAnimationHandler?=null
+        fun render(canvas:Canvas,paint:Paint,v:ColorExpanderRectView) {
             if(time == 0) {
-
+                animationHandler = CERVAnimationHandler(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
+            animationHandler?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            animationHandler?.handleTap(x,y)
         }
     }
     data class ColorExpanderRect(var x:Float,var y:Float,var size:Float) {
