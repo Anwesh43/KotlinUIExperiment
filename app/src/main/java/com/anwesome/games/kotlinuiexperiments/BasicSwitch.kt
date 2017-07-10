@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.*
 import android.hardware.display.DisplayManager
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,11 @@ class BasicSwitchViewGroup(ctx:Context):ViewGroup(ctx) {
         display?.getRealSize(size)
         this.w = size.x
         this.h = size.y
+    }
+    fun addSwitch() {
+        var view:BasicSwitchView = BasicSwitchView(context)
+        addView(view, LayoutParams(w/4,w/8))
+        requestLayout()
     }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var hView = h/30
@@ -106,10 +112,10 @@ class BasicSwitchView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             paint.color = Color.parseColor("#BDBDBD")
-            canvas.drawRoundRect(RectF(w/20,w/20,w/20+9*w/10,w/20+w/10),w/20,w/20,paint)
+            canvas.drawRoundRect(RectF(w/10,w/20,9*w/10,w/20+w/10),w/20,w/20,paint)
             paint.color = Color.parseColor("#1565C0")
-            canvas.drawRoundRect(RectF(w/20,w/20,w/20+9*w/10*scale,w/20+w/10),w/20,w/20,paint)
-            canvas.drawCircle(w/20+9*w/10*scale,w/10,w/10,paint)
+            canvas.drawRoundRect(RectF(w/10,w/20,w/10+8*w/10*scale,w/20+w/10),w/20,w/20,paint)
+            canvas.drawCircle(w/10+8*w/10*scale,w/10,w/10,paint)
             canvas.restore()
         }
         fun update() {

@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 
@@ -11,12 +12,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        var view:CircleCreatorView = CircleCreatorView(this)
 //        val completionListener = CompletionListener(this)
-        var view:ColorExpanderRectView = ColorExpanderRectView(this)
-        //view.onCompletionListener = completionListener
-        view.onExpandListener = ExpandListener(this)
-        supportActionBar?.hide()
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        setContentView(view)
+//        var view:ColorExpanderRectView = ColorExpanderRectView(this)
+//        //view.onCompletionListener = completionListener
+//        view.onExpandListener = ExpandListener(this)
+//        supportActionBar?.hide()
+//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+//        setContentView(view)
+        setContentView(R.layout.activity_main)
+        var viewGroup = BasicSwitchViewGroup(this)
+        addContentView(viewGroup, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
+        viewGroup.addSwitch()
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
