@@ -3,7 +3,6 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.*
 import android.hardware.display.DisplayManager
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +21,9 @@ class BasicSwitchViewGroup(ctx:Context):ViewGroup(ctx) {
         this.w = size.x
         this.h = size.y
     }
-    fun addSwitch() {
+    fun addSwitch(listener:OnSwitchSelectionListener) {
         var view:BasicSwitchView = BasicSwitchView(context)
+        view.onSelectionListener = listener
         addView(view, LayoutParams(w/4,w/8))
         requestLayout()
     }
@@ -51,6 +51,7 @@ class BasicSwitchViewGroup(ctx:Context):ViewGroup(ctx) {
 class BasicSwitchView(ctx:Context):View(ctx) {
     var renderer = SwitchRenderer()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onSelectionListener:OnSwitchSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,this)
     }
@@ -87,6 +88,7 @@ class BasicSwitchView(ctx:Context):View(ctx) {
             if(animated) {
                 basicSwitch?.update()
                 if(basicSwitch?.dir == 0) {
+                    basicSwitch?.handleListener(v?.onSelectionListener)
                     animated = false
                 }
                 try {
@@ -136,5 +138,21 @@ class BasicSwitchView(ctx:Context):View(ctx) {
                 else -> dir
             }
         }
+        fun handleListener(listener: OnSwitchSelectionListener?) {
+            if(scale <= 0.0f) {
+                listener?.onSelect()
+            }
+            else {
+                listener?.onUnSelect()
+            }
+        }
+    }
+}
+interface OnSwitchSelectionListener {
+    fun onSelect() {
+
+    }
+    fun onUnSelect() {
+
     }
 }
