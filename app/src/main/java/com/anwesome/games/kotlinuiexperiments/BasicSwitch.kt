@@ -45,30 +45,34 @@ class BasicSwitchViewGroup(ctx:Context):ViewGroup(ctx) {
     }
 }
 class BasicSwitchView(ctx:Context):View(ctx) {
+    var renderer = SwitchRenderer()
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
     }
-    class Renderer {
+    class SwitchRenderer {
+        var drawingController:SwitchDrawingController?=null
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,v:BasicSwitchView) {
             if(time == 0) {
-
+                drawingController = SwitchDrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
+            drawingController?.draw(canvas,paint)
             time++
         }
-        fun handleTap(x:Float,y:Float) {
-
+        fun handleTap() {
+            drawingController?.startAnimation()
         }
     }
-    class DrawingController(var w:Float,var h:Float,var v:BasicSwitchView) {
+    class SwitchDrawingController(var w:Float,var h:Float,var v:BasicSwitchView) {
         var animated = false
         fun draw(canvas:Canvas,paint:Paint) {
             if(animated) {
