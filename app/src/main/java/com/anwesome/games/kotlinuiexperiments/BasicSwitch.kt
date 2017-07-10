@@ -68,4 +68,24 @@ class BasicSwitchView(ctx:Context):View(ctx) {
 
         }
     }
+    class DrawingController(var w:Float,var h:Float,var v:BasicSwitchView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun startAnimation() {
+            if(!animated) {
+                animated = true
+                v.postInvalidate()
+            }
+        }
+    }
 }
