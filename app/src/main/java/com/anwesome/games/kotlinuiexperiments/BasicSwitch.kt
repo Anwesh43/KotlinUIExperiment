@@ -1,9 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Point
+import android.graphics.*
 import android.hardware.display.DisplayManager
 import android.view.MotionEvent
 import android.view.View
@@ -89,6 +87,37 @@ class BasicSwitchView(ctx:Context):View(ctx) {
             if(!animated) {
                 animated = true
                 v.postInvalidate()
+            }
+        }
+    }
+    data class BasicSwitch(var w:Float) {
+        var dir = 0
+        var scale = 0.0f
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            paint.color = Color.parseColor("#BDBDBD")
+            canvas.drawRoundRect(RectF(w/20,w/20,w/20+9*w/10,w/20+w/10),w/20,w/20,paint)
+            paint.color = Color.parseColor("#1565C0")
+            canvas.drawRoundRect(RectF(w/20,w/20,w/20+9*w/10*scale,w/20+w/10),w/20,w/20,paint)
+            canvas.drawCircle(w/20+9*w/10*scale,w/10,w/10,paint)
+            canvas.restore()
+        }
+        fun update() {
+            scale+=dir*0.1f
+            if(scale > 1) {
+                dir = 0
+                scale = 1.0f
+            }
+            if(scale < 0) {
+                dir = 0
+                scale = 0.0f
+            }
+        }
+        fun startUpdate() {
+            dir = when(scale) {
+                0.0f -> 1
+                1.0f -> -1
+                else -> dir
             }
         }
     }
