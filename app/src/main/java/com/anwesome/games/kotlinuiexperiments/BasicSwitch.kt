@@ -1,8 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Point
 import android.hardware.display.DisplayManager
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 
@@ -38,6 +41,31 @@ class BasicSwitchViewGroup(ctx:Context):ViewGroup(ctx) {
             var child = getChildAt(i)
             child.layout(x,y,x+child.measuredWidth,y+child.measuredHeight)
             y += child.measuredHeight
+        }
+    }
+}
+class BasicSwitchView(ctx:Context):View(ctx) {
+    override fun onDraw(canvas:Canvas) {
+
+    }
+    override fun onTouchEvent(event:MotionEvent):Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+        }
+        return true
+    }
+    class Renderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
         }
     }
 }
