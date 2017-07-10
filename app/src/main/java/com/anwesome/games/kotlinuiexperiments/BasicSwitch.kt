@@ -139,7 +139,7 @@ class BasicSwitchView(ctx:Context):View(ctx) {
             }
         }
         fun handleListener(listener: OnSwitchSelectionListener?) {
-            if(scale <= 0.0f) {
+            if(scale >= 1.0f) {
                 listener?.onSelect()
             }
             else {

@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
@@ -21,15 +22,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         var viewGroup = BasicSwitchViewGroup(this)
         addContentView(viewGroup, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
-        viewGroup.addSwitch()
+        for(i in 1..8) {
+            viewGroup.addSwitch(SwitchSelectionListener(this,i))
+        }
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -48,5 +43,14 @@ class ExpandListener(var activity: MainActivity):ColorExpanderRectView.OnExpandL
     }
     override fun onShrink() {
         Toast.makeText(activity,"Shrinked",Toast.LENGTH_SHORT).show()
+    }
+}
+class SwitchSelectionListener(var activity:MainActivity,var index:Int):OnSwitchSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"selected $index",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUnSelect() {
+        Toast.makeText(activity,"unselected $index",Toast.LENGTH_SHORT).show()
     }
 }
