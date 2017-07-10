@@ -61,7 +61,7 @@ class BasicSwitchView(ctx:Context):View(ctx) {
         var time = 0
         fun render(canvas:Canvas,paint:Paint,v:BasicSwitchView) {
             if(time == 0) {
-                drawingController = SwitchDrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
+                drawingController = SwitchDrawingController(canvas.width.toFloat(),v)
             }
             drawingController?.draw(canvas,paint)
             time++
@@ -70,10 +70,19 @@ class BasicSwitchView(ctx:Context):View(ctx) {
             drawingController?.startAnimation()
         }
     }
-    class SwitchDrawingController(var w:Float,var h:Float,var v:BasicSwitchView) {
+    class SwitchDrawingController(var w:Float,var v:BasicSwitchView) {
         var animated = false
+        var basicSwitch:BasicSwitch?=null
+        init {
+            basicSwitch = BasicSwitch(w)
+        }
         fun draw(canvas:Canvas,paint:Paint) {
+            basicSwitch?.draw(canvas,paint)
             if(animated) {
+                basicSwitch?.update()
+                if(basicSwitch?.dir == 0) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -85,6 +94,7 @@ class BasicSwitchView(ctx:Context):View(ctx) {
         }
         fun startAnimation() {
             if(!animated) {
+                basicSwitch?.startUpdate()
                 animated = true
                 v.postInvalidate()
             }
