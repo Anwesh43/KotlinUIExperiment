@@ -51,7 +51,7 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             if(animated) {
                 imageColorFilter?.update()
                 if(imageColorFilter?.stopped()?:false) {
-                    if(imageColorFilter?.scale?:0.0f <= 1.0f) {
+                    if(imageColorFilter?.scale?:0.0f >= 1.0f) {
                         v?.onSelectionListener?.onSelect()
                     }
                     else {
