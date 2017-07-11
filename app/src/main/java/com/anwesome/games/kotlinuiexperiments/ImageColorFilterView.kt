@@ -11,6 +11,7 @@ import android.view.MotionEvent
 class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLUE):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer:ICFVRenderer = ICFVRenderer()
+    var onSelectionListener:OnImageSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -50,6 +51,12 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             if(animated) {
                 imageColorFilter?.update()
                 if(imageColorFilter?.stopped()?:false) {
+                    if(imageColorFilter?.scale?:0.0f <= 1.0f) {
+                        v?.onSelectionListener?.onSelect()
+                    }
+                    else {
+                        v?.onSelectionListener?.onUnselect()
+                    }
                     animated = false
                 }
                 try {
@@ -105,5 +112,13 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             }
             return condition
         }
+    }
+}
+interface OnImageSelectionListener {
+    fun onSelect() {
+
+    }
+    fun onUnselect() {
+
     }
 }
