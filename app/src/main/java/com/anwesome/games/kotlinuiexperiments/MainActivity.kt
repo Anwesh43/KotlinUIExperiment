@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         var bitmap:Bitmap = BitmapFactory.decodeResource(resources,R.drawable.stp)
         var view:ImageColorFilterView = ImageColorFilterView(this,bitmap,Color.parseColor("#0097A7"))
+        view.onSelectionListener = ImageSelectionListener(this)
         setContentView(view)
     }
 }
@@ -59,5 +60,14 @@ class SwitchSelectionListener(var activity:MainActivity,var index:Int):OnSwitchS
 
     override fun onUnSelect() {
         Toast.makeText(activity,"unselected $index",Toast.LENGTH_SHORT).show()
+    }
+}
+class ImageSelectionListener(var activity: MainActivity):OnImageSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"selected",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUnselect() {
+        Toast.makeText(activity,"unselected",Toast.LENGTH_SHORT).show()
     }
 }
