@@ -13,7 +13,7 @@ import android.view.MotionEvent
  */
 class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLUE):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    var renderer:Renderer = Renderer()
+    var renderer:ICFVRenderer = ICFVRenderer()
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,this)
     }
@@ -32,7 +32,7 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
                 var h = canvas.height
                 var size = Math.min(w,h)/2
                 v.bitmap = Bitmap.createScaledBitmap(v.bitmap,size,size,true)
-                drawingController = DrawingController(size.toFloat(),size.toFloat(),v.bitmap,v)
+                drawingController = DrawingController(w.toFloat(),h.toFloat(),v.bitmap,v)
             }
             drawingController?.draw(canvas,paint)
             time++
@@ -43,11 +43,17 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
     }
     class DrawingController(w:Float,h:Float,bitmap:Bitmap,var v:ImageColorFilterView) {
         var animated = false
+        var imageColorFilter:ImageColorFilter?=null
         init {
-
+            imageColorFilter = ImageColorFilter(bitmap,v.color,w,h)
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            imageColorFilter?.draw(canvas, paint)
             if(animated) {
+                imageColorFilter?.update()
+                if(imageColorFilter?.stopped()?:false) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -59,6 +65,7 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
         }
         fun handleTap() {
             if(!animated) {
+                imageColorFilter?.handleTap()
                 animated = true
                 v.postInvalidate()
             }
