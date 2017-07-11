@@ -21,15 +21,38 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
     }
     class ICFVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,v:ImageColorFilterView) {
             if(time == 0) {
                 var w = canvas.width
-                var h = canvas.height 
+                var h = canvas.height
             }
             time++
         }
-        fun handleTap(x:Float,y:Float) {
+        fun handleTap() {
 
+        }
+    }
+    class DrawingController(w:Float,h:Float,bitmap:Bitmap,var v:ImageColorFilterView) {
+        var animated = false
+        init {
+
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                v.postInvalidate()
+            }
         }
     }
 }
