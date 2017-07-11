@@ -14,9 +14,22 @@ import android.view.MotionEvent
 class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLUE):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-        
+
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         return true
+    }
+    class ICFVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width
+                var h = canvas.height 
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
     }
 }
