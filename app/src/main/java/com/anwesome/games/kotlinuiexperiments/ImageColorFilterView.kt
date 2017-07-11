@@ -55,4 +55,39 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             }
         }
     }
+    data class ImageColorFilter(var b:Bitmap,var color:Int,var x:Float,var y:Float) {
+        var scale:Float = 0.0f
+        var dir:Int = 0
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.BLACK
+            canvas.drawBitmap(b,-b.width.toFloat()/2,-b.height.toFloat()/2,paint)
+            canvas.save()
+            canvas.scale(scale,scale)
+            paint.color = Color.argb(120,Color.red(color),Color.green(color),Color.blue(color));
+            canvas.restore()
+            canvas.restore()
+        }
+        fun update() {
+            scale += 0.15f*dir
+            if(scale > 1) {
+                scale = 1.0f
+                dir = 0
+            }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0
+            }
+        }
+        fun stopped():Boolean = dir == 0
+        fun handleTap() {
+            if(dir == 0) {
+                dir = when(scale) {
+                    1.0f->-1
+                    else->1
+                }
+            }
+        }
+    }
 }
