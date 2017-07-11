@@ -1,6 +1,9 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
@@ -19,12 +22,16 @@ class MainActivity : AppCompatActivity() {
 //        supportActionBar?.hide()
 //        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 //        setContentView(view)
-        setContentView(R.layout.activity_main)
-        var viewGroup = BasicSwitchViewGroup(this)
-        addContentView(viewGroup, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
-        for(i in 1..8) {
-            viewGroup.addSwitch(SwitchSelectionListener(this,i))
-        }
+//
+//        setContentView(R.layout.activity_main)
+//        var viewGroup = BasicSwitchViewGroup(this)
+//        addContentView(viewGroup, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT))
+//        for(i in 1..8) {
+//            viewGroup.addSwitch(SwitchSelectionListener(this,i))
+//        }
+        var bitmap:Bitmap = BitmapFactory.decodeResource(resources,R.drawable.stp)
+        var view:ImageColorFilterView = ImageColorFilterView(this,bitmap,Color.parseColor("#0097A7"))
+        setContentView(view)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
