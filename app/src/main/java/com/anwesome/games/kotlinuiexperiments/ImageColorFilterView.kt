@@ -13,23 +13,32 @@ import android.view.MotionEvent
  */
 class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLUE):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer:Renderer = Renderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
+        if(event.action == MotionEvent.ACTION_DOWN) {
+            renderer.handleTap()
+        }
         return true
     }
     class ICFVRenderer {
         var time = 0
+        var drawingController:DrawingController?=null
         fun render(canvas:Canvas,paint:Paint,v:ImageColorFilterView) {
             if(time == 0) {
                 var w = canvas.width
                 var h = canvas.height
+                var size = Math.min(w,h)/2
+                v.bitmap = Bitmap.createScaledBitmap(v.bitmap,size,size,true)
+                drawingController = DrawingController(size.toFloat(),size.toFloat(),v.bitmap,v)
             }
+            drawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap() {
-
+            drawingController?.handleTap()
         }
     }
     class DrawingController(w:Float,h:Float,bitmap:Bitmap,var v:ImageColorFilterView) {
