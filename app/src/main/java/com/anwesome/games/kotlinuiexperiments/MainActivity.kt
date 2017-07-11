@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
 //        var view:ColorExpanderRectView = ColorExpanderRectView(this)
 //        //view.onCompletionListener = completionListener
 //        view.onExpandListener = ExpandListener(this)
-//        supportActionBar?.hide()
-//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        supportActionBar?.hide()
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 //        setContentView(view)
 //
 //        setContentView(R.layout.activity_main)

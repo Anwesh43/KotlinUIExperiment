@@ -2,10 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.view.View
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.view.MotionEvent
 
 /**
@@ -15,11 +12,12 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer:ICFVRenderer = ICFVRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         if(event.action == MotionEvent.ACTION_DOWN) {
-            renderer.handleTap()
+            renderer.handleTap(event.x,event.y)
         }
         return true
     }
@@ -37,15 +35,15 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             drawingController?.draw(canvas,paint)
             time++
         }
-        fun handleTap() {
-            drawingController?.handleTap()
+        fun handleTap(x:Float,y:Float) {
+            drawingController?.handleTap(x,y)
         }
     }
     class DrawingController(w:Float,h:Float,bitmap:Bitmap,var v:ImageColorFilterView) {
         var animated = false
         var imageColorFilter:ImageColorFilter?=null
         init {
-            imageColorFilter = ImageColorFilter(bitmap,v.color,w,h)
+            imageColorFilter = ImageColorFilter(bitmap,v.color,w/2,h/2)
         }
         fun draw(canvas:Canvas,paint:Paint) {
             imageColorFilter?.draw(canvas, paint)
@@ -63,9 +61,8 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
                 }
             }
         }
-        fun handleTap() {
-            if(!animated) {
-                imageColorFilter?.handleTap()
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && imageColorFilter?.handleTap(x,y)?:false) {
                 animated = true
                 v.postInvalidate()
             }
@@ -81,7 +78,8 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             canvas.drawBitmap(b,-b.width.toFloat()/2,-b.height.toFloat()/2,paint)
             canvas.save()
             canvas.scale(scale,scale)
-            paint.color = Color.argb(120,Color.red(color),Color.green(color),Color.blue(color));
+            paint.color = Color.argb(120,Color.red(color),Color.green(color),Color.blue(color))
+            canvas.drawRect(Rect(-b.width/2,-b.height/2,b.width/2,b.height/2),paint)
             canvas.restore()
             canvas.restore()
         }
@@ -97,13 +95,15 @@ class ImageColorFilterView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.BLU
             }
         }
         fun stopped():Boolean = dir == 0
-        fun handleTap() {
-            if(dir == 0) {
-                dir = when(scale) {
-                    1.0f->-1
-                    else->1
+        fun handleTap(x:Float,y:Float):Boolean {
+            val condition = dir == 0 && (x>=this.x-b.width/2 && x<=this.x+b.width/2 && y>=this.y-b.height/2 && y<=this.y+b.height/2)
+            if(condition) {
+                dir = when (scale) {
+                    1.0f -> -1
+                    else -> 1
                 }
             }
+            return condition
         }
     }
 }
