@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.widget.HorizontalScrollView
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 12/07/17.
@@ -89,6 +91,56 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class DrawingController(w:Float,h:Float,n:Int,var v:ScaleHorizontalButtonListView) {
+        var animated = false
+        var buttons:ConcurrentLinkedQueue<ScaleHorizontalButton> = ConcurrentLinkedQueue()
+        var tappedButtons:ConcurrentLinkedQueue<ScaleHorizontalButton> = ConcurrentLinkedQueue()
+        init {
+            if(n>0) {
+                var size = h/(2*n+1)
+                var y = 3*size/2
+                for (i in 0..n) {
+                    buttons.add(ScaleHorizontalButton(w/2,y,w,size))
+                    y += 2*size
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            buttons.forEach { button->
+                button.draw(canvas,paint)
+            }
+            if(animated) {
+                tappedButtons.forEach { button->
+                    button.update()
+                    if(button.stopped()) {
+                        tappedButtons.remove(button)
+                        if(tappedButtons.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+
+        }
+        fun startAnimation(x:Float,y:Float) {
+            buttons.forEach { button ->
+                if(button.handleTap(x,y)) {
+                    tappedButtons.add(button)
+                    if(tappedButtons.size == 1) {
+                        animated = true
+                        v.postInvalidate()
+                    }
+                }
+            }
         }
     }
 }
