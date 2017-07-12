@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         for(i in 0..5) {
             view.addButton()
         }
+        view.onClickListener = HorizontalScaleButtonClickListener(this)
        // view.onSelectionListener = ImageSelectionListener(this)
         setContentView(view)
     }
@@ -72,5 +73,10 @@ class ImageSelectionListener(var activity: MainActivity):OnImageSelectionListene
 
     override fun onUnselect() {
         Toast.makeText(activity,"unselected",Toast.LENGTH_SHORT).show()
+    }
+}
+class HorizontalScaleButtonClickListener(var activity: MainActivity):OnSHBClickListener {
+    override fun onClick(index: Int) {
+        Toast.makeText(activity,"$index clicked",Toast.LENGTH_SHORT).show();
     }
 }

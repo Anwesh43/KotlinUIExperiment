@@ -32,7 +32,7 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ScaleHorizontalButton(var x:Float,var y:Float,var w:Float,var h:Float) {
+    data class ScaleHorizontalButton(var x:Float,var y:Float,var w:Float,var h:Float,var index:Int) {
         var scale:Float = 0.0f
         var mode:Int = 0
         var waitParam:Int = 0
@@ -110,7 +110,7 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                 var size = h/(2*n+1)
                 var y = 3*size/2
                 for (i in 0..n) {
-                    buttons.add(ScaleHorizontalButton(w/2,y,w,size))
+                    buttons.add(ScaleHorizontalButton(w/2,y,w,size,i))
                     y += 2*size
                 }
             }
@@ -120,11 +120,10 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                 button.draw(canvas,paint)
             }
             if(animated) {
-                var i = 0
                 tappedButtons.forEach { button->
                     button.update()
-                    if(button.mode == 2 && button.scale >= 1) {
-                        v.onClickListener?.onClick(i)
+                    if(button.mode == 2 && button.waitParam == 0) {
+                        v.onClickListener?.onClick(button.index)
                     }
                     if(button.stopped()) {
                         tappedButtons.remove(button)
@@ -132,7 +131,6 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                             animated = false
                         }
                     }
-                    i++
                 }
                 try {
                     Thread.sleep(50)
