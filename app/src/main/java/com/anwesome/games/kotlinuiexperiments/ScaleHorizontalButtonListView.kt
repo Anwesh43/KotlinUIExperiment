@@ -19,7 +19,7 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
     var n = 0
     var renderer = SHBLVRenderer()
     override fun onDraw(canvas:Canvas) {
-        renderer.render(canvas,paint,n)
+        renderer.render(canvas,paint,n,this)
     }
     fun addButton() {
         n++
@@ -87,15 +87,18 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
     }
     class SHBLVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint,n:Int) {
+        var drawingController:DrawingController?=null
+        fun render(canvas:Canvas,paint:Paint,n:Int,v:ScaleHorizontalButtonListView) {
             if(time == 0) {
                 var w = canvas.width
                 var h = canvas.height
+                drawingController = DrawingController(w.toFloat(),h.toFloat(),n,v)
             }
+            drawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            drawingController?.startAnimation(x,y)
         }
     }
     class DrawingController(w:Float,h:Float,n:Int,var v:ScaleHorizontalButtonListView) {
