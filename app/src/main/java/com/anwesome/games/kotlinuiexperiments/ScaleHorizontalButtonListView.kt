@@ -18,6 +18,11 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
 
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+        }
         return true
     }
     data class ScaleHorizontalButton(var x:Float,var y:Float,var w:Float,var h:Float) {
@@ -51,7 +56,10 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
         }
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#9E9E9E")
+            canvas.save()
+            canvas.translate(x,y)
             canvas.drawRect(RectF(-w/2,-h/2,w/2,h/2),paint)
+            canvas.restore()
             for(i in 0..1) {
                 canvas.save()
                 canvas.translate(x,y)
@@ -60,6 +68,13 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                 canvas.drawRect(RectF(w/2,-h/2,w/4*scale,h/2),paint)
                 canvas.restore()
             }
+        }
+        fun handleTap(x:Float,y:Float):Boolean {
+            val condition = x>=this.x-w/2 && x<=this.x+w/2 && y>=this.y-h/2 && y<=this.y+h/2 && mode == 0
+            if(condition) {
+                mode = 1
+            }
+            return condition
         }
         fun stopped():Boolean = mode == 0
     }
