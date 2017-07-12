@@ -78,4 +78,17 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = mode == 0
     }
+    class SHBLVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width
+                var h = canvas.height
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
