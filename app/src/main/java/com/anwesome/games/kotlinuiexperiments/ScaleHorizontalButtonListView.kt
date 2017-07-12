@@ -17,6 +17,7 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var n = 0
     var renderer = SHBLVRenderer()
+    var onClickListener:OnSHBClickListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,n,this)
     }
@@ -71,7 +72,7 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                 canvas.translate(x,y)
                 canvas.rotate(i*180.0f)
                 paint.color = Color.parseColor("#FFEA00")
-                canvas.drawRect(RectF(w/2,-h/2,w/4*scale,h/2),paint)
+                canvas.drawRect(RectF(-w/2,-h/2,-w/2+w/2*scale,h/2),paint)
                 canvas.restore()
             }
         }
@@ -119,14 +120,19 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                 button.draw(canvas,paint)
             }
             if(animated) {
+                var i = 0
                 tappedButtons.forEach { button->
                     button.update()
+                    if(button.mode == 2 && button.scale >= 1) {
+                        v.onClickListener?.onClick(i)
+                    }
                     if(button.stopped()) {
                         tappedButtons.remove(button)
                         if(tappedButtons.size == 0) {
                             animated = false
                         }
                     }
+                    i++
                 }
                 try {
                     Thread.sleep(50)
@@ -149,5 +155,10 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
                 }
             }
         }
+    }
+}
+interface OnSHBClickListener {
+    fun onClick(index:Int) {
+
     }
 }
