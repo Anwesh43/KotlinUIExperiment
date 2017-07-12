@@ -16,13 +16,18 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var n = 0
+    var renderer = SHBLVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,n)
+    }
+    fun addButton() {
+        n++
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -82,7 +87,7 @@ class ScaleHorizontalButtonListView(ctx:Context):View(ctx) {
     }
     class SHBLVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,n:Int) {
             if(time == 0) {
                 var w = canvas.width
                 var h = canvas.height
