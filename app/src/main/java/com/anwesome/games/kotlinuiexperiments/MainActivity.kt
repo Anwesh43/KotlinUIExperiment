@@ -30,8 +30,11 @@ class MainActivity : AppCompatActivity() {
 //            viewGroup.addSwitch(SwitchSelectionListener(this,i))
 //        }
         var bitmap:Bitmap = BitmapFactory.decodeResource(resources,R.drawable.stp)
-        var view:ImageColorFilterView = ImageColorFilterView(this,bitmap,Color.parseColor("#0097A7"))
-        view.onSelectionListener = ImageSelectionListener(this)
+        var view:ScaleHorizontalButtonListView = ScaleHorizontalButtonListView(this)
+        for(i in 0..5) {
+            view.addButton()
+        }
+       // view.onSelectionListener = ImageSelectionListener(this)
         setContentView(view)
     }
 }

@@ -7,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
-import android.widget.HorizontalScrollView
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
