@@ -25,12 +25,22 @@ class OrbitRingView(ctx:Context):View(ctx) {
         var time = 0
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
-                
+
             }
             time++
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class DrawingController(w:Float,h:Float) {
+        var scale = 0.0f
+        var dir = 0
+        fun draw(canvas:Canvas,paint:Paint) {
+
+        }
+        fun handleTap(x:Float,y:Float):Boolean {
+            return true
         }
     }
 }
