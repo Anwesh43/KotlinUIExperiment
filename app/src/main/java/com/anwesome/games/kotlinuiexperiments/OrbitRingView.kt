@@ -58,7 +58,7 @@ class OrbitRingView(ctx:Context):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float):Boolean {
-            if(!animated) {
+            if(orbitRing?.handleTap(x,y)?:false &&  !animated) {
                 orbitRing?.startUpdate()
                 animated = true
                 v?.postInvalidate()
@@ -105,5 +105,6 @@ class OrbitRingView(ctx:Context):View(ctx) {
                 dir = -1
             }
         }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/15 && x<=this.x+size/15 && y>=this.y-this.size-this.size/15 && y<=this.y-size+size/15;
     }
 }
