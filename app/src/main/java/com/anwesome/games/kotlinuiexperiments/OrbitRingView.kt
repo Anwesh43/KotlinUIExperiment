@@ -13,12 +13,14 @@ import android.view.View
  */
 class OrbitRingView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer:ORVRenderer = ORVRenderer()
     override fun onDraw(canvas: Canvas) {
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -30,7 +32,7 @@ class OrbitRingView(ctx:Context):View(ctx) {
             if(time == 0) {
                 drawingController = DrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
-            drawingController.draw(canvas,paint)
+            drawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
