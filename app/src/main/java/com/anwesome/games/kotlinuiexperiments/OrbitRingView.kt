@@ -25,14 +25,16 @@ class OrbitRingView(ctx:Context):View(ctx) {
     }
     class ORVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        var drawingController:DrawingController?=null
+        fun render(canvas:Canvas,paint:Paint,v:OrbitRingView) {
             if(time == 0) {
-
+                drawingController = DrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
+            drawingController.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            drawingController?.handleTap(x,y)
         }
     }
     class DrawingController(w:Float,h:Float,var v:OrbitRingView) {
@@ -57,13 +59,12 @@ class OrbitRingView(ctx:Context):View(ctx) {
                 }
             }
         }
-        fun handleTap(x:Float,y:Float):Boolean {
+        fun handleTap(x:Float,y:Float) {
             if(orbitRing?.handleTap(x,y)?:false &&  !animated) {
                 orbitRing?.startUpdate()
                 animated = true
                 v?.postInvalidate()
             }
-            return true
         }
     }
     data class OrbitRing(var x:Float,var y:Float,var size:Float) {
