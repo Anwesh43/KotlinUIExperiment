@@ -35,13 +35,34 @@ class OrbitRingView(ctx:Context):View(ctx) {
 
         }
     }
-    class DrawingController(w:Float,h:Float) {
-        var scale = 0.0f
-        var dir = 0
+    class DrawingController(w:Float,h:Float,var v:OrbitRingView) {
+        var animated = false
+        var orbitRing:OrbitRing?=null
+        init {
+            orbitRing = OrbitRing(w/2,h/2,Math.min(w,h)/4)
+        }
         fun draw(canvas:Canvas,paint:Paint) {
+            orbitRing?.draw(canvas,paint)
+            if(animated) {
+                orbitRing?.update()
+                if(orbitRing?.stopped()?:false) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    v?.invalidate()
+                }
+                catch (ex:Exception) {
 
+                }
+            }
         }
         fun handleTap(x:Float,y:Float):Boolean {
+            if(!animated) {
+                orbitRing?.startUpdate()
+                animated = true
+                v?.postInvalidate()
+            }
             return true
         }
     }
