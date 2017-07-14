@@ -35,13 +35,23 @@ class ColorCollapserView(ctx:Context):View(ctx) {
         }
     }
     class DrawingController(w:Float,h:Float,var v:ColorCollapserView) {
+        var stateContainer = StateContainer()
+        var collapser:Collapser?=null
+        var colorPlate:ColorPlate?=null
         init {
-
+            collapser = Collapser(w/2,w/10,w/5)
+            colorPlate = ColorPlate(0.0f,w/5,w,4*w/5)
         }
         var animated = false
         fun draw(canvas:Canvas,paint:Paint) {
+            collapser?.draw(canvas,paint,180*stateContainer.scale)
+            colorPlate?.draw(canvas,paint,stateContainer.scale)
             if(animated) {
                 try {
+                    stateContainer.update()
+                    if(stateContainer.stopped()) {
+                        animated = false
+                    }
                     Thread.sleep(50)
                     v.invalidate()
                 }
@@ -51,7 +61,8 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float) {
-            if(!animated) {
+            if(!animated && collapser?.handleTap(x,y)?:false) {
+                stateContainer.startUpdating()
                 animated = true
                 v.postInvalidate()
             }
@@ -86,13 +97,13 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             canvas.translate(x,y)
             canvas.rotate(deg)
             paint.color = Color.parseColor("#9E9E9E")
-            canvas.drawCircle(0,0,size,paint)
+            canvas.drawCircle(0.0f,0.0f,size/2,paint)
             paint.color = Color.WHITE
             for(i in 0..2) {
                 canvas.save()
-                canvas.translate(0.0f,-size/6)
+                canvas.translate(0.0f,-size/3)
                 canvas.rotate(45.0f*(2*i-1))
-                canvas.drawLine(0.0f,0.0f,0.0f,size/6,paint)
+                canvas.drawLine(0.0f,0.0f,0.0f,size/3,paint)
                 canvas.restore()
             }
             canvas.restore()
