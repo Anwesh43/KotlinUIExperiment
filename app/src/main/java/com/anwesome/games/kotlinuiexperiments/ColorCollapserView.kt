@@ -11,6 +11,7 @@ import android.view.View
 class ColorCollapserView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val ccvRenderer = CCVRenderer()
+    var onExpandCollapseListener:OnExpandCollapseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         ccvRenderer.render(canvas,paint,this)
@@ -60,6 +61,12 @@ class ColorCollapserView(ctx:Context):View(ctx) {
                     stateContainer.update()
                     if(stateContainer.stopped()) {
                         animated = false
+                        if(stateContainer.scale >= 1.0f) {
+                            v.onExpandCollapseListener?.onExpand()
+                        }
+                        if(stateContainer.scale <= 0.0f) {
+                            v.onExpandCollapseListener?.onCollapse()
+                        }
                     }
                     Thread.sleep(30)
                     v.invalidate()
@@ -120,12 +127,20 @@ class ColorCollapserView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size
     }
     data class ColorPlate(var x:Float,var y:Float,var w:Float,var h:Float) {
-        fun draw(canvas: Canvas,paint:Paint,scale:Float) {
+        fun draw(canvas: Canvas, paint: Paint, scale: Float) {
             paint.color = Color.parseColor("#0D47A1")
             canvas.save()
-            canvas.translate(x,y)
-            canvas.drawRect(RectF(0.0f,0.0f,w,h*scale),paint)
+            canvas.translate(x, y)
+            canvas.drawRect(RectF(0.0f, 0.0f, w, h * scale), paint)
             canvas.restore()
         }
+    }
+}
+interface OnExpandCollapseListener {
+    fun onExpand(){
+
+    }
+    fun onCollapse() {
+
     }
 }

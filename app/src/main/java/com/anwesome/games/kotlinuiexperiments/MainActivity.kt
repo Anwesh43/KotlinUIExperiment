@@ -1,6 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        view.onClickListener = HorizontalScaleButtonClickListener(this)
        // view.onSelectionListener = ImageSelectionListener(this)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         var view = ColorCollapserView(this)
         setContentView(view)
     }
@@ -79,5 +81,13 @@ class ImageSelectionListener(var activity: MainActivity):OnImageSelectionListene
 class HorizontalScaleButtonClickListener(var activity: MainActivity):OnSHBClickListener {
     override fun onClick(index: Int) {
         Toast.makeText(activity,"$index clicked",Toast.LENGTH_SHORT).show();
+    }
+}
+class ExpandCollapseListener(var activity:MainActivity):OnExpandCollapseListener{
+    override fun onCollapse() {
+        Toast.makeText(activity,"collapsed",Toast.LENGTH_SHORT).show()
+    }
+    override fun onExpand() {
+        Toast.makeText(activity,"expanded",Toast.LENGTH_SHORT).show()
     }
 }
