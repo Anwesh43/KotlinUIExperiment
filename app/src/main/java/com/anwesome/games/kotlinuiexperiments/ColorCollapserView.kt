@@ -24,14 +24,16 @@ class ColorCollapserView(ctx:Context):View(ctx) {
     }
     class CCVRenderer {
         var time = 0
+        var drawingController:DrawingController?=null
         fun render(canvas:Canvas,paint:Paint,v:ColorCollapserView) {
             if(time == 0) {
-
+                drawingController = DrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
+            drawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            drawingController?.handleTap(x,y)
         }
     }
     class DrawingController(w:Float,h:Float,var v:ColorCollapserView) {
