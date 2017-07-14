@@ -23,4 +23,16 @@ class ColorCollapserView(ctx:Context):View(ctx) {
         }
         return true
     }
+    class CCVRenderer {
+        var time = 0
+        fun render() {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
