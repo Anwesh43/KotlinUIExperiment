@@ -1,10 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 
@@ -101,5 +98,14 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size
+    }
+    data class ColorPlate(var x:Float,var y:Float,var w:Float,var h:Float) {
+        fun draw(canvas: Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#0D47A1")
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawRect(RectF(0.0f,0.0f,w,h*scale),paint)
+            canvas.restore()
+        }
     }
 }
