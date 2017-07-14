@@ -12,6 +12,7 @@ class ColorCollapserView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val ccvRenderer = CCVRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         ccvRenderer.render(canvas,paint,this)
     }
 
@@ -30,6 +31,7 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             if(time == 0) {
                 drawingController = DrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
                 paint.strokeWidth = 8.0f
+                paint.strokeCap = Paint.Cap.ROUND
             }
             drawingController?.draw(canvas,paint)
             time++
@@ -48,8 +50,11 @@ class ColorCollapserView(ctx:Context):View(ctx) {
         }
         var animated = false
         fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(0.0f,(canvas.height-canvas.width/2).toFloat())
             collapser?.draw(canvas,paint,180*stateContainer.scale)
             colorPlate?.draw(canvas,paint,stateContainer.scale)
+            canvas.restore()
             if(animated) {
                 try {
                     stateContainer.update()
@@ -105,9 +110,9 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             paint.color = Color.WHITE
             for(i in 0..1) {
                 canvas.save()
-                canvas.translate(0.0f,0.0f)
+                canvas.translate(0.0f,-size/3)
                 canvas.rotate(45.0f*(2*i-1))
-                canvas.drawLine(0.0f,-size/3,0.0f,0.0f,paint)
+                canvas.drawLine(0.0f,0.0f,0.0f,size/3,paint)
                 canvas.restore()
             }
             canvas.restore()
