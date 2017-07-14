@@ -10,14 +10,15 @@ import android.view.View
  */
 class ColorCollapserView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val ccvRenderer = CCVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        ccvRenderer.render(canvas,paint,this)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                ccvRenderer.handleTap(event.x,event.y)
             }
         }
         return true
