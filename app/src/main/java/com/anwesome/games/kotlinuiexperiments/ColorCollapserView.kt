@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 
@@ -80,5 +82,24 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = dir == 0
+    }
+    data class Collapser(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint,deg:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.rotate(deg)
+            paint.color = Color.parseColor("#9E9E9E")
+            canvas.drawCircle(0,0,size,paint)
+            paint.color = Color.WHITE
+            for(i in 0..2) {
+                canvas.save()
+                canvas.translate(0.0f,-size/6)
+                canvas.rotate(45.0f*(2*i-1))
+                canvas.drawLine(0.0f,0.0f,0.0f,size/6,paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size
     }
 }
