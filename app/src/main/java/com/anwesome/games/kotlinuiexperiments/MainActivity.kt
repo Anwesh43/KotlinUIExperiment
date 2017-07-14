@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        view.onClickListener = HorizontalScaleButtonClickListener(this)
        // view.onSelectionListener = ImageSelectionListener(this)
-        var view = OrbitRingView(this)
+        var view = ColorCollapserView(this)
         setContentView(view)
     }
 }
