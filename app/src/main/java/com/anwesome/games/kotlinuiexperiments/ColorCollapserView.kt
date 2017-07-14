@@ -29,6 +29,7 @@ class ColorCollapserView(ctx:Context):View(ctx) {
         fun render(canvas:Canvas,paint:Paint,v:ColorCollapserView) {
             if(time == 0) {
                 drawingController = DrawingController(canvas.width.toFloat(),canvas.height.toFloat(),v)
+                paint.strokeWidth = 8.0f
             }
             drawingController?.draw(canvas,paint)
             time++
@@ -102,11 +103,11 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             paint.color = Color.parseColor("#9E9E9E")
             canvas.drawCircle(0.0f,0.0f,size/2,paint)
             paint.color = Color.WHITE
-            for(i in 0..2) {
+            for(i in 0..1) {
                 canvas.save()
-                canvas.translate(0.0f,-size/3)
+                canvas.translate(0.0f,0.0f)
                 canvas.rotate(45.0f*(2*i-1))
-                canvas.drawLine(0.0f,0.0f,0.0f,size/3,paint)
+                canvas.drawLine(0.0f,-size/3,0.0f,0.0f,paint)
                 canvas.restore()
             }
             canvas.restore()
