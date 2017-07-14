@@ -25,7 +25,7 @@ class ColorCollapserView(ctx:Context):View(ctx) {
     }
     class CCVRenderer {
         var time = 0
-        fun render() {
+        fun render(canvas:Canvas,paint:Paint,v:ColorCollapserView) {
             if(time == 0) {
 
             }
@@ -33,6 +33,29 @@ class ColorCollapserView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class DrawingController(w:Float,h:Float,var v:ColorCollapserView) {
+        init {
+
+        }
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                animated = true
+                v.postInvalidate()
+            }
         }
     }
 }
