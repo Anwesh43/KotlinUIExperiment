@@ -58,4 +58,27 @@ class ColorCollapserView(ctx:Context):View(ctx) {
             }
         }
     }
+    class StateContainer {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale+=dir*0.1f
+            if(scale > 1) {
+                dir = 0
+                scale = 1.0f
+            }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0
+            }
+        }
+        fun startUpdating() {
+            dir = when(scale) {
+                0.0f -> 1
+                1.0f -> -1
+                else -> dir
+            }
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
