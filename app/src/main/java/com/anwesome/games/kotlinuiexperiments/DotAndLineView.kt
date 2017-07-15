@@ -38,4 +38,16 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=-r/10 && x<=r/10 && y>=-r/10 && y<=r/10
     }
+    class DALRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,v:DotAndLineView) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
