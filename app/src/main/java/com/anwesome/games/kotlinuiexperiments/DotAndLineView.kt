@@ -27,17 +27,17 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
     data class DotLine(var r:Float,var n:Int) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             if(n > 0) {
-                var deg = 360.0f/n
+                var deg = 360.0/n
                 for (i in 0..n) {
                     canvas.save()
-                    canvas.rotate(deg*i)
+                    canvas.rotate(deg.toFloat()*i)
                     paint.style = Paint.Style.STROKE
                     canvas.drawCircle(0.0f,0.0f,r/10,paint)
                     paint.style = Paint.Style.FILL
                     canvas.drawArc(RectF(-r/10,-r/10,r/10,r/10),0.0f,360*scale,true,paint)
-                    var xFact = r*Math.cos(deg.toDouble()/2).toFloat()*scale
-                    var yFact = r*Math.sin(deg.toDouble()/2).toFloat()
-                    canvas.drawLine(-xFact,yFact,xFact,yFact,paint)
+                    var xFact = (r*Math.cos(deg/2).toFloat())*scale
+                    var yFact = r*Math.sin(deg/2).toFloat()
+                    canvas.drawLine(-2*xFact,yFact,2*xFact,yFact,paint)
                     canvas.restore()
                 }
             }
@@ -46,23 +46,30 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
     }
     class DALRenderer {
         var time = 0
+        var w = 0
+        var h = 0
         var drawingController:DALDrawingController?=null
         fun render(canvas:Canvas,paint:Paint,n:Int,v:DotAndLineView) {
             if(time == 0) {
+                w = canvas.width
+                h = canvas.height
                 drawingController = DALDrawingController(DotLine(canvas.width.toFloat()/4,Math.max(n,3)),v)
             }
             drawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-            drawingController?.handleTap(x,y)
+            drawingController?.handleTap(x-w.toFloat()/2,y-h.toFloat()/2)
         }
     }
     class DALDrawingController(var dotAndLine:DotLine,var v:DotAndLineView) {
         var animated:Boolean = false
         var stateHandler = StateHandler()
         fun draw(canvas:Canvas,paint:Paint) {
-            dotAndLine.draw(canvas,paint,1.0f)
+            canvas.save()
+            canvas.translate(canvas.width.toFloat()/2,canvas.height.toFloat()/2)
+            dotAndLine.draw(canvas,paint,stateHandler.scale)
+            canvas.restore()
             if(animated) {
                 stateHandler.update()
                 if(stateHandler.stopped()) {
