@@ -12,10 +12,16 @@ import android.view.View
  */
 class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer = DALRenderer()
     override fun onDraw(canvas: Canvas) {
-
+        renderer.render(canvas,paint,n,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                renderer.handleTap(event.x,event.y)
+            }
+        }
         return true
     }
     data class DotLine(var r:Float,var n:Int) {
@@ -40,14 +46,16 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
     }
     class DALRenderer {
         var time = 0
+        var drawingController:DALDrawingController?=null
         fun render(canvas:Canvas,paint:Paint,n:Int,v:DotAndLineView) {
             if(time == 0) {
-
+                drawingController = DALDrawingController(DotLine(canvas.width.toFloat()/4,Math.max(n,3)),v)
             }
+            drawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            drawingController?.handleTap(x,y)
         }
     }
     class DALDrawingController(var dotAndLine:DotLine,var v:DotAndLineView) {
