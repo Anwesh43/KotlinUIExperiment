@@ -52,9 +52,14 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
     }
     class DALDrawingController(var dotAndLine:DotLine,var v:DotAndLineView) {
         var animated:Boolean = false
+        var stateHandler = StateHandler()
         fun draw(canvas:Canvas,paint:Paint) {
             dotAndLine.draw(canvas,paint,1.0f)
             if(animated) {
+                stateHandler.update()
+                if(stateHandler.stopped()) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -66,6 +71,7 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(!animated && dotAndLine.handleTap(x,y)) {
+                stateHandler.startUpdating()
                 animated = true
                 v.postInvalidate()
             }
