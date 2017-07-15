@@ -40,7 +40,7 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
     }
     class DALRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint,v:DotAndLineView) {
+        fun render(canvas:Canvas,paint:Paint,n:Int,v:DotAndLineView) {
             if(time == 0) {
 
             }
@@ -48,6 +48,27 @@ class DotAndLineView(ctx:Context,var n:Int):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class DALDrawingController(var dotAndLine:DotLine,var v:DotAndLineView) {
+        var animated:Boolean = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            dotAndLine.draw(canvas,paint,1.0f)
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (e:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && dotAndLine.handleTap(x,y)) {
+                animated = true
+                v.postInvalidate()
+            }
         }
     }
 }
