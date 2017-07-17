@@ -47,15 +47,21 @@ class DownloadButtonView(ctx:Context):View(ctx) {
     }
     class DBVRenderer {
         var time = 0
+        var dbvDrawingController:DBVDrawingController?=null
         fun render(canvas:Canvas,paint:Paint,v:DownloadButtonView) {
             if(time == 0) {
                 var w = canvas.width
                 var h = canvas.height
+                paint.strokeWidth = (Math.min(w,h)/60).toFloat()
+                paint.strokeJoin = Paint.Join.ROUND
+                paint.strokeCap = Paint.Cap.ROUND
+                dbvDrawingController = DBVDrawingController(DownloadButtonShape((w/2).toFloat(),(h/2).toFloat(),(Math.min(w,h)/4).toFloat()),v)
             }
+            dbvDrawingController?.draw(canvas,paint)
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            dbvDrawingController?.handleTap(x,y)
         }
     }
     class DBVDrawingController(var shape:DownloadButtonShape ,var view:DownloadButtonView) {
