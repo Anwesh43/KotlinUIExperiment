@@ -79,4 +79,26 @@ class DownloadButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class StateContainer {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 1.0f
+                dir = 0
+            }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0
+            }
+        }
+        fun startUpdating() {
+            dir = 1
+            if(scale >= 1) {
+                dir = -1
+            }
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
