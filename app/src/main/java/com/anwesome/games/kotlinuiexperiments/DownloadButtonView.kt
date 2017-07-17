@@ -58,4 +58,25 @@ class DownloadButtonView(ctx:Context):View(ctx) {
 
         }
     }
+    class DBVDrawingController(var shape:DownloadButtonShape ,var view:DownloadButtonView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            shape.draw(canvas,paint,1.0f)
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && shape.handleTap(x,y)) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
