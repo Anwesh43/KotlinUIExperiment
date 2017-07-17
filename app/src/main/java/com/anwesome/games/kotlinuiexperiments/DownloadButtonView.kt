@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -21,5 +23,26 @@ class DownloadButtonView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class DownloadButtonShape(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.GRAY
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            paint.color = Color.parseColor("#03A9F4")
+            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360*scale,true,paint)
+            paint.color = Color.WHITE
+            canvas.drawLine(0.0f,-r/2,0.0f,r/2,paint)
+            for(i in 0..2) {
+                canvas.save()
+                canvas.translate(0.0f, r / 2)
+                canvas.rotate(45.0f*(i*2-1))
+                canvas.drawLine(0.0f,0.0f,0.0f,-r/6,paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
 }
