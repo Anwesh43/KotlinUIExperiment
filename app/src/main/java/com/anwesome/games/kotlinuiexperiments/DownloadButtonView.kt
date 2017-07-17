@@ -32,14 +32,14 @@ class DownloadButtonView(ctx:Context):View(ctx) {
             paint.color = Color.GRAY
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.color = Color.parseColor("#03A9F4")
-            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360*scale,true,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),-90.0f,360*scale,true,paint)
             paint.color = Color.WHITE
             canvas.drawLine(0.0f,-r/2,0.0f,r/2,paint)
-            for(i in 0..2) {
+            for(i in 0..1) {
                 canvas.save()
                 canvas.translate(0.0f, r / 2)
                 canvas.rotate(45.0f*(i*2-1))
-                canvas.drawLine(0.0f,0.0f,0.0f,-r/6,paint)
+                canvas.drawLine(0.0f,0.0f,0.0f,-r/2,paint)
                 canvas.restore()
             }
             canvas.restore()
@@ -69,12 +69,12 @@ class DownloadButtonView(ctx:Context):View(ctx) {
         var animated = false
         var stateContainer = StateContainer()
         fun draw(canvas:Canvas,paint:Paint) {
-            shape.draw(canvas,paint,1.0f)
+            shape.draw(canvas,paint,stateContainer.scale)
             if(animated) {
                 try {
                     stateContainer.update()
                     if(stateContainer.stopped()) {
-                        animated = true
+                        animated = false
                     }
                     Thread.sleep(50)
                     view.invalidate()

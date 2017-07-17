@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 //        view.onClickListener = HorizontalScaleButtonClickListener(this)
        // view.onSelectionListener = ImageSelectionListener(this)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        var view = DotAndLineView(this,5)
+        var view = DownloadButtonView(this)
         setContentView(view)
     }
 }
