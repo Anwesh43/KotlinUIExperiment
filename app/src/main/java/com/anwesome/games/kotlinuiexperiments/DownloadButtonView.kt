@@ -45,4 +45,17 @@ class DownloadButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    class DBVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,v:DownloadButtonView) {
+            if(time == 0) {
+                var w = canvas.width
+                var h = canvas.height
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
