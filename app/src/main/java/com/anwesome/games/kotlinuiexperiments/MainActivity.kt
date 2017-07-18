@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
        // view.onSelectionListener = ImageSelectionListener(this)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         var view = DownloadButtonView(this)
+        view.downloadListener = CustomDownloadListener(this)
         setContentView(view)
     }
 }
@@ -89,5 +90,13 @@ class ExpandCollapseListener(var activity:MainActivity):OnExpandCollapseListener
     }
     override fun onExpand() {
         Toast.makeText(activity,"expanded",Toast.LENGTH_SHORT).show()
+    }
+}
+class CustomDownloadListener(var activity: MainActivity):DownloadButtonListener {
+    override fun onInstallIndicator() {
+        Toast.makeText(activity,"Installed",Toast.LENGTH_SHORT).show()
+    }
+    override fun onUnInstallIndicator() {
+        Toast.makeText(activity,"UnInstalled",Toast.LENGTH_SHORT).show();
     }
 }
