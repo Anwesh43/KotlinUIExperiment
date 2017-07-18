@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 
 /**
  * Created by anweshmishra on 18/07/17.
@@ -14,6 +15,7 @@ import android.view.View
 class DownloadButtonView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer:DBVRenderer = DBVRenderer()
+    var downloadListener:DownloadButtonListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,this)
     }
@@ -75,6 +77,14 @@ class DownloadButtonView(ctx:Context):View(ctx) {
                     stateContainer.update()
                     if(stateContainer.stopped()) {
                         animated = false
+                        when(stateContainer.scale) {
+                            0.0f -> {
+                                view.downloadListener?.onUnInstallIndicator()
+                            }
+                            1.0f -> {
+                                view.downloadListener?.onInstallIndicator()
+                            }
+                        }
                     }
                     Thread.sleep(50)
                     view.invalidate()
@@ -113,5 +123,13 @@ class DownloadButtonView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = dir == 0
+    }
+}
+interface DownloadButtonListener {
+    fun onInstallIndicator() {
+
+    }
+    fun onUnInstallIndicator() {
+
     }
 }
