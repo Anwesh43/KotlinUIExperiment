@@ -55,12 +55,45 @@ class CircularColorFilterImageView(bitmap:Bitmap,ctx:Context):View(ctx) {
         }
         fun stopped() = dir == 0
     }
-    data class ColorFilterImage(var x:Float,var y:Float,var r:Float) {
+    data class ColorFilterImage(var bitmap:Bitmap,var x:Float,var y:Float,var r:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(x,y)
+            var path:Path = Path()
+            path.addCircle(0.0f,0.0f,r,Path.Direction.CW)
+            canvas.clipPath(path)
+            canvas.drawBitmap(bitmap,-r,-r,paint)
             canvas.drawArc(RectF(-r,-r,r,r),-90.0f,360*scale,true,paint)
             canvas.restore()
+        }
+    }
+    class CCFIVDrawingController(var colorFilterImage:ColorFilterImage,var v:CircularColorFilterImageView) {
+        var animated = false
+        var stateController = CCFIVStateController()
+        fun draw(canvas:Canvas,paint:Paint) {
+            colorFilterImage.draw(canvas,paint,stateController.scale)
+        }
+        fun animate() {
+            if(animated) {
+                stateController.update()
+                if(stateController.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                stateController.startUpdating()
+                animated = true
+                v.postInvalidate()
+            }
         }
     }
 }
