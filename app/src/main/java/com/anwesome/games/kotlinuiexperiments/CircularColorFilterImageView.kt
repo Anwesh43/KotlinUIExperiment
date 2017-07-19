@@ -9,13 +9,14 @@ import android.view.View
  */
 class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer:CCFIVRenderer = CCFIVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -28,7 +29,8 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
                 var w = canvas.width
                 var h = canvas.height
                 var r = Math.min(w,h)/2
-                drawingController = CCFIVDrawingController(ColorFilterImage(v.bitmap,w.toFloat()/2,h.toFloat()/2,r.toFloat()),v)
+                var bitmap = Bitmap.createScaledBitmap(v.bitmap,w,h,true)
+                drawingController = CCFIVDrawingController(ColorFilterImage(bitmap,w.toFloat()/2,h.toFloat()/2,r.toFloat()),v)
             }
             drawingController?.draw(canvas,paint)
             drawingController?.animate()
