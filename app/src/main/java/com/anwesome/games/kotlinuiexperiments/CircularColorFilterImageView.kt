@@ -20,4 +20,16 @@ class CircularColorFilterImageView(bitmap:Bitmap,ctx:Context):View(ctx) {
         }
         return true
     }
+    class CCFIVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,v:CircularColorFilterImageView) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap() {
+
+        }
+    }
 }
