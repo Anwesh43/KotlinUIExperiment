@@ -22,4 +22,17 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
+    class BDLBVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width
+                var h = canvas.height
+            }
+            time++
+        }
+        fun handleTap() {
+
+        }
+    }
 }
