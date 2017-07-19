@@ -11,9 +11,8 @@ import android.view.ViewGroup
 /**
  * Created by anweshmishra on 19/07/17.
  */
-class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
+class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context,var color:Int):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    var color = Color.parseColor("#FF5722")
     val renderer:CCFIVRenderer = CCFIVRenderer()
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,this)
@@ -112,9 +111,9 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity,bitmap: Bitmap) {
+        fun create(activity:Activity,bitmap: Bitmap,color:Int=Color.parseColor("#FF5722")) {
             var dimension = getDimension(activity)
-            activity.addContentView(CircularColorFilterImageView(bitmap,activity), ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
+            activity.addContentView(CircularColorFilterImageView(bitmap,activity,color), ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
         }
         private fun getDimension(activity: Activity):Point {
             var displayManager:DisplayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
