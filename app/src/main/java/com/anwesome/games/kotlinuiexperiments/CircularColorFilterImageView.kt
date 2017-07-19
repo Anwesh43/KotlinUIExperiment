@@ -7,7 +7,7 @@ import android.view.View
 /**
  * Created by anweshmishra on 19/07/17.
  */
-class CircularColorFilterImageView(bitmap:Bitmap,ctx:Context):View(ctx) {
+class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -22,14 +22,20 @@ class CircularColorFilterImageView(bitmap:Bitmap,ctx:Context):View(ctx) {
     }
     class CCFIVRenderer {
         var time = 0
+        var drawingController:CCFIVDrawingController?=null
         fun render(canvas:Canvas,paint:Paint,v:CircularColorFilterImageView) {
             if(time == 0) {
-
+                var w = canvas.width
+                var h = canvas.height
+                var r = Math.min(w,h)/2
+                drawingController = CCFIVDrawingController(ColorFilterImage(v.bitmap,w.toFloat()/2,h.toFloat()/2,r.toFloat()),v)
             }
+            drawingController?.draw(canvas,paint)
+            drawingController?.animate()
             time++
         }
         fun handleTap() {
-
+            drawingController?.handleTap()
         }
     }
     class CCFIVStateController {
