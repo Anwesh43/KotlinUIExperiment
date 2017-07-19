@@ -1,12 +1,13 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
+import android.hardware.display.DisplayManager
+import android.view.Display
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 20/07/17.
@@ -107,6 +108,20 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
                 animated = true
                 v.postInvalidate()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var size = getDimension(activity)
+            var v = BiDirecLoaderButtonView(activity)
+            activity.addContentView(v,ViewGroup.LayoutParams(size.x/3,size.x/3))
+        }
+        private fun getDimension(activity:Activity):Point {
+            var displayManager:DisplayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+            var display:Display = displayManager.getDisplay(0)
+            var point = Point()
+            display.getRealSize(point)
+            return point
         }
     }
 }
