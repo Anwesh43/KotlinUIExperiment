@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -12,7 +14,7 @@ import android.view.View
 class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -28,11 +30,26 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
             if(time == 0) {
                 var w = canvas.width
                 var h = canvas.height
+                paint.strokeWidth = (w/50).toFloat()
+                paint.style = Paint.Style.STROKE
             }
             time++
         }
         fun handleTap() {
 
+        }
+    }
+    data class BiDirecLoader(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            var deg = 360*scale
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.parseColor("#9E9E9E")
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            paint.color = Color.parseColor("#311B92")
+            canvas.drawArc(RectF(-r,-r,r,r),0.0f,deg,false,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),180.0f,deg,false,paint)
+            canvas.restore()
         }
     }
 }
