@@ -75,4 +75,32 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class AnimationHandler(var biDirecLoader: BiDirecLoader,var v:BiDirecLoaderButtonView) {
+        var stateContainer = StateContainer()
+        var animated = true
+        fun draw(canvas:Canvas,paint:Paint) {
+            biDirecLoader.draw(canvas,paint)
+        }
+        fun animate() {
+            if(animated) {
+                stateContainer.update()
+                if(stateContainer.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                } catch (ex: Exception) {
+
+                }
+            }
+        }
+        fun startAnimating() {
+            if(!animated) {
+                stateContainer.startUpdating()
+                animated = true
+                v.postInvalidate()
+            }
+        }
+    }
 }
