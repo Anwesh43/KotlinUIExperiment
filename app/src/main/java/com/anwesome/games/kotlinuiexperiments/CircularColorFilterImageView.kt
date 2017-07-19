@@ -113,7 +113,7 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
             var dimension = getDimension(activity)
             activity.addContentView(CircularColorFilterImageView(bitmap,activity), ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
         }
-        fun getDimension(activity: Activity):Point {
+        private fun getDimension(activity: Activity):Point {
             var displayManager:DisplayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
             var size = Point()
             var display:Display = displayManager.getDisplay(0)
