@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 //        view.onClickListener = HorizontalScaleButtonClickListener(this)
        // view.onSelectionListener = ImageSelectionListener(this)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        CircularColorFilterImageView.create(this,bitmap,Color.parseColor("#0097A7"))
+        CircularColorFilterImageView.create(this,bitmap,Color.parseColor("#0097A7"),CircularColorImageListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -96,5 +96,14 @@ class CustomDownloadListener(var activity: MainActivity):DownloadButtonListener 
     }
     override fun onUnInstallIndicator() {
         Toast.makeText(activity,"UnInstalled",Toast.LENGTH_SHORT).show();
+    }
+}
+class CircularColorImageListener(var activity:MainActivity):CircularColorFilterImageView.CCFIVSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"Selected",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUnSelect() {
+        Toast.makeText(activity,"UnSelected",Toast.LENGTH_SHORT).show()
     }
 }

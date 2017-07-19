@@ -118,9 +118,15 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context,var color:Int):
         }
     }
     companion object {
-        fun create(activity:Activity,bitmap: Bitmap,color:Int=Color.parseColor("#FF5722")) {
+        fun create(activity:Activity,bitmap: Bitmap,color:Int=Color.parseColor("#FF5722"),vararg listeners:CCFIVSelectionListener) {
             var dimension = getDimension(activity)
-            activity.addContentView(CircularColorFilterImageView(bitmap,activity,color), ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
+            var view = CircularColorFilterImageView(bitmap,activity,color)
+            when(listeners.size) {
+                1->{
+                    view.selectionListener = listeners[0]
+                }
+            }
+            activity.addContentView(view, ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
         }
         private fun getDimension(activity: Activity):Point {
             var displayManager:DisplayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
