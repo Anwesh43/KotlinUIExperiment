@@ -13,30 +13,36 @@ import android.view.View
  */
 class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer = BDLBVRenderer()
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
     }
     class BDLBVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        var animationHandler:AnimationHandler?=null
+        fun render(canvas:Canvas,paint:Paint,v:BiDirecLoaderButtonView) {
             if(time == 0) {
-                var w = canvas.width
-                var h = canvas.height
-                paint.strokeWidth = (w/50).toFloat()
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                paint.strokeWidth = (w/50)
                 paint.style = Paint.Style.STROKE
+                animationHandler = AnimationHandler(BiDirecLoader(w/2,h/2,Math.min(w,h)/3),v)
             }
+            animationHandler?.draw(canvas,paint)
+            animationHandler?.animate()
             time++
         }
         fun handleTap() {
-
+            animationHandler?.startAnimating()
         }
     }
     data class BiDirecLoader(var x:Float,var y:Float,var r:Float) {
@@ -79,7 +85,7 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
         var stateContainer = StateContainer()
         var animated = true
         fun draw(canvas:Canvas,paint:Paint) {
-            biDirecLoader.draw(canvas,paint)
+            biDirecLoader.draw(canvas,paint,stateContainer.scale)
         }
         fun animate() {
             if(animated) {
