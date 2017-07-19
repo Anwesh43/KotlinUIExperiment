@@ -14,6 +14,7 @@ import android.view.ViewGroup
 class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context,var color:Int):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer:CCFIVRenderer = CCFIVRenderer()
+    var selectionListener:CCFIVSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,this)
     }
@@ -92,6 +93,12 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context,var color:Int):
                 stateController.update()
                 if(stateController.stopped()) {
                     animated = false
+                    if(stateController.scale >= 1) {
+                        v.selectionListener?.onSelect()
+                    }
+                    else {
+                        v.selectionListener?.onUnSelect()
+                    }
                 }
                 try {
                     Thread.sleep(75)
@@ -121,6 +128,14 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context,var color:Int):
             var display:Display = displayManager.getDisplay(0)
             display?.getRealSize(size)
             return size
+        }
+    }
+    interface CCFIVSelectionListener {
+        fun onSelect() {
+
+        }
+        fun onUnSelect() {
+
         }
     }
 }
