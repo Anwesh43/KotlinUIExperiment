@@ -13,6 +13,7 @@ import android.view.ViewGroup
  */
 class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var color = Color.parseColor("#FF5722")
     val renderer:CCFIVRenderer = CCFIVRenderer()
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint,this)
@@ -34,7 +35,7 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
                 var h = canvas.height
                 var r = Math.min(w,h)/2
                 var bitmap = Bitmap.createScaledBitmap(v.bitmap,w,h,true)
-                drawingController = CCFIVDrawingController(ColorFilterImage(bitmap,w.toFloat()/2,h.toFloat()/2,r.toFloat()),v)
+                drawingController = CCFIVDrawingController(ColorFilterImage(bitmap,w.toFloat()/2,h.toFloat()/2,r.toFloat(),v.color),v)
             }
             drawingController?.draw(canvas,paint)
             drawingController?.animate()
@@ -67,14 +68,16 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
         }
         fun stopped() = dir == 0
     }
-    data class ColorFilterImage(var bitmap:Bitmap,var x:Float,var y:Float,var r:Float) {
+    data class ColorFilterImage(var bitmap:Bitmap,var x:Float,var y:Float,var r:Float,var color:Int) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(x,y)
             var path:Path = Path()
             path.addCircle(0.0f,0.0f,r,Path.Direction.CW)
             canvas.clipPath(path)
+            paint.color = Color.BLACK
             canvas.drawBitmap(bitmap,-r,-r,paint)
+            paint.color = Color.argb(150,Color.red(color),Color.green(color),Color.blue(color))
             canvas.drawArc(RectF(-r,-r,r,r),-90.0f,360*scale,true,paint)
             canvas.restore()
         }
