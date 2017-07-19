@@ -1,8 +1,12 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.graphics.*
 import android.content.Context
+import android.hardware.display.DisplayManager
+import android.view.Display
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 19/07/17.
@@ -102,6 +106,19 @@ class CircularColorFilterImageView(var bitmap:Bitmap,ctx:Context):View(ctx) {
                 animated = true
                 v.postInvalidate()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity,bitmap: Bitmap) {
+            var dimension = getDimension(activity)
+            activity.addContentView(CircularColorFilterImageView(bitmap,activity), ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
+        }
+        fun getDimension(activity: Activity):Point {
+            var displayManager:DisplayManager = activity.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+            var size = Point()
+            var display:Display = displayManager.getDisplay(0)
+            display?.getRealSize(size)
+            return size
         }
     }
 }

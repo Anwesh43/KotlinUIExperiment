@@ -38,9 +38,7 @@ class MainActivity : AppCompatActivity() {
 //        view.onClickListener = HorizontalScaleButtonClickListener(this)
        // view.onSelectionListener = ImageSelectionListener(this)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        var view = DownloadButtonView(this)
-        view.downloadListener = CustomDownloadListener(this)
-        setContentView(view)
+        CircularColorFilterImageView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
