@@ -34,7 +34,7 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
-                paint.strokeWidth = (w/50)
+                paint.strokeWidth = (w/20)
                 paint.style = Paint.Style.STROKE
                 animationHandler = AnimationHandler(BiDirecLoader(w/2,h/2,Math.min(w,h)/3),v)
             }
