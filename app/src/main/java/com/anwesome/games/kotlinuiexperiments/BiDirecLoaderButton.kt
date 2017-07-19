@@ -52,4 +52,27 @@ class BiDirecLoaderButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
+    class StateContainer {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                dir = 0
+                scale = 1.0f
+            }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0
+            }
+        }
+        fun stopped():Boolean = dir == 0
+        fun startUpdating() {
+            dir = when(scale) {
+                0.0f -> 1
+                1.0f -> -1
+                else -> dir
+            }
+        }
+    }
 }
