@@ -55,4 +55,12 @@ class CircularColorFilterImageView(bitmap:Bitmap,ctx:Context):View(ctx) {
         }
         fun stopped() = dir == 0
     }
+    data class ColorFilterImage(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawArc(RectF(-r,-r,r,r),-90.0f,360*scale,true,paint)
+            canvas.restore()
+        }
+    }
 }
