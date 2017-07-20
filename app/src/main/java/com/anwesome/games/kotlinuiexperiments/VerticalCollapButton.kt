@@ -35,4 +35,25 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
 
         }
     }
+    class VCBStateContainer(var scale:Float=0.0f,var dir:Int = 0) {
+        fun update() {
+            scale += dir*0.2f
+            if(scale > 1.0f) {
+                scale = 1.0f
+                dir = 0
+            }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0
+            }
+        }
+        fun startUpdating() {
+            dir = when(scale) {
+                0.0f -> 1
+                1.0f -> -1
+                else -> dir
+            }
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
