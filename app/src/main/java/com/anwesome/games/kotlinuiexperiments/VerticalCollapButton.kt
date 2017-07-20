@@ -14,6 +14,7 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
     val renderer:VCBRenderer = VCBRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -31,6 +32,8 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                paint.strokeWidth = w/40
+                paint.strokeCap = Paint.Cap.ROUND
                 renderingController = VCBRenderingController(CollapVerticalButtonShape(w,h),v)
             }
             renderingController?.draw(canvas,paint)
