@@ -22,4 +22,17 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
         }
         return true
     }
+    class VCBRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,v:VerticalCollapButton) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
