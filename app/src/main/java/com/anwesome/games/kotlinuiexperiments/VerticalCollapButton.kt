@@ -131,7 +131,8 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
     companion object {
         fun create(activity:Activity) {
             var v =  VerticalCollapButton(activity)
-            activity.addContentView(v, ViewGroup.LayoutParams(200,200))
+            var dimension = DimensionsUtil.getDimension(activity)
+            activity.addContentView(v, ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
         }
     }
 }
