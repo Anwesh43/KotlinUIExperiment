@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
@@ -76,6 +77,22 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
                 animated = true
                 stateContainer.startUpdating()
             }
+        }
+    }
+    data class CollapButton(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.GRAY
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            paint.color = Color.BLACK
+            for(i in 0..1) {
+                canvas.save()
+                canvas.rotate(90.0f*i+45.0f*scale)
+                canvas.drawLine(0.0f,-2*r/3,0.0f,2*r/3)
+                canvas.restore()
+            }
+            canvas.restore()
         }
     }
 }
