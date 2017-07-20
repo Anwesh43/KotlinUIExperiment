@@ -26,15 +26,19 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
     }
     class VCBRenderer {
         var time = 0
+        var renderingController:VCBRenderingController?=null
         fun render(canvas:Canvas,paint:Paint,v:VerticalCollapButton) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                renderingController = VCBRenderingController(CollapVerticalButtonShape(w,h),v)
             }
+            renderingController?.draw(canvas,paint)
+            renderingController?.animate()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            renderingController?.handleTap(x,y)   
         }
     }
     class VCBStateContainer(var scale:Float=0.0f,var dir:Int = 0) {
