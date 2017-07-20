@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -92,6 +93,15 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
                 canvas.drawLine(0.0f,-2*r/3,0.0f,2*r/3)
                 canvas.restore()
             }
+            canvas.restore()
+        }
+    }
+    data class VerticalButton(var x:Float,var y:Float,var w:Float,var h:Float) {
+        fun draw(canvas: Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.GRAY
+            canvas.drawRect(RectF(0,0,w,h*scale),paint)
             canvas.restore()
         }
     }
