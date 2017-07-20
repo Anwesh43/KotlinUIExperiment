@@ -58,12 +58,15 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
-    class VCBRenderingController(var v:VerticalCollapButton) {
+    class VCBRenderingController(var verticalButtonShape: CollapVerticalButtonShape,var v:VerticalCollapButton) {
         var animated = false
         var stateContainer = VCBStateContainer()
         fun animate() {
             if(animated) {
                 stateContainer.update()
+                if(stateContainer.stopped()) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -73,10 +76,14 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
                 }
             }
         }
+        fun draw(canvas:Canvas,paint:Paint) {
+            verticalButtonShape.draw(canvas,paint,stateContainer.scale)
+        }
         fun handleTap(x:Float,y:Float) {
             if(!animated) {
                 animated = true
                 stateContainer.startUpdating()
+                v.postInvalidate()
             }
         }
     }
