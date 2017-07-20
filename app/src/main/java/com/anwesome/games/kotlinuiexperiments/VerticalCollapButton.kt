@@ -56,4 +56,26 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    class VCBRenderingController(var v:VerticalCollapButton) {
+        var animated = false
+        var stateContainer = VCBStateContainer()
+        fun animate() {
+            if(animated) {
+                stateContainer.update()
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                animated = true
+                stateContainer.startUpdating()
+            }
+        }
+    }
 }
