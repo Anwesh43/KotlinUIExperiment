@@ -12,14 +12,15 @@ import android.view.View
  * Created by anweshmishra on 21/07/17.
  */
 class VerticalCollapButton(ctx:Context):View(ctx) {
+    val renderer:VCBRenderer = VCBRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas: Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action){
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -34,11 +35,11 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
                 renderingController = VCBRenderingController(CollapVerticalButtonShape(w,h),v)
             }
             renderingController?.draw(canvas,paint)
-            renderingController?.animate()
             time++
+            renderingController?.animate()
         }
         fun handleTap(x:Float,y:Float) {
-            renderingController?.handleTap(x,y)   
+            renderingController?.handleTap(x,y)
         }
     }
     class VCBStateContainer(var scale:Float=0.0f,var dir:Int = 0) {
