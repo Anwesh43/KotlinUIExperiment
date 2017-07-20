@@ -1,12 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 21/07/17.
@@ -127,6 +126,12 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             collapButton?.draw(canvas,paint,scale)
             verticalButton?.draw(canvas,paint,scale)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var v =  VerticalCollapButton(activity)
+            activity.addContentView(v, ViewGroup.LayoutParams(200,200))
         }
     }
 }
