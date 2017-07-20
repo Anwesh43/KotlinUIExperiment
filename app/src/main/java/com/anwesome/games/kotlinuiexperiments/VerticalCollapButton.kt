@@ -90,7 +90,7 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
             for(i in 0..1) {
                 canvas.save()
                 canvas.rotate(90.0f*i+45.0f*scale)
-                canvas.drawLine(0.0f,-2*r/3,0.0f,2*r/3)
+                canvas.drawLine(0.0f,-2*r/3,0.0f,2*r/3,paint)
                 canvas.restore()
             }
             canvas.restore()
@@ -101,8 +101,20 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             paint.color = Color.GRAY
-            canvas.drawRect(RectF(0,0,w,h*scale),paint)
+            canvas.drawRect(RectF(-w/2,0.0f,w/2,h*scale),paint)
             canvas.restore()
+        }
+    }
+    class CollapVerticalButtonShape(w:Float,h:Float) {
+        var collapButton:CollapButton?=null
+        var verticalButton:VerticalButton?=null
+        init{
+            collapButton = CollapButton(w/2,w/10,w/10)
+            verticalButton = VerticalButton(w/2,w/5,w/6,h-w/5)
+        }
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            collapButton?.draw(canvas,paint,scale)
+            verticalButton?.draw(canvas,paint,scale)
         }
     }
 }
