@@ -13,6 +13,7 @@ import android.view.ViewGroup
 class VerticalCollapButton(ctx:Context):View(ctx) {
     val renderer:VCBRenderer = VCBRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onExpandCollapseListener:OnExpandCollapseListener?=null
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -73,6 +74,14 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
                 stateContainer.update()
                 if(stateContainer.stopped()) {
                     animated = false
+                    when(stateContainer.scale) {
+                        0.0f -> {
+                            v.onExpandCollapseListener?.onCollapse()
+                        }
+                        1.0f -> {
+                            v.onExpandCollapseListener?.onExpand()
+                        }
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -134,10 +143,21 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean = collapButton?.handleTap(x,y)?:false
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners: OnExpandCollapseListener) {
             var v =  VerticalCollapButton(activity)
+            if(listeners.size == 1) {
+                v.onExpandCollapseListener = listeners[0]
+            }
             var dimension = DimensionsUtil.getDimension(activity)
             activity.addContentView(v, ViewGroup.LayoutParams(dimension.x/2,dimension.x/2))
+        }
+    }
+    interface OnCollapseExapndListener {
+        fun onExpand(){
+
+        }
+        fun onCollapse() {
+
         }
     }
 }
