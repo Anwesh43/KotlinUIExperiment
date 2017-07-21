@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //CircularColorFilterImageView.create(this,bitmap,Color.parseColor("#0097A7"),CircularColorImageListener(this))
         //BiDirecLoaderButtonView.create(this)
-        VerticalCollapButton.create(this)
+        VerticalCollapButton.create(this,ExpandCollapListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -107,5 +107,13 @@ class CircularColorImageListener(var activity:MainActivity):CircularColorFilterI
 
     override fun onUnSelect() {
         Toast.makeText(activity,"UnSelected",Toast.LENGTH_SHORT).show()
+    }
+}
+class ExpandCollapListener(var activity:MainActivity):OnExpandCollapseListener {
+    override fun onExpand() {
+        Toast.makeText(activity,"Expanded",Toast.LENGTH_SHORT).show()
+    }
+    override fun onCollapse() {
+        Toast.makeText(activity,"Collapsed",Toast.LENGTH_SHORT).show()
     }
 }
