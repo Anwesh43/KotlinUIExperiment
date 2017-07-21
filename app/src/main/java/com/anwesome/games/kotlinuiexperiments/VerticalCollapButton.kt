@@ -87,7 +87,7 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
             verticalButtonShape.draw(canvas,paint,stateContainer.scale)
         }
         fun handleTap(x:Float,y:Float) {
-            if(!animated) {
+            if(!animated && verticalButtonShape.handleTap(x,y)) {
                 animated = true
                 stateContainer.startUpdating()
                 v.postInvalidate()
@@ -109,6 +109,7 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
             }
             canvas.restore()
         }
+        fun handleTap(x:Float,y:Float):Boolean = x>this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class VerticalButton(var x:Float,var y:Float,var w:Float,var h:Float) {
         fun draw(canvas: Canvas,paint:Paint,scale:Float) {
@@ -130,6 +131,7 @@ class VerticalCollapButton(ctx:Context):View(ctx) {
             collapButton?.draw(canvas,paint,scale)
             verticalButton?.draw(canvas,paint,scale)
         }
+        fun handleTap(x:Float,y:Float):Boolean = collapButton?.handleTap(x,y)?:false
     }
     companion object {
         fun create(activity:Activity) {
