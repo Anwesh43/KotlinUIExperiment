@@ -24,23 +24,27 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
     }
     class DLSVRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        var drawingController:DLSVDrawingController?=null
+        fun render(canvas:Canvas,paint:Paint,v:DotLineSwitchView) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 paint.strokeWidth = w/60
+                drawingController = DLSVDrawingController(DotLine(w/2,h/2,w/3),v)
             }
+            drawingController?.draw(canvas,paint)
+            drawingController?.animate()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            drawingController?.startAnimation()
         }
     }
     class DLSVDrawingController(var dotLine:DotLine,var v:DotLineSwitchView) {
         var animated = false
         var stateContainer = StateContainer()
         fun draw(canvas:Canvas,paint:Paint) {
-            dotLine.draw(canvas,paint,1.0f)
+            dotLine.draw(canvas,paint,stateContainer.scale)
         }
         fun animate() {
             if (animated) {
@@ -59,6 +63,8 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
         fun startAnimation() {
             if(!animated) {
                 stateContainer.startUpdating()
+                animated = true
+                v.postInvalidate()
             }
         }
     }
