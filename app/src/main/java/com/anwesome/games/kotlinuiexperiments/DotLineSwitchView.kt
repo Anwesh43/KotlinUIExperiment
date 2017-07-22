@@ -34,4 +34,25 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
 
         }
     }
+    class DrawingController(var v:DotLineSwitchView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+
+        }
+        fun animate() {
+            if (animated) {
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                } catch (ex: Exception) {
+
+                }
+            }
+        }
+        fun startAnimation(x:Float,y:Float) {
+            if(!animated) {
+
+            }
+        }
+    }
 }
