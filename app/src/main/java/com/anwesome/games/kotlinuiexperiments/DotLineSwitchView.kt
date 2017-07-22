@@ -72,4 +72,28 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
             }
         }
     }
+    class StateContainer {
+        var scale:Float = 0.0f
+        var dir = 0
+        fun update() {
+            scale += 0.2f*dir;
+            if(scale > 1) {
+                scale = 1.0f
+                dir = 0
+            }
+            if(scale < 0) {
+                scale = 0.0f
+                dir = 0
+            }
+        }
+        fun stopped():Boolean = dir == 0
+        fun startUpdating() {
+            if(scale <= 0) {
+                dir = 1
+            }
+            else if(scale >= 1) {
+                dir = -1
+            }
+        }
+    }
 }
