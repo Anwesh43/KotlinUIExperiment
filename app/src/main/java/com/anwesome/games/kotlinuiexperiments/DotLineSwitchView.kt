@@ -1,10 +1,13 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Point
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 22/07/17.
@@ -106,6 +109,13 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
             else if(scale >= 1) {
                 dir = -1
             }
+        }
+    }
+    companion object {
+        fun create(activty:Activity) {
+            var view = DotLineSwitchView(activty)
+            var size = DimensionsUtil.getDimension(activty)
+            activty.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
