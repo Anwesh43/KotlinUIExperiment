@@ -38,11 +38,16 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
     }
     class DLSVDrawingController(var dotLine:DotLine,var v:DotLineSwitchView) {
         var animated = false
+        var stateContainer = StateContainer()
         fun draw(canvas:Canvas,paint:Paint) {
             dotLine.draw(canvas,paint,1.0f)
         }
         fun animate() {
             if (animated) {
+                stateContainer.update()
+                if(stateContainer.stopped()) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -51,9 +56,9 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
                 }
             }
         }
-        fun startAnimation(x:Float,y:Float) {
+        fun startAnimation() {
             if(!animated) {
-
+                stateContainer.startUpdating()
             }
         }
     }
