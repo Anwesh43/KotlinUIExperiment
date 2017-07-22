@@ -11,13 +11,14 @@ import android.view.View
  */
 class DotLineSwitchView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DLSVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -36,7 +37,7 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
             drawingController?.animate()
             time++
         }
-        fun handleTap(x:Float,y:Float) {
+        fun handleTap() {
             drawingController?.startAnimation()
         }
     }
