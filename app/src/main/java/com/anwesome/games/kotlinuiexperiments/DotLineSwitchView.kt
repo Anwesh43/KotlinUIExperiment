@@ -24,9 +24,11 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
     }
     class DLSVRenderer {
         var time = 0
-        fun render(canvas:Canvas) {
+        fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
-
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                paint.strokeWidth = w/60
             }
             time++
         }
@@ -34,7 +36,7 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
 
         }
     }
-    class DrawingController(var v:DotLineSwitchView) {
+    class DLSVDrawingController(var v:DotLineSwitchView) {
         var animated = false
         fun draw(canvas:Canvas,paint:Paint) {
 
@@ -52,6 +54,21 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
         fun startAnimation(x:Float,y:Float) {
             if(!animated) {
 
+            }
+        }
+    }
+    data class DotLine(var x:Float,var y:Float,var size:Float,var scale) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            for(i in 0..1) {
+                canvas.save()
+                canvas.translate(x,y)
+                canvas.scale(2*i-1.0f,1.0f)
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(-4*size/5,0.0f,size/5,paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawCircle(-4*size/5,0.0f,size/5,paint)
+                canvas.drawLine(0.0f,0.0f,(3*size/5)*scale,0.0f,paint)
+                canvas.restore()
             }
         }
     }
