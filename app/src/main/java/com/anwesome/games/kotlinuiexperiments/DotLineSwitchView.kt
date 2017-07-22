@@ -36,10 +36,10 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
 
         }
     }
-    class DLSVDrawingController(var v:DotLineSwitchView) {
+    class DLSVDrawingController(var dotLine:DotLine,var v:DotLineSwitchView) {
         var animated = false
         fun draw(canvas:Canvas,paint:Paint) {
-
+            dotLine.draw(canvas,paint,1.0f)
         }
         fun animate() {
             if (animated) {
@@ -57,8 +57,8 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
             }
         }
     }
-    data class DotLine(var x:Float,var y:Float,var size:Float,var scale) {
-        fun draw(canvas:Canvas,paint:Paint) {
+    data class DotLine(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             for(i in 0..1) {
                 canvas.save()
                 canvas.translate(x,y)
