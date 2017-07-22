@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         //CircularColorFilterImageView.create(this,bitmap,Color.parseColor("#0097A7"),CircularColorImageListener(this))
         //BiDirecLoaderButtonView.create(this)
         //VerticalCollapButton.create(this,ExpandCollapListener(this))
-        DotLineSwitchView.create(this)
+        DotLineSwitchView.create(this,500,500)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

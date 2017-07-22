@@ -115,10 +115,12 @@ class DotLineSwitchView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activty:Activity) {
+        fun create(activty:Activity,x:Int,y:Int) {
             var view = DotLineSwitchView(activty)
             var size = DimensionsUtil.getDimension(activty)
             activty.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
+            view.x = x.toFloat()
+            view.y = y.toFloat()
         }
     }
 }
