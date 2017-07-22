@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //CircularColorFilterImageView.create(this,bitmap,Color.parseColor("#0097A7"),CircularColorImageListener(this))
         //BiDirecLoaderButtonView.create(this)
-        VerticalCollapButton.create(this,ExpandCollapListener(this))
+        //VerticalCollapButton.create(this,ExpandCollapListener(this))
+        DotLineSwitchView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
