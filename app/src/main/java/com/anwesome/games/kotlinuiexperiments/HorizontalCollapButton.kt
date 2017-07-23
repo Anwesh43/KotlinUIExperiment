@@ -1,9 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 
@@ -102,6 +100,14 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
                 canvas.drawLine(0.0f,-3*r/4,0.0f,3*r/4,paint)
                 canvas.restore()
             }
+        }
+    }
+    data class HCBCollapBox(var x:Float,var y:Float,var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            paint.color = Color.parseColor("#01579B")
+            canvas.drawRect(RectF(x,y,x+w*scale,y+h),paint)
+            canvas.restore()
         }
     }
 }
