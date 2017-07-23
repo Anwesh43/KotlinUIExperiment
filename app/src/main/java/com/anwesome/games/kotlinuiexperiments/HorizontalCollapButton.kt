@@ -57,4 +57,24 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class HCBStateContainer {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale += 0.2f*dir
+            if(scale > 1 || scale < 0) {
+                dir = 0
+                scale = if(scale>1) {
+                    1.0f
+                }
+                else {
+                    0.0f
+                }
+            }
+        }
+        fun stopped():Boolean = dir == 0
+        fun startUpdating() {
+            dir = (1-2*scale).toInt()
+        }
+    }
 }
