@@ -14,6 +14,7 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer:HCBRenderer = HCBRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -100,7 +101,7 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(x,y)
-            paint.color = Color.parseColor("#757575")
+            paint.color = Color.parseColor("#BDBDBD")
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.color = Color.parseColor("#212121")
             for(i in 0..1) {
