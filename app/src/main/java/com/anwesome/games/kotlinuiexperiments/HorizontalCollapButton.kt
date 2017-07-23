@@ -13,6 +13,7 @@ import android.view.ViewGroup
 class HorizontalCollapButtonView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer:HCBRenderer = HCBRenderer()
+    var onExpandCloseListener:HSBOnExpandCollapseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -55,6 +56,10 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
                 stateContainer.update()
                 if(stateContainer.stopped()) {
                     animated = false
+                    when(stateContainer.scale) {
+                        0.0f -> v.onExpandCloseListener?.onCollapse()
+                        1.0f -> v.onExpandCloseListener?.onExpand()
+                    }
                 }
                 try {
                     Thread.sleep(75)
@@ -135,9 +140,21 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean = collapButton?.handleTap(x,y)?:false
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listener:HSBOnExpandCollapseListener) {
             var size:Point = DimensionsUtil.getDimension(activity)
-            activity.addContentView(HorizontalCollapButtonView(activity), ViewGroup.LayoutParams(size.x/2,size.x/2))
+            var view = HorizontalCollapButtonView(activity)
+            if(listener.size >= 1) {
+                view.onExpandCloseListener = listener[0]
+            }
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
+        }
+    }
+    interface HSBOnExpandCollapseListener {
+        fun onExpand() {
+
+        }
+        fun onCollapse() {
+
         }
     }
 }
