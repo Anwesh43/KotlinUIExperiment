@@ -24,7 +24,7 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
     }
     class HCBRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,v:HorizontalCollapButtonView) {
             if(time == 0) {
 
             }
@@ -32,6 +32,29 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class HCBDrawingController(var v:HorizontalCollapButtonView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+
+        }
+        fun update() {
+            if(animated) {
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                animated = true
+                v.postInvalidate()
+            }
         }
     }
 }
