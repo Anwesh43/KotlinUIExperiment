@@ -23,17 +23,21 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
     }
     class HCBRenderer {
         var time = 0
+        var drawingController:HCBDrawingController?=null
         fun render(canvas:Canvas,paint:Paint,v:HorizontalCollapButtonView) {
             if(time == 0) {
-                var w = canvas.width
-                var h = canvas.height
-                paint.strokeWidth = w/60.0f
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                paint.strokeWidth = w/60
                 paint.strokeCap = Paint.Cap.ROUND
+                drawingController = HCBDrawingController(HCBCollapButtonBox(w,h),v)
             }
+            drawingController?.draw(canvas,paint)
+            drawingController?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            drawingController?.handleTap(x,y)
         }
     }
     class HCBDrawingController(var collapButtonBox:HCBCollapButtonBox,var v:HorizontalCollapButtonView) {
