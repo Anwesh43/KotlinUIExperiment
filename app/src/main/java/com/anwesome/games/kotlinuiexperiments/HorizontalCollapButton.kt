@@ -36,11 +36,16 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
     }
     class HCBDrawingController(var v:HorizontalCollapButtonView) {
         var animated = false
+        var stateContainer = HCBStateContainer()
         fun draw(canvas:Canvas,paint:Paint) {
 
         }
         fun update() {
             if(animated) {
+                stateContainer.update()
+                if(stateContainer.stopped()) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(75)
                     v.invalidate()
@@ -52,6 +57,7 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(!animated) {
+                stateContainer.startUpdating()
                 animated = true
                 v.postInvalidate()
             }
