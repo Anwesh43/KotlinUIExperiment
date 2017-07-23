@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         //BiDirecLoaderButtonView.create(this)
         //VerticalCollapButton.create(this,ExpandCollapListener(this))
 //        DotLineSwitchView.create(this,500,500)
-        HorizontalCollapButtonView.create(this)
+        HorizontalCollapButtonView.create(this,HCBExpandCollapListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -117,5 +117,16 @@ class ExpandCollapListener(var activity:MainActivity):OnExpandCollapseListener {
     }
     override fun onCollapse() {
         Toast.makeText(activity,"Collapsed",Toast.LENGTH_SHORT).show()
+    }
+}
+class HCBExpandCollapListener(var activity:MainActivity):HorizontalCollapButtonView.HSBOnExpandCollapseListener {
+    override fun onExpand() {
+        makeToast("Expanded")
+    }
+    private fun makeToast(text:String) {
+        Toast.makeText(activity,text,Toast.LENGTH_SHORT).show()
+    }
+    override fun onCollapse() {
+        makeToast("Collapsed")
     }
 }
