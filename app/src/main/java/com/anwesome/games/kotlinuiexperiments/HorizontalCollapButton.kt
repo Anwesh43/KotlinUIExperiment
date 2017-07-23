@@ -110,4 +110,17 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
+    data class HCBCollapButtonBox(var w:Float,var h:Float) {
+        var collapBox:HCBCollapBox?=null
+        var collapButton:HCBCollapButton?=null
+        init {
+            collapButton = HCBCollapButton(3*w/20,h/20+w/10,w/10)
+            collapBox = HCBCollapBox(0.0f,w/5+h/20,w,19*h/20-w/5)
+        }
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            collapButton?.draw(canvas,paint,scale)
+            collapBox?.draw(canvas,paint,scale)
+        }
+        fun handleTap(x:Float,y:Float):Boolean = collapButton?.handleTap(x,y)?:false
+    }
 }
