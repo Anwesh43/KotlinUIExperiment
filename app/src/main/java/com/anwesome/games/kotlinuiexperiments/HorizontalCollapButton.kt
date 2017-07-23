@@ -98,8 +98,10 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
             return dist < r*r
         }
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
             paint.color = Color.parseColor("#757575")
-            canvas.drawCircle(x,y,r,paint)
+            canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.color = Color.parseColor("#212121")
             for(i in 0..1) {
                 canvas.save()
@@ -107,6 +109,7 @@ class HorizontalCollapButtonView(ctx:Context):View(ctx) {
                 canvas.drawLine(0.0f,-3*r/4,0.0f,3*r/4,paint)
                 canvas.restore()
             }
+            canvas.restore()
         }
     }
     data class HCBCollapBox(var x:Float,var y:Float,var w:Float,var h:Float) {
