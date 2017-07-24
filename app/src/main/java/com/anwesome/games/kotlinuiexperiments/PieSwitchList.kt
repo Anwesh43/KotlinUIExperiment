@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -125,5 +127,15 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
             }
         }
         fun stopped():Boolean = dir == 0
+    }
+    companion object {
+        fun create(activity:Activity,vararg n:Int) {
+           var view:PieSwitchListView = PieSwitchListView(activity)
+            if(n.size >= 1) {
+                view.n  = n[0]
+            }
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
+        }
     }
 }
