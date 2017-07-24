@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         //BiDirecLoaderButtonView.create(this)
         //VerticalCollapButton.create(this,ExpandCollapListener(this))
 //        DotLineSwitchView.create(this,500,500)
-        HorizontalCollapButtonView.create(this,HCBExpandCollapListener(this))
+//        HorizontalCollapButtonView.create(this,HCBExpandCollapListener(this))
+        PieSwitchListView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
