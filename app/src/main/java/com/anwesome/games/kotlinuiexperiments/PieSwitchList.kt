@@ -77,4 +77,22 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
             }
         }
     }
+    class StateContainer {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale+=0.2f*dir
+            if(scale > 1) {
+                dir = 0
+                scale = 1.0f
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0) {
+                scale = 0.0f
+                dir = 1
+            }
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
