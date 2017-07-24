@@ -43,7 +43,7 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0.0f,deg,true,paint)
             canvas.restore()
         }
         fun update(scale:Float) {
@@ -54,6 +54,8 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
     class AnimationHandler(var w:Float,var h:Float,var v:PieSwitchListView) {
         var prev:PieSwitch?=null
         var curr:PieSwitch?=null
+        var animated = false
+        var state = PSVStateContainer()
         var pieSwitches:ConcurrentLinkedQueue<PieSwitch> = ConcurrentLinkedQueue()
         init {
             var size = w/(2*v.n+1)
@@ -69,15 +71,37 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
                 it.draw(canvas,paint)
             }
         }
+        fun update() {
+            if(animated) {
+                state.update()
+                curr?.update(state.scale)
+                prev?.update(state.scale)
+                if(state.stopped()) {
+                    animated = false
+                    prev = curr
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
         fun handleTap(x:Float,y:Float) {
-            pieSwitches.forEach {
-                if(it.handleTap(x,y)) {
-                    curr = it
+            if(!animated) {
+                pieSwitches.forEach {
+                    if (it.handleTap(x, y)) {
+                        curr = it
+                        animated = true
+                        v.postInvalidate()
+                    }
                 }
             }
         }
     }
-    class StateContainer {
+    class PSVStateContainer {
         var scale = 0.0f
         var dir = 0
         fun update() {
