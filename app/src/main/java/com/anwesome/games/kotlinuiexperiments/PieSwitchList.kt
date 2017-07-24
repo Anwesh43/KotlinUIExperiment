@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -33,5 +34,16 @@ class PieSwitchListView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
 
         }
+    }
+    data class PieSwitch(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
+            canvas.restore()
+        }
+        fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
 }
