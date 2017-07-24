@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -31,6 +32,8 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
         fun render(canvas:Canvas,paint: Paint,v:PieSwitchListView) {
             if(time == 0) {
                 animationHandler = PSVAnimationHandler(canvas.width.toFloat(),canvas.height.toFloat(),v)
+                paint.color = Color.parseColor("#0277BD")
+                paint.strokeWidth = canvas.width.toFloat()/60
             }
             animationHandler?.draw(canvas,paint)
             animationHandler?.update()
