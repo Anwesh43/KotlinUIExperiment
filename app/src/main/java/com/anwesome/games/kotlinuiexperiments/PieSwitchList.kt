@@ -13,27 +13,31 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = PSVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
     }
     class PSVRenderer  {
         var time = 0
+        var animationHandler:PSVAnimationHandler?=null
         fun render(canvas:Canvas,paint: Paint,v:PieSwitchListView) {
             if(time == 0) {
-
+                animationHandler = PSVAnimationHandler(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
+            animationHandler?.draw(canvas,paint)
+            animationHandler?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            animationHandler?.handleTap(x,y)
         }
     }
     data class PieSwitch(var x:Float,var y:Float,var r:Float,var deg:Float = 0.0f) {
@@ -51,7 +55,7 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
-    class AnimationHandler(var w:Float,var h:Float,var v:PieSwitchListView) {
+    class PSVAnimationHandler(var w:Float,var h:Float,var v:PieSwitchListView) {
         var prev:PieSwitch?=null
         var curr:PieSwitch?=null
         var animated = false
