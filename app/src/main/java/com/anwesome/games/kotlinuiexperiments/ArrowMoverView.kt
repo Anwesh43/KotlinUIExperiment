@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 /**
@@ -56,5 +57,19 @@ class ArrowMoverView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = dir == 0
+    }
+    data class ArrowMover(var x:Float,var y:Float,var size:Float,var h:Float,var deg:Float = 0.0f) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y-h*scale)
+            canvas.rotate(180.0f*scale)
+            var path = Path()
+            path.moveTo(0.0f,0.0f)
+            path.lineTo(-size/2,size/2)
+            path.lineTo(size/2,size/2)
+            path.lineTo(0.0f,-size/2)
+            canvas.drawPath(path,paint)
+            canvas.restore()
+        }
     }
 }
