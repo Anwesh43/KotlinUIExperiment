@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -105,5 +106,9 @@ class ArrowMoverView(ctx:Context):View(ctx) {
                 v.postInvalidate()
             }
         }
+    }
+    fun create(activity: Activity) {
+        var view = ArrowMoverView(activity)
+        activity.setContentView(view)
     }
 }
