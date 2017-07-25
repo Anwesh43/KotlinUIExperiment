@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
@@ -14,6 +15,7 @@ class ArrowMoverView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer:AMVRenderer = AMVRenderer()
     override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -33,6 +35,7 @@ class ArrowMoverView(ctx:Context):View(ctx) {
                 var h = canvas.height.toFloat()
                 var size = Math.min(w,h)/10
                 renderingController = AMVRenderingController(ArrowMover(w/2,h-size/2,size,h-size),v)
+                paint.color = Color.parseColor("#4527A0")
             }
             renderingController?.draw(canvas,paint)
             renderingController?.animate()
@@ -72,10 +75,11 @@ class ArrowMoverView(ctx:Context):View(ctx) {
             canvas.translate(x,y-h*scale)
             canvas.rotate(180.0f*scale)
             var path = Path()
-            path.moveTo(0.0f,0.0f)
+            path.moveTo(0.0f,size/4)
             path.lineTo(-size/2,size/2)
-            path.lineTo(size/2,size/2)
             path.lineTo(0.0f,-size/2)
+            path.lineTo(size/2,size/2)
+            path.lineTo(0.0f,size/4)
             canvas.drawPath(path,paint)
             canvas.restore()
         }
