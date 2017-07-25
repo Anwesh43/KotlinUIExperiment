@@ -24,7 +24,7 @@ class ArrowMoverView(ctx:Context):View(ctx) {
     }
     class AMVRenderer {
         var time = 0
-        fun render(canvas: Canvas,paint:Paint) {
+        fun render(canvas: Canvas,paint:Paint,v:ArrowMoverView) {
             if(time == 0) {
 
             }
@@ -70,6 +70,33 @@ class ArrowMoverView(ctx:Context):View(ctx) {
             path.lineTo(0.0f,-size/2)
             canvas.drawPath(path,paint)
             canvas.restore()
+        }
+    }
+    class AMVRenderingController(var arrowMover:ArrowMover,var v:ArrowMoverView,var state:AMVStateContainer = AMVStateContainer(),var animated:Boolean = false) {
+        fun draw(canvas: Canvas,paint:Paint) {
+            arrowMover.draw(canvas,paint,state.scale)
+        }
+        fun animate() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun startAnimation() {
+            if(!animated) {
+                animated = true
+                state.startUpdating()
+                v.postInvalidate()
+            }
         }
     }
 }
