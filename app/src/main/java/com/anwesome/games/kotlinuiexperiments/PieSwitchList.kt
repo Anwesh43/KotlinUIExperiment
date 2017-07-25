@@ -61,7 +61,7 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
-    class PSVAnimationHandler(var w:Float,var h:Float,var v:PieSwitchListView) {
+    class PSVAnimationHandler(w:Float,h:Float,var v:PieSwitchListView) {
         var prev:PieSwitch?=null
         var curr:PieSwitch?=null
         var animated = false
@@ -85,7 +85,7 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
             if(animated) {
                 state.update()
                 curr?.update(state.scale)
-                prev?.update(state.scale)
+                prev?.update(1-state.scale)
                 if(state.stopped()) {
                     animated = false
                     prev = curr
@@ -105,7 +105,9 @@ class PieSwitchListView(ctx:Context,var n:Int=5):View(ctx) {
                     if (it.handleTap(x, y)) {
                         curr = it
                         animated = true
+                        state.startUpdating()
                         v.postInvalidate()
+                        return
                     }
                 }
             }
