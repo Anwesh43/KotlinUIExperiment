@@ -21,4 +21,16 @@ class ArrowMoverView(ctx:Context):View(ctx) {
         }
         return true
     }
+    class AMVRenderer {
+        var time = 0
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
