@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         //VerticalCollapButton.create(this,ExpandCollapListener(this))
 //        DotLineSwitchView.create(this,500,500)
 //        HorizontalCollapButtonView.create(this,HCBExpandCollapListener(this))
-        PieSwitchListView.create(this)
+        //PieSwitchListView.create(this)
+        ArrowMoverView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

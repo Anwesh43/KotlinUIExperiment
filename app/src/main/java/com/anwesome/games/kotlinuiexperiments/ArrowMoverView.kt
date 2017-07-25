@@ -107,8 +107,10 @@ class ArrowMoverView(ctx:Context):View(ctx) {
             }
         }
     }
-    fun create(activity: Activity) {
-        var view = ArrowMoverView(activity)
-        activity.setContentView(view)
+    companion object {
+        fun create(activity: Activity) {
+            var view = ArrowMoverView(activity)
+            activity.setContentView(view)
+        }
     }
 }
