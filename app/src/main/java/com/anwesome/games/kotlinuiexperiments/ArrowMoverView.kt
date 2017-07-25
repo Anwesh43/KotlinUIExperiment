@@ -23,15 +23,21 @@ class ArrowMoverView(ctx:Context):View(ctx) {
         return true
     }
     class AMVRenderer {
+        var renderingController:AMVRenderingController?=null
         var time = 0
         fun render(canvas: Canvas,paint:Paint,v:ArrowMoverView) {
             if(time == 0) {
-
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var size = Math.min(w,h)/10
+                renderingController = AMVRenderingController(ArrowMover(w/2,h-size/2,size,h-size),v)
             }
+            renderingController?.draw(canvas,paint)
+            renderingController?.animate()
             time++
         }
-        fun handleTap(x:Float,y:Float) {
-
+        fun handleTap() {
+            renderingController?.startAnimation()
         }
     }
     class AMVStateContainer {
