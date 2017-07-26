@@ -14,6 +14,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PPBRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -30,14 +31,16 @@ class PausePlayButton(ctx:Context):View(ctx) {
                 state = 1
             }
             if(scale <= 0.0f) {
-                state = -1
+                state = 0
             }
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
             paint.color = Color.parseColor("#1565C0")
-            paint.strokeWidth = size/40
+            paint.strokeWidth = size/25
             canvas.drawArc(RectF(-size/2,-size/2,size/2,size/2),0.0f,360.0f*scale,false,paint)
+            paint.color = Color.WHITE
+            paint.strokeWidth = size/15
             when(state) {
                 0 -> {
                     drawPause(canvas,paint,size)
@@ -50,7 +53,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
 
         }
         private fun drawPlay(canvas:Canvas,paint:Paint,size:Float) {
-            paint.style = Paint.Style.FILL
+            paint.style = Paint.Style.FILL_AND_STROKE
             var path:Path = Path()
             path.moveTo(-size/10,-size/10)
             path.lineTo(size/10,0.0f)
@@ -59,19 +62,19 @@ class PausePlayButton(ctx:Context):View(ctx) {
             canvas.drawPath(path,paint)
         }
         private fun drawPause(canvas:Canvas,paint:Paint,size:Float) {
-            paint.strokeWidth = size/25
             var a = size/10
             for(i in 0..1) {
                 canvas.drawLine(a*(1-2*i),-a,a*(1-2*i),a,paint)
             }
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/5 && x<=this.x+size/5 && y>=this.y-size/5 && y<=this.y+size/5
     }
     class PPBRenderer{
         var time = 0
         var handler:PPBAnimationHandler?=null
         fun render(canvas:Canvas,paint:Paint,v:PausePlayButton) {
             if(time == 0) {
+                paint.strokeCap = Paint.Cap.ROUND
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 var size = 2*Math.min(w,h)/3
@@ -88,7 +91,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
     class PPBAnimationHandler(var playPause: PlayPause,var v:PausePlayButton,var stateContainer:PPBStateContainer = PPBStateContainer()) {
         var animated = false
         fun draw(canvas: Canvas,paint:Paint) {
-            playPause.draw(canvas,paint,1.0f)
+            playPause.draw(canvas,paint,stateContainer.scale)
         }
         fun animate() {
             if(animated) {
@@ -120,9 +123,11 @@ class PausePlayButton(ctx:Context):View(ctx) {
             scale += 0.2f*dir
             if(scale > 1 || scale < 0) {
                 dir = 0
-                scale = 0.0f
                 if(scale > 1) {
                     scale = 1.0f
+                }
+                else if(scale < 0.0f){
+                    scale = 0.0f
                 }
             }
         }
