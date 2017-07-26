@@ -59,5 +59,18 @@ class PausePlayButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
     }
+    class PPBRenderer{
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var size = 2*Math.min(w,h)/3
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
 
+        }
+    }
 }
