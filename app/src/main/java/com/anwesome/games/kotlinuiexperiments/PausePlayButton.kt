@@ -41,7 +41,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
             canvas.restore()
 
         }
-        fun drawPlay(canvas:Canvas,paint:Paint,size:Float) {
+        private fun drawPlay(canvas:Canvas,paint:Paint,size:Float) {
             paint.style = Paint.Style.FILL
             var path:Path = Path()
             path.moveTo(-size/10,-size/10)
@@ -50,7 +50,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
             path.lineTo(-size/10,-size/10)
             canvas.drawPath(path,paint)
         }
-        fun drawPause(canvas:Canvas,paint:Paint,size:Float) {
+        private fun drawPause(canvas:Canvas,paint:Paint,size:Float) {
             paint.strokeWidth = size/25
             var a = size/10
             for(i in 0..1) {
@@ -61,7 +61,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
     }
     class PPBRenderer{
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        fun render(canvas:Canvas,paint:Paint,v:PausePlayButton) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
@@ -71,6 +71,29 @@ class PausePlayButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class PPBAnimationHandler(var playPause: PlayPause,var v:PausePlayButton) {
+        var animated = false
+        fun draw(canvas: Canvas,paint:Paint) {
+            playPause.draw(canvas,paint,1.0f)
+        }
+        fun animate() {
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && playPause.handleTap(x,y)) {
+                animated = true
+                v.postInvalidate()
+            }
         }
     }
 }
