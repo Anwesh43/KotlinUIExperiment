@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
 //        DotLineSwitchView.create(this,500,500)
 //        HorizontalCollapButtonView.create(this,HCBExpandCollapListener(this))
         //PieSwitchListView.create(this)
-        ArrowMoverView.create(this)
+        //ArrowMoverView.create(this)
+        PausePlayButton.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
