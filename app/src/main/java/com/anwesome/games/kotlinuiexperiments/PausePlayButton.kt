@@ -10,10 +10,16 @@ import android.view.View
  */
 class PausePlayButton(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = PPBRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                renderer.handleTap(event.x,event.y)
+            }
+        }
         return true
     }
     data class PlayPause(var x:Float,var y:Float,var size:Float,var state:Int = 0) {
