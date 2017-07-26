@@ -73,13 +73,17 @@ class PausePlayButton(ctx:Context):View(ctx) {
 
         }
     }
-    class PPBAnimationHandler(var playPause: PlayPause,var v:PausePlayButton) {
+    class PPBAnimationHandler(var playPause: PlayPause,var v:PausePlayButton,var stateContainer:PPBStateContainer = PPBStateContainer()) {
         var animated = false
         fun draw(canvas: Canvas,paint:Paint) {
             playPause.draw(canvas,paint,1.0f)
         }
         fun animate() {
             if(animated) {
+                stateContainer.update()
+                if(stateContainer.stopped()) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -91,6 +95,7 @@ class PausePlayButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(!animated && playPause.handleTap(x,y)) {
+                stateContainer.startUpdating()
                 animated = true
                 v.postInvalidate()
             }
