@@ -61,16 +61,20 @@ class PausePlayButton(ctx:Context):View(ctx) {
     }
     class PPBRenderer{
         var time = 0
+        var handler:PPBAnimationHandler?=null
         fun render(canvas:Canvas,paint:Paint,v:PausePlayButton) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 var size = 2*Math.min(w,h)/3
+                handler = PPBAnimationHandler(PlayPause(w/2,h/2,size),v)
             }
+            handler?.draw(canvas,paint)
+            handler?.animate()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            handler?.handleTap(x,y)
         }
     }
     class PPBAnimationHandler(var playPause: PlayPause,var v:PausePlayButton,var stateContainer:PPBStateContainer = PPBStateContainer()) {
