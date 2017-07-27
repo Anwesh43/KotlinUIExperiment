@@ -17,6 +17,7 @@ class DoubleSideArcButton(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = DSABRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -46,7 +47,7 @@ class DoubleSideArcButton(ctx:Context):View(ctx) {
         fun startUpdating() {
             dir = when(scale) {
                 0.0f -> 1
-                1.0f -> 0
+                1.0f -> -1
                 else -> dir
             }
         }
