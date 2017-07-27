@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -44,6 +46,15 @@ class DoubleSideArcButton(ctx:Context):View(ctx) {
                 1.0f -> 0
                 else -> dir
             }
+        }
+    }
+    data class DoubleSideArc(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#FF5722")
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawArc(RectF(-size/2,-size/2*scale,size/2,size/2*scale),0.0f,360.0f,true,paint)
+            canvas.restore()
         }
     }
 }
