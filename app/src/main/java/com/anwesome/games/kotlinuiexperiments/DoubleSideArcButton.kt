@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,19 +8,21 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 27/07/17.
  */
 class DoubleSideArcButton(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DSABRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -100,6 +103,12 @@ class DoubleSideArcButton(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             handler?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(DoubleSideArcButton(activity),ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
