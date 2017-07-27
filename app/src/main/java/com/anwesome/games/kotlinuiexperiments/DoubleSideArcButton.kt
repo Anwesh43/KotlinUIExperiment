@@ -84,4 +84,22 @@ class DoubleSideArcButton(ctx:Context):View(ctx) {
             }
         }
     }
+    class DSABRenderer {
+        var time = 0
+        var handler:DSABAnimationHandler?=null
+        fun render(canvas: Canvas,paint:Paint,v:DoubleSideArcButton) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var size = 2*Math.min(w,h)/3
+                handler = DSABAnimationHandler(DoubleSideArc(w/2,h/2,size),v)
+            }
+            handler?.draw(canvas,paint)
+            handler?.update()
+            time++
+        }
+        fun handleTap() {
+            handler?.startUpdating()
+        }
+    }
 }
