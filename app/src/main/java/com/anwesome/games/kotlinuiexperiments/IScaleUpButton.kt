@@ -22,4 +22,21 @@ class IClassButton(ctx:Context):View(ctx) {
         }
         return true
     }
+    class ICBDrawingHandler(var v:IClassButton) {
+        var time = 0
+        fun draw(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var size = 2*Math.min(w,h)/3
+            }
+            time++
+        }
+        fun update() {
+            v.postInvalidate()
+        }
+        fun handleTap() {
+
+        }
+    }
 }
