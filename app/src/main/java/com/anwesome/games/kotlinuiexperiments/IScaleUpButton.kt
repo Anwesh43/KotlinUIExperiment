@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
@@ -59,6 +62,47 @@ class IClassButton(ctx:Context):View(ctx) {
             canvas.drawRect(RectF(-size/15,-size/15,size/15,size/15),paint)
             canvas.restore()
             canvas.restore()
+        }
+    }
+    class ISBAnimHandler(var handler:ICBDrawingHandler):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var startAnim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var endAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        var state = 0
+        var animated = false
+        init {
+            startAnim.duration = 500
+            endAnim.duration = 500
+            startAnim.addUpdateListener(this)
+            endAnim.addUpdateListener(this)
+            startAnim.addListener(this)
+            endAnim.addListener(this)
+        }
+        override fun onAnimationUpdate(valueAnimator: ValueAnimator) {
+            if(animated) {
+                handler.update(valueAnimator.animatedValue as Float)
+            }
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                state = when(state) {
+                    0 -> 1
+                    else -> 0
+                }
+                animated = false
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when (state) {
+                    0 -> {
+                        startAnim.start()
+                    }
+                    1 -> {
+                        endAnim.start()
+                    }
+                }
+                animated = true
+            }
         }
     }
 }
