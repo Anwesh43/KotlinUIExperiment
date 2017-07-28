@@ -27,6 +27,7 @@ class IClassButton(ctx:Context):View(ctx) {
     class ICBDrawingHandler(var v:IClassButton) {
         var time = 0
         var iscaleup:IScaleUP?=null
+        var animHandler = ISBAnimHandler(this)
         fun draw(canvas:Canvas,paint:Paint) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
@@ -42,7 +43,7 @@ class IClassButton(ctx:Context):View(ctx) {
             v.postInvalidate()
         }
         fun handleTap() {
-
+            animHandler.start()
         }
     }
     data class IScaleUP(var x:Float,var y:Float,var size:Float,var scale:Float = 0.0f) {
