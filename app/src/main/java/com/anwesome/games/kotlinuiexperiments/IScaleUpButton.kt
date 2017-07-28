@@ -3,23 +3,26 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 28/07/17.
  */
 class IClassButton(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val handler = ICBDrawingHandler(this)
     override fun onDraw(canvas:Canvas) {
-
+        handler.draw(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                handler.handleTap()
             }
         }
         return true
@@ -104,6 +107,13 @@ class IClassButton(ctx:Context):View(ctx) {
                 }
                 animated = true
             }
+        }
+    }
+    companion object {
+        fun create(activity: Activity) {
+            var button:IClassButton = IClassButton(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(button, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
