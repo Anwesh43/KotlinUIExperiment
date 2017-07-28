@@ -17,6 +17,7 @@ class IClassButton(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val handler = ICBDrawingHandler(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         handler.draw(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -62,8 +63,8 @@ class IClassButton(ctx:Context):View(ctx) {
             paint.color = Color.WHITE
             canvas.drawLine(0.0f,-size/3,0.0f,size/3,paint)
             canvas.save()
-            canvas.translate(-2*size/5,0.0f)
-            canvas.drawRect(RectF(-size/15,-size/15,size/15,size/15),paint)
+            canvas.translate(0.0f,-2*size/5)
+            canvas.drawRect(RectF(-size/30,-size/30,size/30,size/30),paint)
             canvas.restore()
             canvas.restore()
         }

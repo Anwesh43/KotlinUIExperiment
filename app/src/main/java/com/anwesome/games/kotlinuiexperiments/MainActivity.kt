@@ -46,7 +46,8 @@ class MainActivity : AppCompatActivity() {
         //PieSwitchListView.create(this)
         //ArrowMoverView.create(this)
         //PausePlayButton.create(this)
-        DoubleSideArcButton.create(this)
+        //DoubleSideArcButton.create(this)
+        IClassButton.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
