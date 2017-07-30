@@ -66,4 +66,12 @@ class ScaleUpColorFilterImageView(ctx:Context,var color:Int=Color.CYAN,var bitma
         }
         fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
     }
+    data class ScaleUpIndicatorColorFilterImage(var scaleUpIndicator:ScaleUpIndicator,var colorFilterImage:ColorFilterImage) {
+        fun draw(canvas: Canvas,paint:Paint,scale:Float) {
+            colorFilterImage.draw(canvas,paint,scale)
+            scaleUpIndicator.draw(canvas,paint)
+            scaleUpIndicator.update(scale)
+        }
+        fun handleTap(x:Float,y:Float):Boolean = scaleUpIndicator.handleTap(x,y)
+    }
 }
