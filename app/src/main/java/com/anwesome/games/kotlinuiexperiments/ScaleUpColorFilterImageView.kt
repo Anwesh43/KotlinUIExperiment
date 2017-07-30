@@ -9,14 +9,15 @@ import android.view.View
  * Created by anweshmishra on 30/07/17.
  */
 class ScaleUpColorFilterImageView(ctx:Context,var color:Int=Color.CYAN,var bitmap:Bitmap):View(ctx) {
+    val renderer = CFSVRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas: Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
