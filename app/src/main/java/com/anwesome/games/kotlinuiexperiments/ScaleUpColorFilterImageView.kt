@@ -74,4 +74,26 @@ class ScaleUpColorFilterImageView(ctx:Context,var color:Int=Color.CYAN,var bitma
         }
         fun handleTap(x:Float,y:Float):Boolean = scaleUpIndicator.handleTap(x,y)
     }
+    class CFSVState(var scale:Float = 0.0f,var dir:Int = 0) {
+        fun update() {
+            scale += 0.2f*dir
+            if(scale > 1 || scale < 0) {
+                dir = 0
+                if(scale > 1) {
+                    scale = 1.0f
+                }
+                else {
+                    scale = 0.0f
+                }
+            }
+        }
+        fun startUpdating() {
+            dir = when(scale) {
+                0.0f -> 1
+                1.0f -> -1
+                else -> dir
+            }
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
