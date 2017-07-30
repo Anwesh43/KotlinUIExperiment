@@ -1,14 +1,16 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 30/07/17.
  */
-class ScaleUpColorFilterImageView(ctx:Context,var color:Int=Color.CYAN,var bitmap:Bitmap):View(ctx) {
+class ScaleUpColorFilterImageView(ctx:Context,var bitmap:Bitmap,var color:Int=Color.CYAN):View(ctx) {
     val renderer = CFSVRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas: Canvas) {
@@ -144,5 +146,12 @@ class ScaleUpColorFilterImageView(ctx:Context,var color:Int=Color.CYAN,var bitma
             }
         }
 
+    }
+    companion object {
+        fun create(activity:Activity,bitmap: Bitmap) {
+            var view =  ScaleUpColorFilterImageView(activity,bitmap)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
+        }
     }
 }
