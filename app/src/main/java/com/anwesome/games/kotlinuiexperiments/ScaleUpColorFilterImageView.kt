@@ -96,6 +96,26 @@ class ScaleUpColorFilterImageView(ctx:Context,var color:Int=Color.CYAN,var bitma
         }
         fun stopped():Boolean = dir == 0
     }
+    class CFSVRenderer(var time:Int = 0) {
+        var animHandler:CFSVAnimHandler?=null
+        fun render(canvas: Canvas,paint: Paint,v:ScaleUpColorFilterImageView) {
+            if(time == 0) {
+                var w = canvas.width
+                var h = canvas.height
+                var bitmap = Bitmap.createScaledBitmap(v.bitmap,w,h,true)
+                var sizeW = w.toFloat()
+                var sizeH = h.toFloat()
+                var sicfb = ScaleUpIndicatorColorFilterImage(ScaleUpIndicator(sizeW/2,sizeH/2,Math.min(sizeH,sizeW)/10,sizeW,sizeH), ColorFilterImage(sizeW/2,sizeH/2,bitmap,v.color))
+                animHandler = CFSVAnimHandler(sicfb,v)
+            }
+            animHandler?.draw(canvas,paint)
+            animHandler?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animHandler?.handleTap(x,y)
+        }
+    }
     class CFSVAnimHandler(var sicfb:ScaleUpIndicatorColorFilterImage,var v:ScaleUpColorFilterImageView,var state:CFSVState = CFSVState(),var animated:Boolean = false)  {
         fun update() {
             if(animated) {
