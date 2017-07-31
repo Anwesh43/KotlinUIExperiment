@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -33,6 +35,12 @@ class RollerButton(ctx:Context):View(ctx) {
         }
         fun handleTap() {
 
+        }
+    }
+    data class RollerIndicator(var w:Float,var h:Float) {
+        fun draw(canvas: Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#01579B")
+            canvas.drawRect(RectF(0.0f,0.0f,w*scale,h),paint)
         }
     }
 }
