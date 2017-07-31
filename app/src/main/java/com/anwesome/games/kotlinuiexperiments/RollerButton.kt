@@ -86,4 +86,30 @@ class RollerButton(ctx:Context):View(ctx) {
             return condition
         }
     }
+    class RBAnimHandler(var shape:RollerButtonShape,var v:RollerButton,var animated:Boolean = true,var state:RBState = RBState()) {
+        fun update() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun startUpdating(x:Float,y:Float) {
+            if(!animated && shape.handleTap(x,y)) {
+                animated = true
+                v.postInvalidate()
+            }
+        }
+        fun draw(canvas: Canvas,paint: Paint) {
+            shape.draw(canvas,paint,state.scale)
+        }
+    }
 }
