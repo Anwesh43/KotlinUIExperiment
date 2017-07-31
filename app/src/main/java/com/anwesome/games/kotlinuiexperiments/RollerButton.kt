@@ -63,6 +63,14 @@ class RollerButton(ctx:Context):View(ctx) {
             deg = 360.0f*scale
             x = w*scale
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r 
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
+    }
+    data class RollerButtonShape(var indicator: RollerIndicator,var button:RBButton) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            indicator.draw(canvas,paint,scale)
+            button.draw(canvas,paint)
+            button.update(scale)
+        }
+        fun handleTap(x:Float,y:Float):Boolean = button.handleTap(x,y)
     }
 }
