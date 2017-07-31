@@ -73,4 +73,17 @@ class RollerButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = button.handleTap(x,y)
     }
+    class RBState(var deg:Float = 0.0f,var scale :Float = 0.0f) {
+        fun update() {
+            deg += 18.0f
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+        }
+        fun stopped():Boolean {
+            var condition = deg>180
+            if(condition) {
+                deg = 0.0f
+            }
+            return condition
+        }
+    }
 }
