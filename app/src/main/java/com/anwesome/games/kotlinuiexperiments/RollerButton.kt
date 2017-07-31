@@ -37,9 +37,7 @@ class RollerButton(ctx:Context):View(ctx) {
                 animHandler = RBAnimHandler(RollerButtonShape(RollerIndicator(w,h), RBButton(h/2,h/2,h/2,(w-h/2))),v)
             }
             animHandler?.draw(canvas,paint)
-            if(time > 0) {
-                animHandler?.update()
-            }
+            animHandler?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
@@ -60,6 +58,8 @@ class RollerButton(ctx:Context):View(ctx) {
             paint.color = Color.parseColor("#9E9E9E")
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.color = Color.WHITE
+            paint.strokeWidth = r/9
+            paint.strokeCap = Paint.Cap.ROUND
             for(i in 0..1) {
                 canvas.save()
                 canvas.rotate(i*90.0f)
@@ -72,7 +72,7 @@ class RollerButton(ctx:Context):View(ctx) {
             deg = 360.0f*scale
             x = r+w*scale
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-2*r && x<=this.x+2*r && y>=this.y-2*r && y<=this.y+2*r
     }
     data class RollerButtonShape(var indicator: RollerIndicator,var button:RBButton) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
@@ -95,7 +95,7 @@ class RollerButton(ctx:Context):View(ctx) {
             return condition
         }
     }
-    class RBAnimHandler(var shape:RollerButtonShape,var v:RollerButton,var animated:Boolean = true,var state:RBState = RBState()) {
+    class RBAnimHandler(var shape:RollerButtonShape,var v:RollerButton,var animated:Boolean = false,var state:RBState = RBState()) {
         fun update() {
             if(animated) {
                 state.update()
