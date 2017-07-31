@@ -26,15 +26,19 @@ class RollerButton(ctx:Context):View(ctx) {
     }
     class RBRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint:Paint) {
+        var animHandler:RBAnimHandler?=null
+        fun render(canvas:Canvas,paint:Paint,v:RollerButton) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                animHandler = RBAnimHandler(RollerButtonShape(RollerIndicator(w,h), RBButton(h/2,h/2,h/2,(w-h/2))),v)
             }
+            animHandler?.draw(canvas,paint)
+            animHandler?.update()
             time++
         }
-        fun handleTap() {
-
+        fun handleTap(x:Float,y:Float) {
+            animHandler?.startUpdating(x,y)
         }
     }
     data class RollerIndicator(var w:Float,var h:Float) {
