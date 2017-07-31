@@ -22,4 +22,17 @@ class RollerButton(ctx:Context):View(ctx) {
         }
         return true
     }
+    class RBRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+            }
+            time++
+        }
+        fun handleTap() {
+
+        }
+    }
 }
