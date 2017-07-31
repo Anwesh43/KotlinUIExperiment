@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,19 +8,21 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 31/07/17.
  */
 class RollerButton(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = RBRenderer()
     override fun onDraw(canvas: Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -114,6 +117,13 @@ class RollerButton(ctx:Context):View(ctx) {
         }
         fun draw(canvas: Canvas,paint: Paint) {
             shape.draw(canvas,paint,state.scale)
+        }
+    }
+    companion object {
+        fun create(activity: Activity) {
+            var size = DimensionsUtil.getDimension(activity)
+            var button = RollerButton(activity)
+            activity.addContentView(button, ViewGroup.LayoutParams(size.x/2,size.x/20))
         }
     }
 }
