@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() {
         //ArrowMoverView.create(this)
         //PausePlayButton.create(this)
         //DoubleSideArcButton.create(this)
-        IClassButton.create(this)
+      //  IClassButton.create(this)
+        ScaleUpColorFilterImageView.create(this,bitmap)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

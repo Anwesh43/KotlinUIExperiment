@@ -26,12 +26,14 @@ class ScaleUpColorFilterImageView(ctx:Context,var bitmap:Bitmap,var color:Int=Co
     }
     data class ColorFilterImage(var x:Float,var y:Float,var bitmap: Bitmap,var color:Int) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.style = Paint.Style.FILL
             val w = canvas.width.toFloat()
             val h = canvas.height.toFloat()
             canvas.save()
             canvas.translate(x,y)
             paint.color = Color.BLACK
             canvas.drawBitmap(bitmap,-w/2,-h/2,paint)
+            this.drawColorFilter(canvas,paint,color,scale,bitmap.width.toFloat(),bitmap.height.toFloat())
             canvas.restore()
         }
         private fun drawColorFilter(canvas: Canvas,paint:Paint,color:Int,scale:Float,w:Float,h:Float) {
@@ -42,38 +44,33 @@ class ScaleUpColorFilterImageView(ctx:Context,var bitmap:Bitmap,var color:Int=Co
             canvas.restore()
         }
     }
-    data class ScaleUpIndicator(var x:Float,var y:Float,var size:Float,var w:Float,var h:Float,var deg:Float = 0.0f) {
-        fun draw(canvas:Canvas,paint:Paint) {
+    data class ScaleUpIndicator(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.rotate(deg+45)
+            canvas.rotate(180.0f*scale+45)
             paint.style = Paint.Style.STROKE
+            this.drawDirectionIndicator(canvas,paint)
             canvas.restore()
         }
         private fun drawDirectionIndicator(canvas:Canvas,paint:Paint) {
-            paint.color = Color.WHITE
-            paint.strokeWidth = size/20
+            paint.color = Color.BLACK
+            paint.strokeWidth = size/8
             paint.strokeCap = Paint.Cap.ROUND
-            canvas.drawLine(0.0f,-size/3,0.0f,size/3,paint)
+            canvas.drawLine(0.0f,-size/2,0.0f,size/2,paint)
             for(i in 0..1) {
                 canvas.save()
-                canvas.scale(1.0f,2*i-1.0f)
-                canvas.drawLine(0.0f,-size/3,size/6,-size/6,paint)
+                canvas.scale(2*i-1.0f,1.0f)
+                canvas.drawLine(0.0f,-size/2,size/6,-size/3,paint)
                 canvas.restore()
             }
-        }
-        fun update(scale:Float) {
-            deg = 180.0f*scale
-            x = w*scale
-            y = h*(1-scale)
         }
         fun handleTap(x:Float,y:Float):Boolean =  x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
     }
     data class ScaleUpIndicatorColorFilterImage(var scaleUpIndicator:ScaleUpIndicator,var colorFilterImage:ColorFilterImage) {
         fun draw(canvas: Canvas,paint:Paint,scale:Float) {
             colorFilterImage.draw(canvas,paint,scale)
-            scaleUpIndicator.draw(canvas,paint)
-            scaleUpIndicator.update(scale)
+            scaleUpIndicator.draw(canvas,paint,scale)
         }
         fun handleTap(x:Float,y:Float):Boolean = scaleUpIndicator.handleTap(x,y)
     }
@@ -108,7 +105,7 @@ class ScaleUpColorFilterImageView(ctx:Context,var bitmap:Bitmap,var color:Int=Co
                 var bitmap = Bitmap.createScaledBitmap(v.bitmap,w,h,true)
                 var sizeW = w.toFloat()
                 var sizeH = h.toFloat()
-                var sicfb = ScaleUpIndicatorColorFilterImage(ScaleUpIndicator(sizeW/2,sizeH/2,Math.min(sizeH,sizeW)/10,sizeW,sizeH), ColorFilterImage(sizeW/2,sizeH/2,bitmap,v.color))
+                var sicfb = ScaleUpIndicatorColorFilterImage(ScaleUpIndicator(sizeW/2,sizeH/2,Math.min(sizeH,sizeW)/4), ColorFilterImage(sizeW/2,sizeH/2,bitmap,v.color))
                 animHandler = CFSVAnimHandler(sicfb,v)
             }
             animHandler?.draw(canvas,paint)
@@ -139,8 +136,8 @@ class ScaleUpColorFilterImageView(ctx:Context,var bitmap:Bitmap,var color:Int=Co
             sicfb.draw(canvas,paint,state.scale)
         }
         fun handleTap(x:Float,y:Float) {
-            if(!animated) {
-                sicfb.handleTap(x,y)
+            if(!animated && sicfb.handleTap(x,y)) {
+                state.startUpdating()
                 animated = true
                 v.postInvalidate()
             }
