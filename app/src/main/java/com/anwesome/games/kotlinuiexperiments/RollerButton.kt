@@ -37,7 +37,9 @@ class RollerButton(ctx:Context):View(ctx) {
                 animHandler = RBAnimHandler(RollerButtonShape(RollerIndicator(w,h), RBButton(h/2,h/2,h/2,(w-h/2))),v)
             }
             animHandler?.draw(canvas,paint)
-            animHandler?.update()
+            if(time > 0) {
+                animHandler?.update()
+            }
             time++
         }
         fun handleTap(x:Float,y:Float) {
@@ -82,7 +84,7 @@ class RollerButton(ctx:Context):View(ctx) {
     }
     class RBState(var deg:Float = 0.0f,var scale :Float = 0.0f) {
         fun update() {
-            deg += 18.0f
+            deg += 4.5f
             scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
         }
         fun stopped():Boolean {
@@ -101,7 +103,7 @@ class RollerButton(ctx:Context):View(ctx) {
                     animated = false
                 }
                 try {
-                    Thread.sleep(75)
+                    Thread.sleep(50)
                     v.invalidate()
                 }
                 catch (ex:Exception) {
