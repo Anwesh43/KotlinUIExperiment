@@ -68,7 +68,7 @@ class RollerButton(ctx:Context):View(ctx) {
         }
         fun update(scale:Float) {
             deg = 360.0f*scale
-            x = w*scale
+            x = r+w*scale
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
@@ -123,7 +123,7 @@ class RollerButton(ctx:Context):View(ctx) {
         fun create(activity: Activity) {
             var size = DimensionsUtil.getDimension(activity)
             var button = RollerButton(activity)
-            activity.addContentView(button, ViewGroup.LayoutParams(size.x/2,size.x/20))
+            activity.addContentView(button, ViewGroup.LayoutParams(size.x/2,size.x/10))
         }
     }
 }
