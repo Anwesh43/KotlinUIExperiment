@@ -2,7 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 import java.util.*
@@ -29,6 +31,7 @@ class TapStarView(ctx:Context):View(ctx) {
         var controller:TPVController?=null
         fun render(canvas:Canvas,paint:Paint,v:TapStarView) {
             if(time == 0) {
+                paint.color = Color.parseColor("#ffc107")
                 controller = TPVController(canvas.width.toFloat(),canvas.height.toFloat(),v)
             }
             controller?.draw(canvas,paint)
@@ -46,6 +49,18 @@ class TapStarView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             canvas.rotate(deg)
+            var path = Path()
+            for(i in 0..5) {
+                var sx = (size/2)*Math.cos(i*60*Math.PI/180)
+                var sy = (size/2)*Math.sin(i*60*Math.PI/180)
+                if(i == 0) {
+                    path.moveTo(sx.toFloat(), sy.toFloat())
+                }
+                else {
+                    path.lineTo(sx.toFloat(),sy.toFloat())
+                }
+            }
+            canvas.drawPath(path,paint)
             canvas.restore()
         }
         fun update() {
