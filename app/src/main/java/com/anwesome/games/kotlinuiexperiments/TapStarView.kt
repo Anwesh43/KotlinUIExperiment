@@ -34,4 +34,20 @@ class TapStarView(ctx:Context):View(ctx) {
 
         }
     }
+    data class TapStar(var x:Float,var y:Float,var size:Float,var deg:Float = 0.0f) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.rotate(deg)
+            canvas.restore()
+        }
+        fun update() {
+            deg += 20
+            y += 25
+        }
+        fun stopUpdating(h:Float):Boolean {
+            return y>=h
+        }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
+    }
 }
