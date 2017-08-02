@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -15,13 +16,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class TapStarView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = TPVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -82,6 +85,13 @@ class TapStarView(ctx:Context):View(ctx) {
                     stars.remove(star)
                 }
             }
+            try {
+                Thread.sleep(75)
+                v.invalidate()
+            }
+            catch(ex:Exception) {
+
+            }
         }
         fun createStars() {
             stars.add(TapStar(random.nextInt(w.toInt()).toFloat(),-w/10,w/5))
@@ -91,6 +101,12 @@ class TapStarView(ctx:Context):View(ctx) {
                 star.handleTap(x,y)
                 stars.remove(star)
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var v = TapStarView(activity)
+            activity.setContentView(v)
         }
     }
 }
