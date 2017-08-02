@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 02/08/17.
@@ -49,5 +51,26 @@ class TapStarView(ctx:Context):View(ctx) {
             return y>=h
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
+    }
+    class TPVController(var w:Float,var h:Float,var v:TapStarView,var stars:ConcurrentLinkedQueue<TapStar> = ConcurrentLinkedQueue()) {
+        var random = Random()
+        fun draw(canvas:Canvas,paint:Paint) {
+            stars.forEach { star ->
+                star.draw(canvas,paint)
+                star.update()
+                if(star.stopUpdating(h)) {
+                    stars.remove(star)
+                }
+            }
+        }
+        fun createStars() {
+            stars.add(TapStar(random.nextInt(w.toInt()).toFloat(),-w/10,w/5))
+        }
+        fun handleTap(x:Float,y:Float) {
+            stars.forEach { star ->
+                star.handleTap(x,y)
+                stars.remove(star)
+            }
+        }
     }
 }
