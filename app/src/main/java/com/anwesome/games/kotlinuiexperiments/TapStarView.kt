@@ -17,9 +17,21 @@ class TapStarView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                
+
             }
         }
         return true
+    }
+    class TPVRenderer {
+        var time =  0
+        fun render(canvas:Canvas,paint:Paint,v:TapStarView) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
     }
 }
