@@ -26,14 +26,19 @@ class TapStarView(ctx:Context):View(ctx) {
     }
     class TPVRenderer {
         var time =  0
+        var controller:TPVController?=null
         fun render(canvas:Canvas,paint:Paint,v:TapStarView) {
             if(time == 0) {
-
+                controller = TPVController(canvas.width.toFloat(),canvas.height.toFloat(),v)
+            }
+            controller?.draw(canvas,paint)
+            if(time % 25 == 5) {
+                controller?.createStars()
             }
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            controller?.handleTap(x,y)
         }
     }
     data class TapStar(var x:Float,var y:Float,var size:Float,var deg:Float = 0.0f) {
