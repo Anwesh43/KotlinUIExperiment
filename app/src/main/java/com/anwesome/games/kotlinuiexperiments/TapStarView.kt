@@ -54,14 +54,17 @@ class TapStarView(ctx:Context):View(ctx) {
             canvas.rotate(deg)
             var path = Path()
             for(i in 0..5) {
-                var sx = (size/2)*Math.cos(i*60*Math.PI/180)
-                var sy = (size/2)*Math.sin(i*60*Math.PI/180)
+                var sx = (size/4)*Math.cos(i*Math.PI/3)
+                var sy = (size/4)*Math.sin(i*Math.PI/3)
+                var tx = (size/2)*Math.cos(i*Math.PI/3+Math.PI/6)
+                var ty = (size/2)*Math.sin(i*Math.PI/3+Math.PI/6)
                 if(i == 0) {
                     path.moveTo(sx.toFloat(), sy.toFloat())
                 }
                 else {
                     path.lineTo(sx.toFloat(),sy.toFloat())
                 }
+                path.lineTo(tx.toFloat(),ty.toFloat())
             }
             canvas.drawPath(path,paint)
             canvas.restore()
@@ -98,8 +101,10 @@ class TapStarView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             stars.forEach { star ->
-                star.handleTap(x,y)
-                stars.remove(star)
+                if(star.handleTap(x,y)) {
+                    stars.remove(star)
+                    return
+                }
             }
         }
     }
