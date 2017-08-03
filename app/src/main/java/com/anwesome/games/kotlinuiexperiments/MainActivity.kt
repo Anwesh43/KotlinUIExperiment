@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
       //  IClassButton.create(this)
        // ScaleUpColorFilterImageView.create(this,bitmap)
         //RollerButton.create(this)
-        TapStarView.create(this)
+        //TapStarView.create(this)
+        BarButtonView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

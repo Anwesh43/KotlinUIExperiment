@@ -1,7 +1,9 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -14,13 +16,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = BBVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -109,6 +113,12 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
                     }
                 }
              }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = BarButtonView(activity)
+            activity.setContentView(view)
         }
     }
 }
