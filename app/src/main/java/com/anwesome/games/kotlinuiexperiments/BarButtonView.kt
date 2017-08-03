@@ -39,4 +39,16 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    class BBVRenderer {
+        var time = 0
+        fun render() {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
