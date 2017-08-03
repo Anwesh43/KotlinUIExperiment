@@ -54,14 +54,25 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
     }
     class BBVRenderer {
         var time = 0
+        var controller:BBVRenderingController?=null
         fun render(canvas:Canvas,paint:Paint,v:BarButtonView) {
             if(time == 0) {
-
+                var barButtons:ConcurrentLinkedQueue<BarButton> = ConcurrentLinkedQueue()
+                var size = canvas.width.toFloat()/(2*v.n+1)
+                var y = canvas.height.toFloat()-2*size
+                var x = 3*size/2
+                for(i in 0..v.n-1) {
+                    barButtons.add(BarButton(x,y,size,canvas.height.toFloat()/2))
+                    x += 2*size
+                }
+                controller = BBVRenderingController(barButtons,v)
             }
+            controller?.draw(canvas,paint)
+            controller?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            controller?.handleTap(x,y)
         }
     }
     class BBVRenderingController(var barButtons:ConcurrentLinkedQueue<BarButton>,var v:BarButtonView,var tappedButtons:ConcurrentLinkedQueue<BarButton> = ConcurrentLinkedQueue()) {
