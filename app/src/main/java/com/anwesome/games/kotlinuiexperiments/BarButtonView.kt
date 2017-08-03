@@ -34,13 +34,18 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
-            paint.strokeCap = Paint.Cap.ROUND
-            paint.strokeWidth = r/40
-            canvas.drawCircle(0.0f,0.0f,r,paint)
+            canvas.drawCircle(0.0f,0.0f,r/2,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
-            canvas.drawLine(0.0f,-h,0.0f,0.0f,paint)
+            canvas.drawArc(RectF(-r/2,-r/2,r/2,r/2),0.0f,360.0f*scale,true,paint)
+            canvas.drawLine(0.0f,-h*scale,0.0f,0.0f,paint)
             canvas.restore()
+        }
+        fun startUpdating() {
+            dir = when(scale) {
+                0.0f -> 1
+                1.0f -> -1
+                else -> dir
+            }
         }
         fun update() {
             scale += dir*0.2f
@@ -61,6 +66,7 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
         var controller:BBVRenderingController?=null
         fun render(canvas:Canvas,paint:Paint,v:BarButtonView) {
             if(time == 0) {
+                paint.color = Color.parseColor("#673ab7")
                 var barButtons:ConcurrentLinkedQueue<BarButton> = ConcurrentLinkedQueue()
                 var size = canvas.width.toFloat()/(2*v.n+1)
                 var y = canvas.height.toFloat()-2*size
@@ -70,6 +76,8 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
                     x += 2*size
                 }
                 controller = BBVRenderingController(barButtons,v)
+                paint.strokeCap = Paint.Cap.ROUND
+                paint.strokeWidth = 10.0f
             }
             controller?.draw(canvas,paint)
             controller?.update()
@@ -91,7 +99,10 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
                 tappedButtons.forEach { tappedButton ->
                     tappedButton.update()
                     if(tappedButton.stopped()) {
-                        animated = false
+                        tappedButtons.remove(tappedButton)
+                        if(tappedButtons.size == 0) {
+                            animated = false
+                        }
                     }
                 }
                 try {
@@ -106,6 +117,7 @@ class BarButtonView(ctx:Context,var n:Int = 5):View(ctx) {
         fun handleTap(x:Float,y:Float) {
              barButtons.forEach { barButton ->
                 if(barButton.handleTap(x,y)) {
+                    barButton.startUpdating()
                     tappedButtons.add(barButton)
                     if(tappedButtons.size == 1) {
                         animated = true
