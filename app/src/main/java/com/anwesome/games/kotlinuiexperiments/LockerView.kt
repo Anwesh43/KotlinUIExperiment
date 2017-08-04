@@ -78,6 +78,26 @@ class LockerView(ctx:Context):View(ctx) {
                 v.postInvalidate()
             }
         }
-
+    }
+    class LVStateHandler {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale += dir * 0.2f
+            if(scale > 1) {
+                scale = 1.0f
+                dir = 0
+            }
+            if(scale < 0) {
+                dir = 0
+                scale = 0.0f
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0) {
+                dir = (1-2*scale).toInt()
+            }
+        }
+        fun stopped():Boolean = dir == 0
     }
 }
