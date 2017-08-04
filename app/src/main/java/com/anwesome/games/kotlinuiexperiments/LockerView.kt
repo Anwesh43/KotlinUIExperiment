@@ -13,27 +13,33 @@ import android.view.View
  */
 class LockerView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = LVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
     }
     class LVRenderer {
         var time = 0
+        var handler:LVAnimationHandler?=null
         fun render(canvas:Canvas,paint:Paint,v:LockerView) {
             if(time == 0) {
-
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                handler = LVAnimationHandler(Locker(w/2,h/2,Math.min(w,h)/3),v)
             }
+            handler?.draw(canvas,paint)
+            handler?.update()
             time++
         }
         fun handleTap(x:Float,y:Float)  {
-
+            handler?.startUpdating(x,y)
         }
     }
     data class Locker(var x:Float,var y:Float,var r:Float) {
@@ -58,8 +64,13 @@ class LockerView(ctx:Context):View(ctx) {
     }
     class LVAnimationHandler(var locker:Locker,var v:LockerView) {
         var animated = false
+        var state = LVStateHandler()
         fun update() {
             if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
                 try {
                     Thread.sleep(75)
                     v.invalidate()
@@ -74,6 +85,7 @@ class LockerView(ctx:Context):View(ctx) {
         }
         fun startUpdating(x:Float,y:Float) {
             if(!animated && locker.handleTap(x,y)) {
+                state.startUpdating()
                 animated = true
                 v.postInvalidate()
             }
