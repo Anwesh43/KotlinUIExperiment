@@ -54,6 +54,30 @@ class LockerView(ctx:Context):View(ctx) {
             canvas.drawArc(RectF(0.0f,-r/4,r/4,r/4),180.0f,180.0f,false,paint)
             canvas.restore()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r 
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
+    }
+    class LVAnimationHandler(var locker:Locker,var v:LockerView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            locker.draw(canvas,paint,0.0f)
+        }
+        fun startUpdating(x:Float,y:Float) {
+            if(!animated && locker.handleTap(x,y)) {
+                animated = true
+                v.postInvalidate()
+            }
+        }
+
     }
 }
