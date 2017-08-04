@@ -1,24 +1,28 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 05/08/17.
  */
 class PyramidView(ctx:Context,var n:Int):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = PVRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -123,6 +127,13 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
         }
         fun handleTap() {
             controller?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity,n:Int = 4) {
+            var view = PyramidView(activity,n)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.setContentView(view)
         }
     }
 }
