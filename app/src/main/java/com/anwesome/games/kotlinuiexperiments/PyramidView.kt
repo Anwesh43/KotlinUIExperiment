@@ -29,7 +29,7 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
     }
     data class Pyramid(var x:Float,var y:Float,var w:Float,var h:Float,var n:Int)  {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
-            var size = Math.min(w,h)
+            var size = h
             canvas.save()
             canvas.translate(x-w/2,y-h/2)
             var px = 0.0f
@@ -41,13 +41,14 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
                 paint.color = Color.WHITE
                 canvas.drawLine(0f,0f,0f,nsize,paint)
                 canvas.drawLine(0f,0f,nsize*(Math.sqrt(3.0).toFloat()/2),nsize/2,paint)
-                canvas.drawLine(nsize*(Math.sqrt(3.0).toFloat())/2,nsize/2,nsize,nsize,paint)
+                canvas.drawLine(nsize*(Math.sqrt(3.0).toFloat())/2,nsize/2,0f,nsize,paint)
                 paint.color = Color.parseColor("#00E676")
                 canvas.save()
                 canvas.translate(0f,nsize/2)
                 for(j in 0..1) {
-                    canvas.drawLine(0f,0f,0f,(1-2*i)*nsize/2*(scale),paint)
+                    canvas.drawLine(0f,0f,0f,(1-2*j)*nsize/2*(scale),paint)
                 }
+                canvas.restore()
                 for(j in 0..1) {
                     canvas.save()
                     canvas.translate(nsize*(Math.sqrt(3.0).toFloat()/2),nsize/2)
@@ -56,9 +57,8 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
                     canvas.restore()
                 }
                 canvas.restore()
-                canvas.restore()
-                px += size/i
-                py += (size/(i) - (size/(i+1)))
+                px += (Math.sqrt(3.0)/2).toFloat()*(size/i)
+                py += ((size/(i) - (size/(i+1))))/2
             }
             canvas.restore()
         }
@@ -68,6 +68,14 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
         var dir = 0
         fun update() {
             scale += dir * 0.2f
+            if(scale > 1) {
+                dir = 0
+                scale = 1.0f
+            }
+            if(scale < 0) {
+                dir = 0
+                scale = 0.0f
+            }
         }
         fun startUpdating() {
             if(dir == 0) {
@@ -114,12 +122,14 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                paint.strokeWidth = Math.min(w,h)/30
+                paint.strokeCap = Paint.Cap.ROUND
                 var sumN = 0f
                 for(i in 1..v.n) {
-                    sumN += 1/i
+                    sumN += (1/i.toFloat())
                 }
                 sumN *= (Math.sqrt(3.0)/2).toFloat()
-                controller = PVRenderingController(Pyramid(w/2,h/2,w,w/sumN,v.n),v)
+                controller = PVRenderingController(Pyramid(w/2,h/2,w,(w*0.95f)/sumN,v.n),v)
             }
             controller?.draw(canvas,paint)
             controller?.update()

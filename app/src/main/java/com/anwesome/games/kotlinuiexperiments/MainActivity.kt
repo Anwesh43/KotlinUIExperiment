@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity() {
         //RollerButton.create(this)
         //TapStarView.create(this)
         //BarButtonView.create(this)
-        LockerView.create(this)
+        //LockerView.create(this)
+        PyramidView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
