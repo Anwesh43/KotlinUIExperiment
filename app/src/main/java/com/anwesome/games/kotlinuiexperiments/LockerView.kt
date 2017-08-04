@@ -22,4 +22,16 @@ class LockerView(ctx:Context):View(ctx) {
         }
         return true
     }
+    class LVRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,v:LockerView) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float)  {
+
+        }
+    }
 }
