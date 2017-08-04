@@ -76,4 +76,31 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    class PVRenderingController(var pyramid:Pyramid,var v:PyramidView,var animated:Boolean = false,var state:PVState = PVState()) {
+        fun update() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            pyramid.draw(canvas,paint,state.scale)
+        }
+        fun handleTap() {
+            if(!animated) {
+                state.startUpdating()
+                animated = true
+                v.postInvalidate()
+            }
+        }
+    }
 }
