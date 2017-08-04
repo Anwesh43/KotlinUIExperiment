@@ -103,4 +103,26 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
             }
         }
     }
+    class PVRenderer {
+        var time = 0
+        var controller:PVRenderingController?=null
+        fun render(canvas:Canvas,paint:Paint,v:PyramidView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var sumN = 0f
+                for(i in 1..v.n) {
+                    sumN += 1/i
+                }
+                sumN *= (Math.sqrt(3.0)/2).toFloat()
+                controller = PVRenderingController(Pyramid(w/2,h/2,w,w/sumN,v.n),v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap() {
+            controller?.handleTap()
+        }
+    }
 }
