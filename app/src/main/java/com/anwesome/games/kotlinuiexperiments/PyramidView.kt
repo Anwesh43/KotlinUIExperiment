@@ -59,4 +59,21 @@ class PyramidView(ctx:Context,var n:Int):View(ctx) {
             canvas.restore()
         }
     }
+    class PVState {
+        var scale = 0.0f
+        var dir = 0
+        fun update() {
+            scale += dir * 0.2f
+        }
+        fun startUpdating() {
+            if(dir == 0) {
+                dir = when(scale) {
+                    0.0f -> 1
+                    1.0f -> -1
+                    else -> dir
+                }
+            }
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
