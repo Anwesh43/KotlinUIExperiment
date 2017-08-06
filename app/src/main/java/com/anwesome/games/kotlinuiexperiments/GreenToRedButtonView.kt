@@ -53,6 +53,14 @@ class GreenToRedButtonView(ctx:Context):View(ctx) {
         var animated = false
         var startAnim = ValueAnimator.ofFloat(0.0f,1.0f)
         var endAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        init {
+            startAnim.addUpdateListener(this)
+            endAnim.addUpdateListener(this)
+            startAnim.addListener(this)
+            endAnim.addListener(this)
+            startAnim.duration = 500
+            endAnim.duration = 500
+        }
         override fun onAnimationUpdate(vf:ValueAnimator) {
             var factor = vf.animatedValue as Float
             renderer.update(factor)
@@ -90,6 +98,7 @@ class GreenToRedButtonView(ctx:Context):View(ctx) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                paint.strokeWidth = w/30
                 gtrButton = GreenToRedButton(w/2,h/2,Math.min(w,h)*0.4f)
             }
             gtrButton?.draw(canvas,paint,scale)
