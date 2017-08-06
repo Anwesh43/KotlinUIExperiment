@@ -44,13 +44,14 @@ class GreenToRedButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
-    class GTRAnimListener():AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+    class GTRAnimListener(var renderer:GTRRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
         var dir = 0
         var animated = false
         var startAnim = ValueAnimator.ofFloat(0.0f,1.0f)
         var endAnim = ValueAnimator.ofFloat(1.0f,0.0f)
         override fun onAnimationUpdate(vf:ValueAnimator) {
-            var factor = vf.animatedValue as Float 
+            var factor = vf.animatedValue as Float
+            renderer.update(factor)
         }
         override fun onAnimationEnd(animation: Animator?) {
             if(animated) {
@@ -74,6 +75,28 @@ class GreenToRedButtonView(ctx:Context):View(ctx) {
                 }
                 animated = true
             }
+        }
+    }
+    class GTRRenderer(var v:GreenToRedButtonView) {
+        var time = 0
+        var scale:Float = 0.0f
+        var gtrButton:GreenToRedButton?=null
+        var listener = GTRAnimListener(this)
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                gtrButton = GreenToRedButton(w/2,h/2,Math.min(w,h)*0.4f)
+            }
+            gtrButton?.draw(canvas,paint,scale)
+            time++
+        }
+        fun update(factor:Float) {
+            scale = factor
+            v.postInvalidate()
+        }
+        fun handleTap() {
+            listener.start()
         }
     }
 }
