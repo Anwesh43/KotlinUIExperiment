@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -39,6 +42,38 @@ class GreenToRedButtonView(ctx:Context):View(ctx) {
                 canvas.restore()
             }
             canvas.restore()
+        }
+    }
+    class GTRAnimListener():AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var dir = 0
+        var animated = false
+        var startAnim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var endAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            var factor = vf.animatedValue as Float 
+        }
+        override fun onAnimationEnd(animation: Animator?) {
+            if(animated) {
+                dir = when(dir) {
+                    1 -> 0
+                    0 -> 1
+                    else -> dir
+                }
+                animated = false
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when(dir) {
+                    0 -> {
+                        startAnim.start()
+                    }
+                    1 -> {
+                        endAnim.start()
+                    }
+                }
+                animated = true
+            }
         }
     }
 }
