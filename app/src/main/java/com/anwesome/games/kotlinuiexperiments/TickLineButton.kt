@@ -45,4 +45,32 @@ class TickLineButtonView(ctx:Context,var n:Int=5):View(ctx) {
         }
         fun stopped():Boolean = deg == 0
     }
+    class TickRenderController(var button:TickLineButton,var v:TickLineButtonView,var state:TickState = TickState()) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun startUpdating(x:Float,y:Float) {
+            if(!animated && button.handleTap(x,y)) {
+                animated = true
+
+                v.postInvalidate()
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            button.draw(canvas,paint,state.scale)
+        }
+    }
 }
