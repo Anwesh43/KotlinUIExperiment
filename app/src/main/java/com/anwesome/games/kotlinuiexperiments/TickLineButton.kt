@@ -9,7 +9,7 @@ import android.view.View
 /**
  * Created by anweshmishra on 07/08/17.
  */
-class TickLineButtonView(ctx:Context,var n:Int=5):View(ctx) {
+class TickLineButtonView(ctx:Context):View(ctx) {
     var paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -71,6 +71,23 @@ class TickLineButtonView(ctx:Context,var n:Int=5):View(ctx) {
         }
         fun draw(canvas:Canvas,paint:Paint) {
             button.draw(canvas,paint,state.scale)
+        }
+    }
+    class TickRenderer {
+        var time = 0
+        var controller:TickRenderController?=null
+        fun render(canvas:Canvas,paint:Paint,v:TickLineButtonView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                controller = TickRenderController(TickLineButton(w/2,h-w/3,w/3),v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun startUpdating(x:Float,y:Float) {
+            controller?.startUpdating(x,y)
         }
     }
 }
