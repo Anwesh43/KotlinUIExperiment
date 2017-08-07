@@ -33,4 +33,16 @@ class TickLineButtonView(ctx:Context,var n:Int=5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
     }
+    class TickState {
+        var scale = 0.0f
+        var deg = 0
+        fun update() {
+            deg+= 18
+            scale = Math.abs(Math.sin(deg*Math.PI/180).toFloat())
+            if(deg > 180) {
+                deg = 0
+            }
+        }
+        fun stopped():Boolean = deg == 0
+    }
 }
