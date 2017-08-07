@@ -54,7 +54,8 @@ class MainActivity : AppCompatActivity() {
         //BarButtonView.create(this)
         //LockerView.create(this)
         //PyramidView.create(this)
-        GreenToRedButtonView.create(this)
+        //GreenToRedButtonView.create(this)
+        TickLineButtonView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

@@ -1,23 +1,28 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 07/08/17.
  */
 class TickLineButtonView(ctx:Context):View(ctx) {
     var paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = TickRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.startUpdating(event.x,event.y)
             }
         }
         return true
@@ -37,7 +42,7 @@ class TickLineButtonView(ctx:Context):View(ctx) {
         var scale = 0.0f
         var deg = 0
         fun update() {
-            deg+= 18
+            deg+= 3
             scale = Math.abs(Math.sin(deg*Math.PI/180).toFloat())
             if(deg > 180) {
                 deg = 0
@@ -80,7 +85,10 @@ class TickLineButtonView(ctx:Context):View(ctx) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                paint.style = Paint.Style.STROKE
                 controller = TickRenderController(TickLineButton(w/2,h-w/3,w/3),v)
+                paint.strokeWidth = w/40
+                paint.color = Color.parseColor("#01579B")
             }
             controller?.draw(canvas,paint)
             controller?.update()
@@ -88,6 +96,13 @@ class TickLineButtonView(ctx:Context):View(ctx) {
         }
         fun startUpdating(x:Float,y:Float) {
             controller?.startUpdating(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = TickLineButtonView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
