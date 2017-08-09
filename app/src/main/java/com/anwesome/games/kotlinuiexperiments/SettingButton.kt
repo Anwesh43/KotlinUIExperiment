@@ -17,6 +17,7 @@ class SettingButton(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SBRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -38,17 +39,17 @@ class SettingButton(ctx:Context):View(ctx) {
         private fun drawPath(canvas:Canvas,paint:Paint,r:Float) {
             var path = Path()
             paint.color = Color.GRAY
-            for(i in 0..11) {
-                var currdeg = i*30.0f
+            for(i in 0..7) {
+                var currdeg = i*45.0f
                 var r1 = 2*r/3
-                var x1 = r1*Math.cos(currdeg*Math.PI/180).toFloat()
-                var y1 = r1*Math.sin(currdeg*Math.PI/180).toFloat()
-                var x2 = r*Math.cos((currdeg+5)*Math.PI/180).toFloat()
-                var y2 = r*Math.sin((currdeg+5)*Math.PI/180).toFloat()
-                var x3 = r*Math.cos((currdeg+25)*Math.PI/180).toFloat()
-                var y3 = r*Math.sin((currdeg+25)*Math.PI/180).toFloat()
-                var x4 = r1*Math.cos((currdeg+30)*Math.PI/180).toFloat()
-                var y4 = r1*Math.sin((currdeg+30)*Math.PI/180).toFloat()
+                var x1 = r1*Math.cos((currdeg+5)*Math.PI/180).toFloat()
+                var y1 = r1*Math.sin((currdeg+5)*Math.PI/180).toFloat()
+                var x2 = r*Math.cos((currdeg)*Math.PI/180).toFloat()
+                var y2 = r*Math.sin((currdeg)*Math.PI/180).toFloat()
+                var x3 = r*Math.cos((currdeg+30)*Math.PI/180).toFloat()
+                var y3 = r*Math.sin((currdeg+30)*Math.PI/180).toFloat()
+                var x4 = r1*Math.cos((currdeg+25)*Math.PI/180).toFloat()
+                var y4 = r1*Math.sin((currdeg+25)*Math.PI/180).toFloat()
                 if(i == 0) {
                     path.moveTo(x1,y1)
                 }
@@ -62,7 +63,7 @@ class SettingButton(ctx:Context):View(ctx) {
             canvas.drawPath(path,paint)
         }
         fun update(scale:Float) {
-            deg = 360.0f*scale
+            deg = 180.0f*scale
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x -r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
