@@ -63,4 +63,15 @@ class SettingButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x -r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    class SBState(var deg:Float = 0.0f,var scale:Float = 0.0f) {
+        fun update() {
+            deg += 4.5f
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            if(deg > 180) {
+                deg = 0.0f
+            }
+        }
+        fun stopped():Boolean = deg == 0.0f
+    }
+    
 }
