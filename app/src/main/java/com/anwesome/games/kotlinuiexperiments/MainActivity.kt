@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         //PyramidView.create(this)
         //GreenToRedButtonView.create(this)
         //TickLineButtonView.create(this)
-        SettingButton.create(this)
+        SettingButton.create(this,SettingButtonClickListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -93,6 +93,11 @@ class ImageSelectionListener(var activity: MainActivity):OnImageSelectionListene
 
     override fun onUnselect() {
         Toast.makeText(activity,"unselected",Toast.LENGTH_SHORT).show()
+    }
+}
+class SettingButtonClickListener(var activity: MainActivity):SettingButton.SBClickListener {
+    override fun onClick() {
+        Toast.makeText(activity,"Clicked",Toast.LENGTH_SHORT).show()
     }
 }
 class HorizontalScaleButtonClickListener(var activity: MainActivity):OnSHBClickListener {
