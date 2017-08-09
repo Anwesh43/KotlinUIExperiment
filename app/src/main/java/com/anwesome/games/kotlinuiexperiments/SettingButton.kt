@@ -73,5 +73,31 @@ class SettingButton(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0.0f
     }
-    
+    class SBAnimController(var sb:SettingButtonShape,var v:SettingButton,var animated:Boolean = false,var state:SBState=SBState()) {
+        fun update() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                sb.update(state.scale)
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && sb.handleTap(x,y)) {
+                animated = true
+                v.postInvalidate()
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            sb.draw(canvas,paint)
+        }
+    }
 }
