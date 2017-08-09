@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,19 +8,21 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 09/08/17.
  */
 class SettingButton(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = SBRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -116,6 +119,13 @@ class SettingButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             controller?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = SettingButton(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
