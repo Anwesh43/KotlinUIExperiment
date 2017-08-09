@@ -66,4 +66,51 @@ class DoubleArrowLineButton(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0.0f
     }
+    class DALBRenderController(var dla:DoubleLineArrow,var v:DoubleArrowLineButton,var state:DALBState = DALBState(),var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            dla.draw(canvas,paint,state.scale)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && dla.handleTap(x,y)) {
+                animated = true
+                v.postInvalidate()
+            }
+        }
+    }
+    class DALBRenderer {
+        var time = 0
+        var controller:DALBRenderController?=null
+        fun render(canvas:Canvas,paint:Paint,v:DoubleArrowLineButton) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var arrowSize = w/10
+                var doubleArrow = DoubleArrow(arrowSize/2,h/2,arrowSize)
+                var arrowLine = ArrowLine(0.0F,h/2+h/3,w-arrowSize)
+                var doubleArrowLine = DoubleLineArrow(doubleArrow,arrowLine)
+                controller = DALBRenderController(doubleArrowLine,v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
+        }
+    }
 }
