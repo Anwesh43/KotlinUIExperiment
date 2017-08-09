@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import android.view.ViewGroup
 class SettingButton(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SBRenderer()
+    var listener:SBClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -83,6 +85,7 @@ class SettingButton(ctx:Context):View(ctx) {
                 state.update()
                 if(state.stopped()) {
                     animated = false
+                    v.listener?.onClick()
                 }
                 sb.update(state.scale)
                 try {
@@ -123,10 +126,16 @@ class SettingButton(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listners:SBClickListener) {
             var view = SettingButton(activity)
+            if(listners.size == 1) {
+                view.listener = listners[0]
+            }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
+    }
+    interface SBClickListener {
+        fun onClick()
     }
 }
