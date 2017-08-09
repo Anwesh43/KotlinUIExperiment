@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
@@ -103,10 +104,12 @@ class DoubleArrowLineButton(ctx:Context):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 var arrowSize = w/10
-                var doubleArrow = DoubleArrow(arrowSize/2,h/2,arrowSize)
+                var doubleArrow = DoubleArrow(arrowSize/2,h/2,arrowSize,w-arrowSize/2)
                 var arrowLine = ArrowLine(0.0F,h/2+h/3,w-arrowSize)
                 var doubleArrowLine = DoubleLineArrow(doubleArrow,arrowLine)
                 controller = DALBRenderController(doubleArrowLine,v)
+                paint.color = Color.parseColor("#0D47A1")
+                paint.strokeWidth = h/15
             }
             controller?.draw(canvas,paint)
             controller?.update()
