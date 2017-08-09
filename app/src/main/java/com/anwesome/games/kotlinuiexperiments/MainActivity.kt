@@ -56,7 +56,8 @@ class MainActivity : AppCompatActivity() {
         //PyramidView.create(this)
         //GreenToRedButtonView.create(this)
         //TickLineButtonView.create(this)
-        SettingButton.create(this,SettingButtonClickListener(this))
+        //SettingButton.create(this,SettingButtonClickListener(this))
+        DoubleArrowLineButton.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

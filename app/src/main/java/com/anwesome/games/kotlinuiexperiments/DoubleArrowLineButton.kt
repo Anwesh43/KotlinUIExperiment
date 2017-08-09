@@ -49,7 +49,7 @@ class DoubleArrowLineButton(ctx:Context):View(ctx) {
             }
             canvas.restore()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-2*size && x<=this.x+2*size && y>=this.y-2*size && y<=this.y+2*size
     }
     data class DoubleLineArrow(var doubleArrow:DoubleArrow,var arrowLine:ArrowLine) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
@@ -62,7 +62,7 @@ class DoubleArrowLineButton(ctx:Context):View(ctx) {
         var scale = 0.0f
         var deg = 0.0f
         fun update() {
-            deg += 4.5f
+            deg += 0.9f
             scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
             if(deg > 180.0f) {
                 deg = 0.0f
@@ -78,7 +78,7 @@ class DoubleArrowLineButton(ctx:Context):View(ctx) {
                     animated = false
                 }
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(2)
                     v.invalidate()
                 }
                 catch (ex:Exception) {
