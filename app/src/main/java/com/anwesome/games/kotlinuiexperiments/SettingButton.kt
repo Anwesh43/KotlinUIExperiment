@@ -100,4 +100,22 @@ class SettingButton(ctx:Context):View(ctx) {
             sb.draw(canvas,paint)
         }
     }
+    class SBRenderer {
+        var time = 0
+        var controller:SBAnimController?=null
+        fun render(canvas:Canvas,paint:Paint,v:SettingButton) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var sb = SettingButtonShape(w/2,h/2,Math.min(w,h)/3)
+                controller = SBAnimController(sb,v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
+        }
+    }
 }
