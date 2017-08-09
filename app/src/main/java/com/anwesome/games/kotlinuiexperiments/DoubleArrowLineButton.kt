@@ -54,4 +54,16 @@ class DoubleArrowLineButton(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = doubleArrow.handleTap(x,y)
     }
+    class DALBState {
+        var scale = 0.0f
+        var deg = 0.0f
+        fun update() {
+            deg += 4.5f
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            if(deg > 180.0f) {
+                deg = 0.0f
+            }
+        }
+        fun stopped():Boolean = deg == 0.0f
+    }
 }
