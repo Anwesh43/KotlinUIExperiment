@@ -1,11 +1,13 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -13,13 +15,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class SquareCornerSwitch(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer = CornerSquareRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -148,6 +152,13 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             controller?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity: Activity) {
+            var view = SquareCornerSwitch(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
