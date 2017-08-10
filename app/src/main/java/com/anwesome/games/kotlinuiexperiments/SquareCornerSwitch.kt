@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 11/08/17.
@@ -28,8 +29,6 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
-            paint.color = Color.BLUE
-            paint.strokeWidth = r/20
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.style = Paint.Style.FILL
             canvas.save()
@@ -58,6 +57,44 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
                     dir = 0
                 }
             }
+        }
+    }
+    class CornerSquare(var w:Float,var h:Float) {
+        var corners:ConcurrentLinkedQueue<Corner> = ConcurrentLinkedQueue()
+        init {
+            var deg = -45
+
+            for(i in 0..3) {
+                var r = Math.min(w,h)/2
+                var x = w/2 + r*Math.cos(deg*Math.PI/180).toFloat()
+                var y = h/2 + r*Math.sin(deg*Math.PI/180).toFloat()
+                corners.add(Corner(x,y,r/5))
+                deg+=90
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.BLUE
+            var r = Math.min(w,h)/2
+            paint.strokeWidth = r/20
+            for(i in 0..3) {
+                var r = Math.min(w,h)/2
+                canvas.save()
+                canvas.translate(w/2,h/2)
+                canvas.rotate(i*90.0f)
+                canvas.drawLine(w/2,-(h/2-r),w/2,(h/2-r),paint)
+                canvas.restore()
+            }
+            corners.forEach { corner ->
+                corner.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float):Corner? {
+            corners.forEach { corner->
+                if(corner.handleTap(x,y)) {
+                    return corner
+                }
+            }
+            return null
         }
     }
 }
