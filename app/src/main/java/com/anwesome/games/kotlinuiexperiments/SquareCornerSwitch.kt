@@ -97,4 +97,39 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
             return null
         }
     }
+    class CornerRenderController(var cornerSquare:CornerSquare,var v:SquareCornerSwitch) {
+        var curr:Corner?=null
+        var prev:Corner?=null
+        var animated = false
+        fun draw(canvas: Canvas,paint:Paint) {
+            cornerSquare.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                curr?.update()
+                prev?.update()
+                if(curr?.stopped()?:false) {
+                    prev = curr
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                var corner = cornerSquare.handleTap(x,y)
+                if(!(corner?.equals(prev)?:true)) {
+                    curr = corner
+                    animated = true
+                    v.postInvalidate()
+                }
+            }
+        }
+    }
 }
