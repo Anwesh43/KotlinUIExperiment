@@ -73,7 +73,6 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.BLUE
             var r = Math.min(w,h)/2
             paint.strokeWidth = r/20
             for(i in 0..3) {
@@ -130,6 +129,25 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
                     v.postInvalidate()
                 }
             }
+        }
+    }
+    class CornerSquareRenderer {
+        var time = 0
+        var controller:CornerRenderController?=null
+        fun render(canvas: Canvas,paint:Paint,v:SquareCornerSwitch) {
+            if(time == 0) {
+                paint.color = Color.BLUE
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var cornerSquare = CornerSquare(w,h)
+                controller = CornerRenderController(cornerSquare,v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
         }
     }
 }
