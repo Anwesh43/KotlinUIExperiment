@@ -84,7 +84,7 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
                 canvas.save()
                 canvas.translate(w/2,h/2)
                 canvas.rotate(i*90.0f)
-                canvas.drawLine(w/2,-(h/2-r),w/2,(h/2-r),paint)
+                canvas.drawLine(w/2-r/5,-(h/2-2*r/5),w/2-r/5,(h/2-2*r/5),paint)
                 canvas.restore()
             }
             corners.forEach { corner ->
@@ -129,6 +129,8 @@ class SquareCornerSwitch(ctx:Context):View(ctx) {
                 var corner = cornerSquare.handleTap(x,y)
                 if(!(corner?.equals(prev)?:true)) {
                     curr = corner
+                    curr?.startUpdating(1)
+                    prev?.startUpdating(-1)
                     animated = true
                     v.postInvalidate()
                 }
