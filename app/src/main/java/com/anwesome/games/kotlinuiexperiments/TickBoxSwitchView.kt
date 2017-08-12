@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -50,6 +53,7 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
     }
     class TickBoxRenderer(var v:TickBoxSwitchView) {
         var time = 0
+        var animator = TickBoxAnimController(this)
         var controller:TickBoxRenderController?=null
         fun render(canvas: Canvas,paint:Paint) {
             if(time == 0){
@@ -76,7 +80,7 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(controller?.handleTap(x,y)?:false) {
-
+                animator.start()
             }
         }
     }
@@ -106,6 +110,30 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
                 }
             }
             return false
+        }
+    }
+    class TickBoxAnimController(var renderer:TickBoxRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var animated = false
+        var startAnim:ValueAnimator = ValueAnimator.ofFloat(0.0f,1.0f)
+        init {
+            startAnim.addUpdateListener(this)
+            startAnim.addListener(this)
+            startAnim.duration = 500
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            renderer.update(vf.animatedValue as Float)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                animated = false
+                renderer.stopUpdating()
+            }
+        }
+        fun start() {
+            if(!animated) {
+                startAnim.start()
+                animated = true
+            }
         }
     }
 }
