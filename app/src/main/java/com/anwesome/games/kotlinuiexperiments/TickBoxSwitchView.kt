@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 12/08/17.
@@ -46,5 +47,33 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
             this.scale = scale
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
+    }
+    class TickBoxRenderController(var tickBoxes:ConcurrentLinkedQueue<TickBox>) {
+        var prev:TickBox?=null
+        var curr:TickBox?=null
+        fun draw(canvas:Canvas,paint:Paint) {
+            tickBoxes.forEach{ tickBox ->
+                tickBox.draw(canvas,paint)
+            }
+        }
+        fun update(factor:Float) {
+            prev?.update(factor)
+            curr?.update(1-factor)
+        }
+        fun stopUpdating() {
+            prev = curr
+            curr = null
+        }
+        fun handleTap(x:Float,y:Float):Boolean {
+            if(curr == null) {
+                tickBoxes.forEach { tickBox ->
+                    if (tickBox.handleTap(x, y)) {
+                        curr = tickBox
+                        return true
+                    }
+                }
+            }
+            return false
+        }
     }
 }
