@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         //TickLineButtonView.create(this)
         //SettingButton.create(this,SettingButtonClickListener(this))
         //DoubleArrowLineButton.create(this)
-        SquareCornerSwitch.create(this)
+        //SquareCornerSwitch.create(this)
+        TickBoxSwitchView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

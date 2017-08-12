@@ -21,6 +21,7 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = TickBoxRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -71,7 +72,7 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
                 var x = 3*size/2
                 var tickBoxes:ConcurrentLinkedQueue<TickBox> = ConcurrentLinkedQueue()
                 for(i in 0..v.n) {
-                    tickBoxes.add(TickBox(x,h/2,size/2))
+                    tickBoxes.add(TickBox(x,h/2,2*size/3))
                     x += 2*size
                 }
                 controller = TickBoxRenderController(tickBoxes)
@@ -101,8 +102,8 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
         fun update(factor:Float) {
-            prev?.update(factor)
-            curr?.update(1-factor)
+            prev?.update(1-factor)
+            curr?.update(factor)
         }
         fun stopUpdating() {
             prev = curr
@@ -110,7 +111,7 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean {
             if(curr == null) {
-                tickBoxes.forEach { tickBox ->
+                tickBoxes.filter{ tickBox -> tickBox!=prev }.forEach { tickBox ->
                     if (tickBox.handleTap(x, y)) {
                         curr = tickBox
                         return true
