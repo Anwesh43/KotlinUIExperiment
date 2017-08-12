@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -17,10 +19,16 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = TickBoxRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                renderer.handleTap(event.x,event.y)
+            }
+        }
         return true
     }
     data class TickBox(var x:Float,var y:Float,var size:Float,var scale:Float = 0.0f) {
@@ -134,6 +142,13 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
                 startAnim.start()
                 animated = true
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = TickBoxSwitchView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y/3))
         }
     }
 }
