@@ -48,6 +48,38 @@ class TickBoxSwitchView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
     }
+    class TickBoxRenderer(var v:TickBoxSwitchView) {
+        var time = 0
+        var controller:TickBoxRenderController?=null
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0){
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var size = w/(2*v.n+1)
+                var x = 3*size/2
+                var tickBoxes:ConcurrentLinkedQueue<TickBox> = ConcurrentLinkedQueue()
+                for(i in 0..v.n) {
+                    tickBoxes.add(TickBox(x,h/2,size/2))
+                    x += 2*size
+                }
+                controller = TickBoxRenderController(tickBoxes)
+            }
+            controller?.draw(canvas,paint)
+            time++
+        }
+        fun update(factor: Float) {
+            controller?.update(factor)
+            v.postInvalidate()
+        }
+        fun stopUpdating() {
+            controller?.stopUpdating()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(controller?.handleTap(x,y)?:false) {
+
+            }
+        }
+    }
     class TickBoxRenderController(var tickBoxes:ConcurrentLinkedQueue<TickBox>) {
         var prev:TickBox?=null
         var curr:TickBox?=null
