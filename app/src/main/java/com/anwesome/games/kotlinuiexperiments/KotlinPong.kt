@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 13/08/17.
@@ -69,6 +70,31 @@ class KotlinPongView(ctx:Context):View(ctx) {
             x+=dirx
             y+=diry
             dimensionHolder.decidePongDirection(this)
+        }
+    }
+    data class PongRenderController(var dimensionHolder: DimensionHolder,var pongView: KotlinPongView,var pongs:ConcurrentLinkedQueue<Pong> = ConcurrentLinkedQueue()) {
+        fun handleTap(x:Float,y:Float) {
+            pongs.add(dimensionHolder.createPong(x,y))
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            pongs.forEach { pong->
+                pong.draw(canvas,paint)
+            }
+        }
+        private fun animateView() {
+            try {
+                Thread.sleep(75)
+                pongView.invalidate()
+            }
+            catch(ex:Exception) {
+
+            }
+        }
+        fun update() {
+            pongs.forEach { pong->
+                pong.update(dimensionHolder)
+            }
+            animateView()
         }
     }
 }
