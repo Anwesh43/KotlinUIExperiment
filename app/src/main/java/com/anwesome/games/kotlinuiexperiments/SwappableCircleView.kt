@@ -11,13 +11,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = SwappableViewRenderer()
     override fun onDraw(canvas: Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -38,7 +39,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
-    data class TraversePath(var x:Float,var y:Float,var r:Float,var deg:Float) {
+    data class TraversePath(var x:Float,var y:Float,var r:Float,var deg:Float=0.0f) {
         var updeg = 0.0f
         var traversePoint = PointF()
         fun update() {
