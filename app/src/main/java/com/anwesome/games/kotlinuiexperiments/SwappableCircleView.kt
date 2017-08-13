@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 14/08/17.
@@ -37,12 +38,65 @@ class SwappableCircleView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
-    data class TraversePath(var x:Float,var y:Float,var r:Float) {
-        var deg = 0.0f
+    data class TraversePath(var x:Float,var y:Float,var r:Float,var deg:Float) {
         var traversePoint = PointF()
         fun update() {
             traversePoint.x = x+r*(Math.cos(deg*Math.PI/180)).toFloat()
             traversePoint.y = y+r*(Math.sin(deg*Math.PI/180)).toFloat()
+        }
+    }
+    data class SwapableCircleRenderController(var circles:ConcurrentLinkedQueue<SwappableCircle>,var h:Float,var v:SwappableCircleView) {
+        var first:SwappableCircle?=null
+        var second:SwappableCircle?=null
+        fun update() {
+            if(first != null && second != null) {
+                first?.update()
+                second?.update()
+                try {
+                    Thread.sleep(75)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            circles.forEach { circle ->
+                circle.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!(first != null && second!=null)) {
+                circles.forEach { circle ->
+                    if(circle.handleTap(x,y)) {
+                        if(first != null) {
+                            second = first
+                            var x = ((first?.x?:0.0f).toFloat() + (second?.x?:0.0f).toFloat())/2
+                            var y = ((first?.y?:0.0f).toFloat() + (second?.y?:0.0f).toFloat())/2
+                            var r =  ((first?.x?:0.0f).toFloat() - (second?.x?:0.0f).toFloat())/2
+                            var tpath1 = TraversePath(x,y,r)
+                            var tpath2 = TraversePath(x,y,r)
+                            if(first?.x?:0.0f > second?.x?:0.0f) {
+                                tpath1.deg = 0.0f
+                                tpath2.deg = 180.0f
+                            }
+                            else {
+                                tpath2.deg = 0.0f
+                                tpath1.deg = 180.0f
+                            }
+                            first?.traversePath = tpath1
+                            second?.traversePath = tpath2
+                            v.postInvalidate()
+                            return
+                        }
+                        else {
+                            first = circle
+                            return
+                        }
+                    }
+                }
+            }
         }
     }
 }
