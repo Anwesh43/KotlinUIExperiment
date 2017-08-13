@@ -70,8 +70,8 @@ class KotlinPongView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(dimensionHolder:DimensionHolder) {
-            x+=dirx
-            y+=diry
+            x+=dirx*10
+            y+=diry*10
             dimensionHolder.decidePongDirection(this)
         }
     }
