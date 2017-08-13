@@ -75,10 +75,7 @@ class KotlinPongView(ctx:Context):View(ctx) {
             y+=diry*20
             dimensionHolder.decidePongDirection(this)
         }
-        fun changeDir() {
-            dirx *= -1
-            diry *= -1
-        }
+        fun checkCollision(pong:Pong):Boolean = pong.x+pong.r>this.x-this.r && pong.x-pong.r < x+r && pong.y+pong.r>this.y-this.r && pong.y-pong.r < y+r
     }
     data class PongRenderController(var dimensionHolder: DimensionHolder,var pongView: KotlinPongView,var pongs:ConcurrentLinkedQueue<Pong> = ConcurrentLinkedQueue()) {
         fun handleTap(x:Float,y:Float) {
@@ -87,6 +84,47 @@ class KotlinPongView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             pongs.forEach { pong->
                 pong.draw(canvas,paint)
+            }
+        }
+        private fun handleCollisionBetweenBalls() {
+            var i = 0
+            pongs.forEach { pong ->
+                var j = 0
+                i++
+                var collidingPongs = pongs.filter {
+                    j++
+                    j>i
+                }.filter{ currPong->
+                    currPong.checkCollision(pong)
+                }
+                if(collidingPongs.size == 1) {
+                    swapDir(pong,collidingPongs[0])
+                }
+            }
+        }
+        private fun swapDir(pong1:Pong,pong2:Pong) {
+            var dirx = pong1.dirx
+            var diry = pong1.diry
+            pong1.dirx = pong2.dirx
+            pong1.diry = pong2.diry
+            pong2.dirx = dirx
+            pong2.diry = diry
+            if(pong1.y>pong2.y) {
+                pong1.diry = 1.0f
+                pong2.diry = -1.0f
+            }
+            else {
+                pong1.diry = -1.0f
+                pong2.diry = 1.0f
+            }
+
+            if(pong1.x>pong2.x) {
+                pong1.dirx = 1.0f
+                pong2.dirx = -1.0f
+            }
+            else {
+                pong1.dirx = -1.0f
+                pong2.dirx = 1.0f
             }
         }
         private fun animateView() {
@@ -102,6 +140,7 @@ class KotlinPongView(ctx:Context):View(ctx) {
             pongs.forEach { pong->
                 pong.update(dimensionHolder)
             }
+            handleCollisionBetweenBalls()
             animateView()
         }
     }
