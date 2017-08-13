@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         //SquareCornerSwitch.create(this)
         //TickBoxSwitchView.create(this)
         //KotlinPongView.create(this)
-        SwappableCircleView.create(this)
+        SwappableCircleView.create(this,6)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

@@ -41,7 +41,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
             y = traversePath?.traversePoint?.y?:y
         }
         fun stopped():Boolean = traversePath?.stopped()?:false
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-2*r && x<=this.x+2*r && y>=this.y-2*r && y<=this.y+2*r
     }
     data class TraversePath(var x:Float,var y:Float,var r:Float,var deg:Float=0.0f) {
         var updeg = 0.0f
