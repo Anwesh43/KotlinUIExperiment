@@ -30,16 +30,17 @@ class KotlinPongView(ctx:Context):View(ctx) {
     }
     data class DimensionHolder(var w:Float,var h:Float){
         fun decidePongDirection(pong:Pong) {
-            if(pong.x<0) {
+            var r = pong.r
+            if(pong.x<r) {
                 pong.dirx = 1.0f
             }
-            if(pong.x>w) {
+            if(pong.x>w-r) {
                 pong.dirx = -1.0f
             }
-            if(pong.y<0) {
+            if(pong.y<r) {
                 pong.diry = 1.0f
             }
-            if(pong.y>h) {
+            if(pong.y>h-r) {
                 pong.diry = -1.0f
             }
 
@@ -65,14 +66,18 @@ class KotlinPongView(ctx:Context):View(ctx) {
         fun draw(canvas: Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            paint.color = Color.argb(150,255,0,0)
+            paint.color = Color.argb(150,244,67,54)
             canvas.drawCircle(0.0f,0.0f,r,paint)
             canvas.restore()
         }
         fun update(dimensionHolder:DimensionHolder) {
-            x+=dirx*10
-            y+=diry*10
+            x+=dirx*20
+            y+=diry*20
             dimensionHolder.decidePongDirection(this)
+        }
+        fun changeDir() {
+            dirx *= -1
+            diry *= -1
         }
     }
     data class PongRenderController(var dimensionHolder: DimensionHolder,var pongView: KotlinPongView,var pongs:ConcurrentLinkedQueue<Pong> = ConcurrentLinkedQueue()) {
