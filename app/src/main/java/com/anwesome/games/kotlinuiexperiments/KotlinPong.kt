@@ -71,8 +71,8 @@ class KotlinPongView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(dimensionHolder:DimensionHolder) {
-            x+=dirx*20
-            y+=diry*20
+            x+=dirx*30
+            y+=diry*30
             dimensionHolder.decidePongDirection(this)
         }
         fun checkCollision(pong:Pong):Boolean = pong.x+pong.r>this.x-this.r && pong.x-pong.r < x+r && pong.y+pong.r>this.y-this.r && pong.y-pong.r < y+r
@@ -129,7 +129,7 @@ class KotlinPongView(ctx:Context):View(ctx) {
         }
         private fun animateView() {
             try {
-                Thread.sleep(75)
+                Thread.sleep(40)
                 pongView.invalidate()
             }
             catch(ex:Exception) {
