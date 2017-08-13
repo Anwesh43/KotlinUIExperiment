@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
@@ -116,6 +117,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
                 var circles:ConcurrentLinkedQueue<SwappableCircle> = ConcurrentLinkedQueue()
                 for(i in 0..v.n) {
                     circles.add(SwappableCircle(x,y,2*gap/3))
+                    x += 2*gap
                 }
                 controller = SwapableCircleRenderController(circles,h,v)
             }
@@ -125,6 +127,15 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             controller?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity: Activity,vararg ns:Int) {
+            var view = SwappableCircleView(activity)
+            if(ns.size == 1) {
+                view.n = ns[0]
+            }
+            var point = DimensionsUtil.getDimension(activity)
         }
     }
 }
