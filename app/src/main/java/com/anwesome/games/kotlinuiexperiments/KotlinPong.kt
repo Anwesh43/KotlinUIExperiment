@@ -97,4 +97,21 @@ class KotlinPongView(ctx:Context):View(ctx) {
             animateView()
         }
     }
+    class PongsRenderer(var time:Int = 0) {
+        var controller:PongRenderController?=null
+        fun render(canvas:Canvas,paint:Paint,v:KotlinPongView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var dimensionHolder = DimensionHolder(w,h)
+                controller = PongRenderController(dimensionHolder,v)
+            }
+            controller?.draw(canvas,paint)
+            time++
+            controller?.update()
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
+        }
+    }
 }
