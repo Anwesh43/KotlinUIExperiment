@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
@@ -22,5 +23,52 @@ class KotlinPongView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class DimensionHolder(var w:Float,var h:Float){
+        fun decidePongDirection(pong:Pong) {
+            if(pong.x<0) {
+                pong.dirx = 1.0f
+            }
+            if(pong.x>w) {
+                pong.dirx = -1.0f
+            }
+            if(pong.y<0) {
+                pong.diry = 1.0f
+            }
+            if(pong.y>h) {
+                pong.diry = -1.0f
+            }
+
+        }
+        fun createPong(x:Float,y:Float):Pong {
+            var pong = Pong(x,y,Math.min(w,h)/20,0.0f,0.0f)
+            if(x>=w/2) {
+                pong.dirx = 1.0f
+            }
+            if(x<w/2) {
+                pong.dirx = -1.0f
+            }
+            if(y>=h/2) {
+                pong.diry = 1.0f
+            }
+            if(y<h/2) {
+                pong.diry = -1.0f
+            }
+            return pong
+        }
+    }
+    data class Pong(var x:Float,var y:Float,var r:Float,var dirx:Float,var diry:Float) {
+        fun draw(canvas: Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.argb(150,255,0,0)
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            canvas.restore()
+        }
+        fun update(dimensionHolder:DimensionHolder) {
+            x+=dirx
+            y+=diry
+            dimensionHolder.decidePongDirection(this)
+        }
     }
 }
