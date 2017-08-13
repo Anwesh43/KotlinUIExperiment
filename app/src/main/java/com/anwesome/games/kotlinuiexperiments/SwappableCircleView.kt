@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -14,6 +15,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SwappableViewRenderer()
     override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -35,9 +37,10 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
         }
         fun update() {
             traversePath?.update()
-            x = traversePath?.x?:x
-            y = traversePath?.y?:y
+            x = traversePath?.traversePoint?.x?:x
+            y = traversePath?.traversePoint?.y?:y
         }
+        fun stopped():Boolean = traversePath?.stopped()?:false
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class TraversePath(var x:Float,var y:Float,var r:Float,var deg:Float=0.0f) {
@@ -54,9 +57,13 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
         var first:SwappableCircle?=null
         var second:SwappableCircle?=null
         fun update() {
+            first?.update()
+            second?.update()
             if(first != null && second != null) {
-                first?.update()
-                second?.update()
+                if(first?.stopped()?:false || second?.stopped()?:false) {
+                    first = null
+                    second = null
+                }
                 try {
                     Thread.sleep(75)
                     v.invalidate()
@@ -76,10 +83,10 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
                 circles.forEach { circle ->
                     if(circle.handleTap(x,y)) {
                         if(first != null) {
-                            second = first
+                            second = circle
                             var x = ((first?.x?:0.0f).toFloat() + (second?.x?:0.0f).toFloat())/2
                             var y = ((first?.y?:0.0f).toFloat() + (second?.y?:0.0f).toFloat())/2
-                            var r =  ((first?.x?:0.0f).toFloat() - (second?.x?:0.0f).toFloat())/2
+                            var r =  Math.abs((first?.x?:0.0f).toFloat() - (second?.x?:0.0f).toFloat())/2
                             var tpath1 = TraversePath(x,y,r)
                             var tpath2 = TraversePath(x,y,r)
                             if(first?.x?:0.0f > second?.x?:0.0f) {
@@ -116,14 +123,15 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
                 var y = h/2
                 var circles:ConcurrentLinkedQueue<SwappableCircle> = ConcurrentLinkedQueue()
                 for(i in 0..v.n) {
-                    circles.add(SwappableCircle(x,y,2*gap/3))
+                    circles.add(SwappableCircle(x,y,gap/3))
                     x += 2*gap
                 }
                 controller = SwapableCircleRenderController(circles,h,v)
             }
             controller?.draw(canvas,paint)
-            controller?.update()
             time++
+            controller?.update()
+
         }
         fun handleTap(x:Float,y:Float) {
             controller?.handleTap(x,y)
@@ -135,7 +143,8 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
             if(ns.size == 1) {
                 view.n = ns[0]
             }
-            var point = DimensionsUtil.getDimension(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }

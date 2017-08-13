@@ -59,8 +59,9 @@ class MainActivity : AppCompatActivity() {
         //SettingButton.create(this,SettingButtonClickListener(this))
         //DoubleArrowLineButton.create(this)
         //SquareCornerSwitch.create(this)
-        TickBoxSwitchView.create(this)
-        KotlinPongView.create(this)
+        //TickBoxSwitchView.create(this)
+        //KotlinPongView.create(this)
+        SwappableCircleView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
