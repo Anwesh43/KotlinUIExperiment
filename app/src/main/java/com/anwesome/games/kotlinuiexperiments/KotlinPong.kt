@@ -17,6 +17,7 @@ class KotlinPongView(ctx:Context):View(ctx) {
     val pongRenderer = PongsRenderer()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         pongRenderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
