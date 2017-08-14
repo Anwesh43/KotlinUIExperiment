@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SwappableViewRenderer()
+    var listener:OnSwapListener?=null
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -26,7 +27,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
         }
         return true
     }
-    data class SwappableCircle(var x:Float,var y:Float,var r:Float) {
+    data class SwappableCircle(var x:Float,var y:Float,var r:Float,var i:Int) {
         var traversePath:TraversePath?=null
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
@@ -61,6 +62,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
             second?.update()
             if(first != null && second != null) {
                 if(first?.stopped()?:false || second?.stopped()?:false) {
+                    v.listener?.onSwap(first?.i?:0,second?.i?:0)
                     first = null
                     second = null
                 }
@@ -123,7 +125,7 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
                 var y = h/2
                 var circles:ConcurrentLinkedQueue<SwappableCircle> = ConcurrentLinkedQueue()
                 for(i in 0..v.n) {
-                    circles.add(SwappableCircle(x,y,gap/3))
+                    circles.add(SwappableCircle(x,y,gap/3,i))
                     x += 2*gap
                 }
                 controller = SwapableCircleRenderController(circles,h,v)
@@ -138,13 +140,20 @@ class SwappableCircleView(ctx:Context,var n:Int = 3):View(ctx) {
         }
     }
     companion object {
+        var view:SwappableCircleView?=null
         fun create(activity: Activity,vararg ns:Int) {
-            var view = SwappableCircleView(activity)
+           view = SwappableCircleView(activity)
             if(ns.size == 1) {
-                view.n = ns[0]
+                view?.n = ns[0]
             }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
+        fun addSwapListener(swapListener: OnSwapListener) {
+            view?.listener = swapListener
+        }
+    }
+    interface OnSwapListener {
+        fun onSwap(firstIndex:Int,secondIndex:Int)
     }
 }
