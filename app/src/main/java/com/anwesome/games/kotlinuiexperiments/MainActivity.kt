@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         //TickBoxSwitchView.create(this)
         //KotlinPongView.create(this)
         SwappableCircleView.create(this,6)
+        SwappableCircleView.addSwapListener(SwapListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -152,5 +153,10 @@ class HCBExpandCollapListener(var activity:MainActivity):HorizontalCollapButtonV
     }
     override fun onCollapse() {
         makeToast("Collapsed")
+    }
+}
+class SwapListener(var activity: MainActivity):SwappableCircleView.OnSwapListener {
+    override fun onSwap(firstIndex: Int, secondIndex: Int) {
+        Toast.makeText(activity,"$firstIndex swapped with $secondIndex",Toast.LENGTH_SHORT).show()
     }
 }
