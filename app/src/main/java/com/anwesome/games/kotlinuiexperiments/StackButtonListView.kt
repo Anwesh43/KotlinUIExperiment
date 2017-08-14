@@ -59,4 +59,29 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2 && scale == 0.0f
     }
+    class StackButtonRenderer(var v:StackButton) {
+        var stackButtonShape:StackButtonShape?=null
+        var closeButton:CloseButton?=null
+        var time = 0
+        fun draw(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                stackButtonShape = StackButtonShape(0.0f,0.0f,w,h,v.color,v.text)
+                closeButton = CloseButton(0.9f*w,0.2f*h,0.1f*Math.min(w,h))
+            }
+            stackButtonShape?.draw(canvas,paint)
+            closeButton?.draw(canvas,paint)
+            time++
+        }
+        fun update(scale:Float) {
+            closeButton?.update(scale)
+            v.postInvalidate()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(closeButton?.handleTap(x,y)?:false) {
+
+            }
+        }
+    }
 }
