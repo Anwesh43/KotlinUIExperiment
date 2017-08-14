@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -62,6 +65,7 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
     class StackButtonRenderer(var v:StackButton) {
         var stackButtonShape:StackButtonShape?=null
         var closeButton:CloseButton?=null
+        var scaleAnimator = ScaleUpAnimator(this,{})
         var time = 0
         fun draw(canvas: Canvas,paint:Paint) {
             if(time == 0) {
@@ -81,6 +85,30 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             if(closeButton?.handleTap(x,y)?:false) {
 
+            }
+        }
+    }
+    class ScaleUpAnimator(var renderer:StackButtonRenderer,var cb:()->Unit):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var animated = false
+        var anim = ValueAnimator.ofFloat(0.0f,1.0f)
+        init {
+            anim.addUpdateListener(this)
+            anim.addListener(this)
+            anim.duration = 500
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            renderer.update(vf.animatedFraction)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                animated = false
+                cb()
+            }
+        }
+        fun start() {
+            if(!animated) {
+                anim.start()
+                animated = true
             }
         }
     }
