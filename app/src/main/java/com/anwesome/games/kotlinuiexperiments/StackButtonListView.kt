@@ -36,7 +36,7 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
             canvas.restore()
         }
     }
-    data class CloseButton(var x:Float,var y:Float,var size:Float) {
+    data class CloseButton(var x:Float,var y:Float,var size:Float,var scale:Float = 0.0f) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeWidth = size/10
             paint.strokeCap = Paint.Cap.ROUND
@@ -46,9 +46,17 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
                 canvas.translate(x, y)
                 canvas.rotate(i*90.0f+45.0f)
                 canvas.drawLine(0.0f,-size/2,0.0f,size/2,paint)
+                canvas.save()
+                canvas.scale(scale,scale)
+                paint.color = Color.argb(150,0,0,0)
+                canvas.drawCircle(0.0f,0.0f,size/2,paint)
+                canvas.restore()
                 canvas.restore()
             }
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
+        fun update(scale:Float) {
+            this.scale = scale
+        }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2 && scale == 0.0f
     }
 }
