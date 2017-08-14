@@ -61,8 +61,9 @@ class MainActivity : AppCompatActivity() {
         //SquareCornerSwitch.create(this)
         //TickBoxSwitchView.create(this)
         //KotlinPongView.create(this)
-        SwappableCircleView.create(this,6)
-        SwappableCircleView.addSwapListener(SwapListener(this))
+        //SwappableCircleView.create(this,6)
+        //SwappableCircleView.addSwapListener(SwapListener(this))
+        StackButton.create(this,Color.parseColor("#AD1457"),"Hello")
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
