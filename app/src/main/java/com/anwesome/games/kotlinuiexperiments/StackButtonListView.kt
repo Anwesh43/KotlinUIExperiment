@@ -65,7 +65,9 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
     class StackButtonRenderer(var v:StackButton) {
         var stackButtonShape:StackButtonShape?=null
         var closeButton:CloseButton?=null
-        var scaleAnimator = ScaleUpAnimator(this,{})
+        var translateAnimator:TranslateXAnimator?=null
+        var scaleAnimator = ScaleUpAnimator(this,{translateAnimator?.start()})
+
         var time = 0
         fun draw(canvas: Canvas,paint:Paint) {
             if(time == 0) {
@@ -73,6 +75,7 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
                 var h = canvas.height.toFloat()
                 stackButtonShape = StackButtonShape(0.0f,0.0f,w,h,v.color,v.text)
                 closeButton = CloseButton(0.9f*w,0.2f*h,0.1f*Math.min(w,h))
+                translateAnimator = TranslateXAnimator(v,w)
             }
             stackButtonShape?.draw(canvas,paint)
             closeButton?.draw(canvas,paint)
@@ -110,6 +113,31 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
                 anim.start()
                 animated = true
             }
+        }
+    }
+    class TranslateXAnimator(var v:StackButton,var w:Float):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener  {
+        var anim = ValueAnimator.ofFloat(0.0f,w)
+        var animated = false
+        init {
+            anim.addUpdateListener(this)
+            anim.addListener(this)
+            anim.duration = 500
+        }
+        fun start() {
+            if(!animated) {
+                animated = true
+                anim.start()
+            }
+        }
+
+        override fun onAnimationUpdate(animation: ValueAnimator) {
+            v.x = (animation.animatedValue as Float)
+        }
+        override fun onAnimationEnd(animation: Animator) {
+            if(animated) {
+                animated = false
+            }
+
         }
     }
 }
