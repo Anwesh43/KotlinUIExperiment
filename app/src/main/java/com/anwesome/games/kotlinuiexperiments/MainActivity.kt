@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         StackButtonListView.create(this)
         var colorTextMap = mapOf<String,Int>(Pair("Hello",Color.RED),Pair("Hi",Color.BLUE),Pair("Me",Color.CYAN),Pair("None",Color.MAGENTA),Pair("More",Color.parseColor("#BF360C")),Pair("See",Color.parseColor("#f44336")),Pair("Eat",Color.parseColor("#69F0AE")))
         colorTextMap.keys.forEach { text->
-            StackButtonListView.addButton(colorTextMap.get(text)?:0,text)
+            StackButtonListView.addButton(colorTextMap.get(text)?:0,text,CloseListener(this,text))
         }
         StackButtonListView.show(this)
     }
@@ -160,6 +160,11 @@ class HCBExpandCollapListener(var activity:MainActivity):HorizontalCollapButtonV
     }
     override fun onCollapse() {
         makeToast("Collapsed")
+    }
+}
+class CloseListener(var activity: MainActivity,var text:String):OnButtonCloseListener {
+    override fun onClose() {
+        Toast.makeText(activity,"Closed $text",Toast.LENGTH_SHORT).show()
     }
 }
 class SwapListener(var activity: MainActivity):SwappableCircleView.OnSwapListener {
