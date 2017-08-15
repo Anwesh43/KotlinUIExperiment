@@ -30,6 +30,10 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
         }
         return true
     }
+    fun startMovingDown(y:Float) {
+        var yAnimator = TranslateYAnimator(this,this.y,y)
+        yAnimator.start()
+    }
     data class StackButtonShape(var x:Float,var y:Float,var w:Float,var h:Float,var color:Int,var text:String) {
         fun draw(canvas: Canvas,paint:Paint) {
             paint.textSize = h/3
@@ -145,6 +149,29 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
                 animated = false
             }
 
+        }
+    }
+    class TranslateYAnimator(var view:StackButton,var fromY:Float,var toY:Float):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var anim = ValueAnimator.ofFloat(fromY,toY)
+        var animated = false
+        init {
+            anim.addUpdateListener(this)
+            anim.addListener(this)
+            anim.duration = 500
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            view.y = vf.animatedValue as Float
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                animated = false
+            }
+        }
+        fun start() {
+            if(!animated) {
+                animated = true
+                anim.start()
+            }
         }
     }
     companion object {

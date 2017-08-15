@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         //KotlinPongView.create(this)
         //SwappableCircleView.create(this,6)
         //SwappableCircleView.addSwapListener(SwapListener(this))
-        StackButton.create(this,Color.parseColor("#AD1457"),"Hello")
+        //StackButton.create(this,Color.parseColor("#AD1457"),"Hello")
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
