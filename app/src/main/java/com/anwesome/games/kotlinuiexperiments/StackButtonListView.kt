@@ -61,7 +61,7 @@ class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent
                 paint.color = Color.WHITE
                 canvas.save()
                 canvas.rotate(i*90.0f+45.0f)
-                canvas.drawLine(0.0f,-size/2,0.0f,size/2,paint)
+                canvas.drawLine(0.0f,-size/3,0.0f,size/3,paint)
                 canvas.restore()
             }
             canvas.save()
@@ -74,7 +74,7 @@ class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent
         fun update(scale:Float) {
             this.scale = scale
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2 && scale == 0.0f
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size && scale == 0.0f
     }
     class StackButtonRenderer(var v:StackButton) {
         var stackButtonShape:StackButtonShape?=null
@@ -168,6 +168,7 @@ class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent
         override fun onAnimationEnd(animator:Animator) {
             if(animated) {
                 animated = false
+                view.i--
             }
         }
         fun start() {
@@ -186,6 +187,8 @@ class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent
     }
 }
 class StackButtonListView(ctx:Context):ViewGroup(ctx) {
+    var n = 0
+    var animationInProgress = false
     override fun onMeasure(wspec:Int,hspec:Int) {
         var h = 0
         var w = 0
@@ -202,6 +205,7 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
     }
     override fun onLayout(reloaded:Boolean,a:Int,b:Int,w:Int,h:Int) {
         var y = h
+
         for(i in 0..childCount-1) {
             var child = getChildAt(i)
             child.layout(0,y-child.measuredHeight,child.measuredWidth,y)
@@ -210,13 +214,16 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
     }
     fun addButton(color:Int,text:String) {
         StackButton.create(this,color,text,childCount)
+        n++
     }
     fun startMovingDown(tappedView:StackButton) {
         var y = tappedView.y
-        for(i in tappedView.i..childCount-1) {
+        for(i in 0..childCount-1) {
             var child = getChildAt(i) as StackButton
-            child.startMovingDown(y)
-            y = child.y
+            if(child.i > tappedView.i && child.x == 0.0f) {
+                child.startMovingDown(y)
+                y = child.y
+            }
         }
     }
     companion object {
