@@ -12,11 +12,12 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import java.util.*
 
 /**
  * Created by anweshmishra on 15/08/17.
  */
-class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
+class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent:StackButtonListView):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = StackButtonRenderer(this)
     override fun onDraw(canvas: Canvas) {
@@ -147,6 +148,7 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
         override fun onAnimationEnd(animation: Animator) {
             if(animated) {
                 animated = false
+                v.parent.startMovingDown(v)
             }
 
         }
@@ -175,8 +177,8 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
         }
     }
     companion object {
-        fun create(parent:ViewGroup,color:Int,text:String) {
-            var view = StackButton(parent.context,color,text)
+        fun create(parent:StackButtonListView,color:Int,text:String,i:Int) {
+            var view = StackButton(parent.context,color,text,i,parent)
             var size = DimensionsUtil.getDimension(parent.context as Activity)
             parent.addView(view, ViewGroup.LayoutParams(size.x,size.y/6))
         }
@@ -206,6 +208,14 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
         }
     }
     fun addButton(color:Int,text:String) {
-        StackButton.create(this,color,text)
+        StackButton.create(this,color,text,childCount)
+    }
+    fun startMovingDown(tappedView:StackButton) {
+        var y = tappedView.y
+        for(i in tappedView.i..childCount-1) {
+            var child = getChildAt(i) as StackButton
+            child.startMovingDown(y)
+            y = child.y
+        }
     }
 }
