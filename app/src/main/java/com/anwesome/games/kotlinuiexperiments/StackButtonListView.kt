@@ -205,7 +205,7 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
         for(i in 0..childCount-1) {
             var child = getChildAt(i)
             child.layout(0,y-child.measuredHeight,child.measuredWidth,y)
-            y -= child.measuredHeight
+            y -= (child.measuredHeight*11)/10
         }
     }
     fun addButton(color:Int,text:String) {
@@ -234,9 +234,12 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
         }
         fun show(activity:Activity) {
             if(view != null && !isShown) {
+                var h = DimensionsUtil.getDimension(activity).y
                 var scrollView = ScrollView(activity)
+                var viewH:Float = view?.measuredHeight?.toFloat()?:0.0f
                 scrollView.addView(view,LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT))
                 activity.addContentView(scrollView, LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT))
+                isShown = true
             }
         }
 
