@@ -21,6 +21,7 @@ import java.util.*
 class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent:StackButtonListView):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = StackButtonRenderer(this)
+    var closeListener:OnButtonCloseListener?=null
     override fun onDraw(canvas: Canvas) {
         renderer.draw(canvas,paint)
     }
@@ -150,6 +151,7 @@ class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent
             if(animated) {
                 animated = false
                 v.parent.startMovingDown(v)
+                v.closeListener?.onClose()
             }
 
         }
@@ -179,8 +181,9 @@ class StackButton(ctx:Context,var color:Int,var text:String,var i:Int,var parent
         }
     }
     companion object {
-        fun create(parent:StackButtonListView,color:Int,text:String,i:Int) {
+        fun create(parent:StackButtonListView,color:Int,text:String,i:Int,closeListener: OnButtonCloseListener) {
             var view = StackButton(parent.context,color,text,i,parent)
+            view.closeListener = closeListener
             var size = DimensionsUtil.getDimension(parent.context as Activity)
             parent.addView(view, ViewGroup.LayoutParams(size.x,size.y/6))
         }
@@ -212,8 +215,8 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
             y -= (child.measuredHeight*11)/10
         }
     }
-    fun addButton(color:Int,text:String) {
-        StackButton.create(this,color,text,childCount)
+    fun addButton(color:Int,text:String,closeListener: OnButtonCloseListener) {
+        StackButton.create(this,color,text,childCount,closeListener)
         n++
     }
     fun startMovingDown(tappedView:StackButton) {
@@ -234,9 +237,9 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
                 view = StackButtonListView(activity)
             }
         }
-        fun addButton(color:Int,text:String) {
+        fun addButton(color:Int,text:String,closeListener: OnButtonCloseListener) {
             if(!isShown) {
-                view?.addButton(color, text)
+                view?.addButton(color, text,closeListener)
             }
         }
         fun show(activity:Activity) {
@@ -251,4 +254,7 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
         }
 
     }
+}
+interface OnButtonCloseListener {
+    fun onClose()
 }
