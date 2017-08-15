@@ -148,10 +148,37 @@ class StackButton(ctx:Context,var color:Int,var text:String):View(ctx) {
         }
     }
     companion object {
-        fun create(activity: Activity,color:Int,text:String) {
-            var view = StackButton(activity,color,text)
-            var size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y/6))
+        fun create(parent:ViewGroup,color:Int,text:String) {
+            var view = StackButton(parent.context,color,text)
+            var size = DimensionsUtil.getDimension(parent.context as Activity)
+            parent.addView(view, ViewGroup.LayoutParams(size.x,size.y/6))
         }
+    }
+}
+class StackButtonListView(ctx:Context):ViewGroup(ctx) {
+    override fun onMeasure(wspec:Int,hspec:Int) {
+        var h = 0
+        var w = 0
+        for(i in 0..childCount-1) {
+            var child = getChildAt(i)
+            measureChild(child,wspec,hspec)
+            h += (child.measuredHeight*11)/10
+            if(i == 0) {
+                w = child.measuredWidth
+            }
+        }
+
+        setMeasuredDimension(w,h)
+    }
+    override fun onLayout(reloaded:Boolean,a:Int,b:Int,w:Int,h:Int) {
+        var y = h
+        for(i in 0..childCount-1) {
+            var child = getChildAt(i)
+            child.layout(0,y-child.measuredHeight,child.measuredWidth,y)
+            y -= child.measuredHeight
+        }
+    }
+    fun addButton(color:Int,text:String) {
+        StackButton.create(this,color,text)
     }
 }
