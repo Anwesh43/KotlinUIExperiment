@@ -12,6 +12,7 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 import java.util.*
 
 /**
@@ -217,5 +218,27 @@ class StackButtonListView(ctx:Context):ViewGroup(ctx) {
             child.startMovingDown(y)
             y = child.y
         }
+    }
+    companion object {
+        var isShown = false
+        var view:StackButtonListView?=null
+        fun create(activity: Activity) {
+            if(view == null) {
+                view = StackButtonListView(activity)
+            }
+        }
+        fun addButton(color:Int,text:String) {
+            if(!isShown) {
+                view?.addButton(color, text)
+            }
+        }
+        fun show(activity:Activity) {
+            if(view != null && !isShown) {
+                var scrollView = ScrollView(activity)
+                scrollView.addView(view,LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT))
+                activity.addContentView(scrollView, LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT))
+            }
+        }
+
     }
 }
