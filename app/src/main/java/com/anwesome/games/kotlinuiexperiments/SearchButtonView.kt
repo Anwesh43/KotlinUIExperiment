@@ -15,6 +15,7 @@ import android.view.ViewGroup
 class SearchButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SearchButtonRenderer()
+    var listener:OnSearchButtonOpenCloseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -66,6 +67,14 @@ class SearchButtonView(ctx:Context):View(ctx) {
                 searchButton.update(state.scale)
                 if(state.stopped()) {
                     animated = false
+                    when(state.scale) {
+                        1.0f -> {
+                            view.listener?.onOpen()
+                        }
+                        0.0f -> {
+                            view.listener?.onClose()
+                        }
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -109,10 +118,17 @@ class SearchButtonView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:OnSearchButtonOpenCloseListener) {
             var view = SearchButtonView(activity)
+            if(listeners.size == 1) {
+                view.listener = listeners[0]
+            }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y/12))
         }
+    }
+    interface OnSearchButtonOpenCloseListener {
+        fun onOpen()
+        fun onClose()
     }
 }
