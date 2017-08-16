@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 //            StackButtonListView.addButton(colorTextMap.get(text)?:0,text,CloseListener(this,text))
 //        }
 //        StackButtonListView.show(this)
-        SearchButtonView.create(this)
+        SearchButtonView.create(this,SearchButtonOpenCloseListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -171,5 +171,13 @@ class CloseListener(var activity: MainActivity,var text:String):OnButtonCloseLis
 class SwapListener(var activity: MainActivity):SwappableCircleView.OnSwapListener {
     override fun onSwap(firstIndex: Int, secondIndex: Int) {
         Toast.makeText(activity,"$firstIndex swapped with $secondIndex",Toast.LENGTH_SHORT).show()
+    }
+}
+class SearchButtonOpenCloseListener(var activity: MainActivity):SearchButtonView.OnSearchButtonOpenCloseListener {
+    override fun onOpen() {
+        Toast.makeText(activity,"Opened",Toast.LENGTH_SHORT).show()
+    }
+    override fun onClose() {
+        Toast.makeText(activity,"Closed",Toast.LENGTH_SHORT).show()
     }
 }
