@@ -64,12 +64,13 @@ class MainActivity : AppCompatActivity() {
         //SwappableCircleView.create(this,6)
         //SwappableCircleView.addSwapListener(SwapListener(this))
         //StackButton.create(this,Color.parseColor("#AD1457"),"Hello")
-        StackButtonListView.create(this)
-        var colorTextMap = mapOf<String,Int>(Pair("Hello",Color.RED),Pair("Hi",Color.BLUE),Pair("Me",Color.CYAN),Pair("None",Color.MAGENTA),Pair("More",Color.parseColor("#BF360C")),Pair("See",Color.parseColor("#f44336")),Pair("Eat",Color.parseColor("#69F0AE")))
-        colorTextMap.keys.forEach { text->
-            StackButtonListView.addButton(colorTextMap.get(text)?:0,text,CloseListener(this,text))
-        }
-        StackButtonListView.show(this)
+//        StackButtonListView.create(this)
+//        var colorTextMap = mapOf<String,Int>(Pair("Hello",Color.RED),Pair("Hi",Color.BLUE),Pair("Me",Color.CYAN),Pair("None",Color.MAGENTA),Pair("More",Color.parseColor("#BF360C")),Pair("See",Color.parseColor("#f44336")),Pair("Eat",Color.parseColor("#69F0AE")))
+//        colorTextMap.keys.forEach { text->
+//            StackButtonListView.addButton(colorTextMap.get(text)?:0,text,CloseListener(this,text))
+//        }
+//        StackButtonListView.show(this)
+        SearchButtonView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
