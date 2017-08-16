@@ -12,13 +12,15 @@ import android.view.View
  */
 class SearchButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = SearchButtonRenderer()
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(x,y)
             }
         }
         return true
@@ -76,6 +78,23 @@ class SearchButtonView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    class SearchButtonRenderer {
+        var time = 0
+        var controller:SearchButtonDrawingController?=null
+        fun render(canvas: Canvas,paint:Paint,v:SearchButtonView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                controller = SearchButtonDrawingController(SearchButton(h/2,h/2,w,h),v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
         }
     }
 }
