@@ -41,4 +41,14 @@ class SearchButtonView(ctx:Context):View(ctx) {
             x = w*scale
         }
     }
+    data class SearchButtonState(var scale:Float = 0.0f,var deg:Float = 0.0f) {
+        fun update() {
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            deg+=20
+            if(deg > 180) {
+                deg = 0.0f
+            }
+        }
+        fun stopped():Boolean = deg == 0.0f
+    }
 }
