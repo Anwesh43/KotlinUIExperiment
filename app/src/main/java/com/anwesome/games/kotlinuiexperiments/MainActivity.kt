@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 //        StackButtonListView.show(this)
        // SearchButtonView.create(this,SearchButtonOpenCloseListener(this))
         BallUpView.create(this)
+        BallUpView.addListener(BallUpListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -180,5 +181,10 @@ class SearchButtonOpenCloseListener(var activity: MainActivity):SearchButtonView
     }
     override fun onClose() {
         Toast.makeText(activity,"Closed",Toast.LENGTH_SHORT).show()
+    }
+}
+class BallUpListener(var activity:MainActivity):BallUpView.OnBallUpListener {
+    override fun onBallUp(index:Int) {
+        Toast.makeText(activity,"ball $index is up",Toast.LENGTH_SHORT).show()
     }
 }

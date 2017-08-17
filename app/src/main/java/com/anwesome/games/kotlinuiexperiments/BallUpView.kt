@@ -70,7 +70,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
         var animated = false
         init {
             var gap = w/(2*v.n+1)
-            for(i in 0..v.n) {
+            for(i in 1..v.n) {
                 var ball = BallUp(i,0.0f,h/2,2*(gap/3),h/2)
                 balls.add(ball)
             }
