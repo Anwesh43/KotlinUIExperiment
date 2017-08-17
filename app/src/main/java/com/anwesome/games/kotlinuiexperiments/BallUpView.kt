@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer = BallUpRenderer()
+    var listener:OnBallUpListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -27,7 +28,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
         }
         return true
     }
-    data class BallUp(var x:Float,var y:Float,var r:Float,var h:Float) {
+    data class BallUp(var index:Int,var x:Float,var y:Float,var r:Float,var h:Float) {
         var origY = 0.0f
         init {
             origY = y
@@ -70,7 +71,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
         init {
             var gap = w/(2*v.n+1)
             for(i in 0..v.n) {
-                var ball = BallUp(0.0f,h/2,2*(gap/3),h/2)
+                var ball = BallUp(i,0.0f,h/2,2*(gap/3),h/2)
                 balls.add(ball)
             }
             adjustBalls()
@@ -94,6 +95,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
                 tappedBall?.update(state.scale)
                 if(state.stopped()) {
                     animated = false
+                    v?.listener?.onBallUp(tappedBall?.index?:0)
                     balls.remove(tappedBall)
                     v.n--
                     if(v.n != 0) {
@@ -131,9 +133,16 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
         fun stopped():Boolean = scale == 0.0f
     }
     companion object {
+        var view:BallUpView?=null
         fun create(activity:Activity) {
-            var view = BallUpView(activity)
+            view = BallUpView(activity)
             activity.setContentView(view)
         }
+        fun addListener(listener:OnBallUpListener) {
+            view?.listener = listener
+        }
+    }
+    interface OnBallUpListener {
+        fun onBallUp(index:Int)
     }
 }
