@@ -56,7 +56,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
 
         }
     }
-    class BallUpAnimator(var w:Float,var h:Float,var v:BallUpView) {
+    class BallUpAnimator(var w:Float,var h:Float,var v:BallUpView,var state:BallUpState = BallUpState()) {
         var balls:ConcurrentLinkedQueue<BallUp> = ConcurrentLinkedQueue()
         var tappedBall:BallUp?=null
         var animated = false
@@ -82,7 +82,16 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
         }
         fun update() {
             if(animated) {
-                tappedBall?.update(0.0f)
+                state.update()
+                tappedBall?.update(state.scale)
+                if(state.stopped()) {
+                    animated = false
+                    balls.remove(tappedBall)
+                    v.n--
+                    if(v.n != 0) {
+                        adjustBalls()
+                    }
+                }
                 try {
                     Thread.sleep(50)
                     v.invalidate()
@@ -93,7 +102,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float) {
-            if(!animated) {
+            if(!animated && v.n>0) {
                 balls.forEach { ball ->
                     if(ball.handleTap(x,y)) {
                         tappedBall = ball
