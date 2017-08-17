@@ -45,15 +45,19 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
     }
     class BallUpRenderer {
         var time = 0
+        var animator:BallUpAnimator?=null
         fun render(canvas:Canvas,paint:Paint,v:BallUpView) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                animator = BallUpAnimator(w,h,v)
             }
+            animator?.draw(canvas,paint)
+            animator?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            animator?.handleTap(x,y)
         }
     }
     class BallUpAnimator(var w:Float,var h:Float,var v:BallUpView,var state:BallUpState = BallUpState()) {
