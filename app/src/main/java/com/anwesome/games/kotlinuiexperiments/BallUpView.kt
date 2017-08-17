@@ -70,7 +70,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
         init {
             var gap = w/(2*v.n+1)
             for(i in 0..v.n) {
-                var ball = BallUp(0.0f,h/2,(gap/3),h/2)
+                var ball = BallUp(0.0f,h/2,2*(gap/3),h/2)
                 balls.add(ball)
             }
             adjustBalls()
