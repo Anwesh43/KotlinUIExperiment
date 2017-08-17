@@ -70,7 +70,8 @@ class MainActivity : AppCompatActivity() {
 //            StackButtonListView.addButton(colorTextMap.get(text)?:0,text,CloseListener(this,text))
 //        }
 //        StackButtonListView.show(this)
-        SearchButtonView.create(this,SearchButtonOpenCloseListener(this))
+       // SearchButtonView.create(this,SearchButtonOpenCloseListener(this))
+        BallUpView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
