@@ -6,11 +6,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 17/08/17.
  */
-class BallUpView(ctx:Context):View(ctx) {
+class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -53,6 +54,54 @@ class BallUpView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
 
+        }
+    }
+    class BallUpAnimator(var w:Float,var h:Float,var v:BallUpView) {
+        var balls:ConcurrentLinkedQueue<BallUp> = ConcurrentLinkedQueue()
+        var tappedBall:BallUp?=null
+        var animated = false
+        init {
+            var gap = w/(2*v.n+1)
+            for(i in 0..v.n) {
+                var ball = BallUp(0.0f,h/2,(gap/3),h/3)
+                balls.add(ball)
+            }
+        }
+        private fun adjustBalls() {
+            var gap = w/(2*v.n+1)
+            var x = 3*gap/2
+            balls.forEach { ball ->
+                ball.x = x
+                x += 2*gap
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            balls.forEach { ball ->
+                ball.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(animated) {
+                tappedBall?.update(0.0f)
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                balls.forEach { ball ->
+                    if(ball.handleTap(x,y)) {
+                        tappedBall = ball
+                        animated = true
+                        v.postInvalidate()
+                    }
+                }
+            }
         }
     }
 }
