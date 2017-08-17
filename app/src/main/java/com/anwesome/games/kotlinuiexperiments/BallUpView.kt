@@ -42,4 +42,17 @@ class BallUpView(ctx:Context):View(ctx) {
         }
         fun handleTap(x: Float, y: Float): Boolean = x >= this.x - r && x <= this.x + r && y >= this.y - r && y <= this.y + r
     }
+    class BallUpRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,v:BallUpView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
