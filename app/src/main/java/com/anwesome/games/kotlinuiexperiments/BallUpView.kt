@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -13,13 +14,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var renderer = BallUpRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -70,6 +73,7 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
                 var ball = BallUp(0.0f,h/2,(gap/3),h/3)
                 balls.add(ball)
             }
+            adjustBalls()
         }
         private fun adjustBalls() {
             var gap = w/(2*v.n+1)
@@ -125,5 +129,11 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
             }
         }
         fun stopped():Boolean = scale == 0.0f
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = BallUpView(activity)
+            activity.setContentView(view)
+        }
     }
 }
