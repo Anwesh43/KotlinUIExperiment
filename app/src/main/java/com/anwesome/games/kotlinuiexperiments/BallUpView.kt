@@ -104,4 +104,13 @@ class BallUpView(ctx:Context,var n:Int = 7):View(ctx) {
             }
         }
     }
+    class BallUpState(var scale:Float = 0.0f){
+        fun update() {
+            scale += 0.1f
+            if(scale > 1) {
+                scale = 0.0f
+            }
+        }
+        fun stopped():Boolean = scale == 0.0f
+    }
 }
