@@ -118,4 +118,21 @@ class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
             }
         }
     }
+    class BCLRenderer {
+        var time = 0
+        var controller:BCLController?=null
+        fun render(canvas:Canvas,paint:Paint,v:BallCircleLayoutView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                controller = BCLController(w,h,v)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
+        }
+    }
 }
