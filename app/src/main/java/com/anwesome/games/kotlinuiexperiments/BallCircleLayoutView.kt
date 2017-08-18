@@ -26,6 +26,7 @@ class BallCircleLayoutView(ctx:Context):View(ctx) {
     data class BCLBall(var cx:Float,var cy:Float,var deg:Float,var r:Float,var size:Float,var r1:Float) {
         var x = 0.0f
         var y = 0.0f
+        var state = BCLState()
         init {
             x = cx+(r*Math.cos(deg*Math.PI/180).toFloat())
             y = cy+(r*Math.sin(deg*Math.PI/180).toFloat())
@@ -37,10 +38,31 @@ class BallCircleLayoutView(ctx:Context):View(ctx) {
             canvas.drawCircle(0.0f,0.0f,size/2,paint)
             canvas.restore()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
-        fun update() {
-
+        fun handleTap(x:Float,y:Float):Boolean {
+            val condition = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r && state.stopped()
+            if(condition) {
+                state.startMoving()
+            }
+            return condition
         }
-        fun stopped():Boolean = true
+        fun update() {
+            x = cx+((r+(r1-r)*state.scale)*Math.cos(deg*Math.PI/180).toFloat())
+            y = cy+((r+(r1-r)*state.scale)*Math.sin(deg*Math.PI/180).toFloat())
+            state.update()
+        }
+        fun stopped():Boolean = state.stopped()
+    }
+    data class BCLState(var scale:Float = 0.0f,var dir:Int = 0) {
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                scale = 1.0f
+                dir = 0
+            }
+        }
+        fun stopped():Boolean = dir == 0
+        fun startMoving() {
+            dir = 1
+        }
     }
 }
