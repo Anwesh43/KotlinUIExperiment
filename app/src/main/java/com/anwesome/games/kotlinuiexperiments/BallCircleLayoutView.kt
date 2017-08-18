@@ -44,7 +44,7 @@ class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean {
-            val condition = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r && state.stopped()
+            val condition = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size && state.stopped()
             if(condition) {
                 state.startMoving()
             }
@@ -59,7 +59,7 @@ class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
     }
     data class BCLState(var scale:Float = 0.0f,var dir:Int = 0) {
         fun update() {
-            scale += 0.1f*dir
+            scale += 0.2f*dir
             if(scale > 1) {
                 scale = 1.0f
                 dir = 0
@@ -75,9 +75,9 @@ class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
         var tappedBalls:ConcurrentLinkedQueue<BCLBall> = ConcurrentLinkedQueue()
         var animated = false
         init {
-            var size = w/20
+            var size = w/15
             var r = w/5
-            var r1 = (w/2-w/5)
+            var r1 = (w/2)
             var n = Math.max(6,v.n)
             var deg = (360/n).toFloat()
             for(i in 0..v.n-1) {
@@ -91,6 +91,7 @@ class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
                     ball.update()
                     if(ball.stopped()) {
                         tappedBalls.remove(ball)
+                        balls.remove(ball)
                         if(tappedBalls.size == 0) {
                             animated = false
                         }
@@ -143,7 +144,7 @@ class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
         fun create(activity: Activity) {
             var view = BallCircleLayoutView(activity)
             var size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }

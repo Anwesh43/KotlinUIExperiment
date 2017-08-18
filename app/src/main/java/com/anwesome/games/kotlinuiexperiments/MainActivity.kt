@@ -71,8 +71,9 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        StackButtonListView.show(this)
        // SearchButtonView.create(this,SearchButtonOpenCloseListener(this))
-        BallUpView.create(this)
-        BallUpView.addListener(BallUpListener(this))
+//        BallUpView.create(this)
+//        BallUpView.addListener(BallUpListener(this))
+        BallCircleLayoutView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
