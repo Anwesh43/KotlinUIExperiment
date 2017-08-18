@@ -6,11 +6,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 18/08/17.
  */
-class BallCircleLayoutView(ctx:Context):View(ctx) {
+class BallCircleLayoutView(ctx:Context,var n:Int=8):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -63,6 +64,58 @@ class BallCircleLayoutView(ctx:Context):View(ctx) {
         fun stopped():Boolean = dir == 0
         fun startMoving() {
             dir = 1
+        }
+    }
+    class BCLController(var w:Float,var h:Float,var v:BallCircleLayoutView) {
+        var balls:ConcurrentLinkedQueue<BCLBall> = ConcurrentLinkedQueue()
+        var tappedBalls:ConcurrentLinkedQueue<BCLBall> = ConcurrentLinkedQueue()
+        var animated = false
+        init {
+            var size = w/20
+            var r = w/5
+            var r1 = (w/2-w/5)
+            var n = Math.max(6,v.n)
+            var deg = (360/n).toFloat()
+            for(i in 0..v.n-1) {
+                var ball = BCLBall(w/2,h/2,deg*i,r,size,r1)
+                balls.add(ball)
+            }
+        }
+        fun update() {
+            if(animated) {
+                tappedBalls.forEach { ball ->
+                    ball.update()
+                    if(ball.stopped()) {
+                        tappedBalls.remove(ball)
+                        if(tappedBalls.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    v.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint){
+            balls.forEach { ball ->
+                ball.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            balls.forEach { ball ->
+                if(ball.handleTap(x,y)) {
+                    tappedBalls.add(ball)
+                    if(!animated) {
+                        animated = true
+                        v.postInvalidate()
+                    }
+                }
+            }
         }
     }
 }
