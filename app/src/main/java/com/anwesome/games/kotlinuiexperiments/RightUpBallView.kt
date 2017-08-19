@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 19/08/17.
  */
-class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
+class RightUpBallView(ctx:Context,var n:Int = 20):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RUPRenderer(this)
     override fun onDraw(canvas:Canvas) {
@@ -39,7 +39,12 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
             origX = x
             origY = y
         }
+
+        fun setOrigX() {
+            origX = x
+        }
         fun draw(canvas: Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#f44336")
             canvas.save()
             canvas.translate(x,y)
             canvas.drawCircle(0.0f,0.0f,r,paint)
@@ -96,6 +101,8 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun handleUpAnimEnd() {
+            curr?.setOrigX()
+            balls.remove(prev)
             prev = curr
             curr = null
         }
@@ -108,7 +115,6 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
             animator.addListener(this)
             animator.duration = 500
         }
-
         override fun onAnimationUpdate(vf:ValueAnimator) {
             var factor = vf.animatedValue as Float
             renderer.update(factor)
