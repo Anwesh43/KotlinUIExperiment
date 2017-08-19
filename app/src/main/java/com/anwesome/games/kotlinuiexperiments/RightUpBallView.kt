@@ -16,18 +16,19 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = RUPRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean  {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
     }
-    data class RUPBall(var x:Float,var y:Float,var r:Float,var h:Float,var w:Float) {
+    data class RUPBall(var x:Float,var y:Float,var r:Float,var h:Float,var w:Float,var i:Int) {
         var origX = 0.0f
         var origY = 0.0f
         init{
@@ -50,6 +51,7 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
         var time = 0
         var curr:RUPBall?=null
         var prev:RUPBall?=null
+        var index = 0
         var controller = AnimatorController(this)
         var balls:ConcurrentLinkedQueue<RUPBall> = ConcurrentLinkedQueue()
         fun render(canvas: Canvas,paint:Paint) {
@@ -57,7 +59,7 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 for(i in 0..v.n-1) {
-                    var ball = RUPBall(-w/2,h/2,w/20,h/2,w/2)
+                    var ball = RUPBall(-w/2,h/2,w/20,h/2,w/2,i)
                     balls.add(ball)
                     if(i == 0) {
                         curr = ball
@@ -70,6 +72,21 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
             curr?.update(factor,0.0f)
             prev?.update(0.0f,factor)
             v.postInvalidate()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(prev?.handleTap(x,y)?:false) {
+                index++
+                var rightBalls = balls.filter{ ball ->
+                    ball.i == index
+                }
+                if(rightBalls.size == 1) {
+                    curr = rightBalls[0]
+                }
+                controller.start()
+            }
+        }
+        fun handleUpAnimEnd() {
+            prev = curr
         }
     }
     class AnimatorController(var renderer:RUPRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
@@ -88,6 +105,7 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
         override fun onAnimationEnd(animator:Animator) {
             if(animated) {
                 animated = false
+                renderer.handleUpAnimEnd()
             }
         }
         fun start() {
