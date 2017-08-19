@@ -73,7 +73,8 @@ class MainActivity : AppCompatActivity() {
        // SearchButtonView.create(this,SearchButtonOpenCloseListener(this))
 //        BallUpView.create(this)
 //        BallUpView.addListener(BallUpListener(this))
-        BallCircleLayoutView.create(this)
+      //  BallCircleLayoutView.create(this)
+        RightUpBallView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

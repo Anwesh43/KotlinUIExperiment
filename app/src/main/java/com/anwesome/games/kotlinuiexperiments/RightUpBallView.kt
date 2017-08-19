@@ -3,12 +3,15 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -18,6 +21,7 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RUPRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean  {
@@ -59,12 +63,18 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 for(i in 0..v.n-1) {
-                    var ball = RUPBall(-w/2,h/2,w/20,h/2,w/2,i)
+                    var ball = RUPBall(-w/20,h/2,w/20,h/2,w/2,i)
                     balls.add(ball)
                     if(i == 0) {
                         curr = ball
                     }
                 }
+            }
+            balls.forEach { ball ->
+                ball.draw(canvas,paint)
+            }
+            if(time == 0) {
+                controller.start()
             }
             time++
         }
@@ -87,6 +97,7 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleUpAnimEnd() {
             prev = curr
+            curr = null
         }
     }
     class AnimatorController(var renderer:RUPRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
@@ -113,6 +124,12 @@ class RightUpBallView(ctx:Context,var n:Int = 6):View(ctx) {
                 animated = true
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = RightUpBallView(activity)
+            activity.setContentView(view)
         }
     }
 }
