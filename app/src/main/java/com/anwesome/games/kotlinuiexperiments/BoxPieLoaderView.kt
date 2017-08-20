@@ -43,7 +43,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
             for(i in 0..4) {
                 canvas.save()
                 canvas.rotate(90.0f*i)
-                canvas.drawLine(-(0.4f*w)*scale,-0.4f*h,(0.4f*w)*scale,0.4f*h,paint)
+                canvas.drawLine(-(0.4f*w)*scale,-0.4f*h,(0.4f*w)*scale,-0.4f*h,paint)
                 canvas.restore()
             }
             canvas.restore()
@@ -64,6 +64,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
                 loader = BoxPieLoader(h,w)
                 paint.color = Color.parseColor("#0D47A1")
                 paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             loader?.draw(canvas,paint)
             time++
@@ -87,6 +88,9 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
             anim.addUpdateListener(this)
             anim.addListener(this)
             anim.duration = 500
+            reverseAnim.addUpdateListener(this)
+            reverseAnim.addListener(this)
+            reverseAnim.duration = 500
         }
         override fun onAnimationUpdate(vf:ValueAnimator) {
             renderer.update(vf.animatedValue as Float)
