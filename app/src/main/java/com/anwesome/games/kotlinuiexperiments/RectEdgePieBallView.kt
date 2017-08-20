@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -70,5 +71,29 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
             this.scale = scale
         }
         fun handleTap(x:Float,y:Float):Boolean = pieBall?.handleTap(x,y)?:false
+    }
+    class REBRenderer(var view:RectEdgePieBallView) {
+        var time = 0
+        var rectEdgePieBall:RectEdgePieBall?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                rectEdgePieBall = RectEdgePieBall(w,h)
+                paint.strokeWidth = Math.min(w,h)/60
+                paint.color = Color.parseColor("#0277BD")
+            }
+            rectEdgePieBall?.draw(canvas,paint)
+            time++
+        }
+        fun update(scale:Float) {
+            rectEdgePieBall?.update(scale)
+            view.postInvalidate()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(rectEdgePieBall?.handleTap(x,y)?:false) {
+
+            }
+        }
     }
 }
