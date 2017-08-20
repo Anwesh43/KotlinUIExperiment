@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -59,10 +62,39 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
         }
         fun update(factor:Float) {
             loader?.update(factor)
+            view.postInvalidate()
         }
         fun handleTap(x:Float,y:Float) {
             if(loader?.handleTap(x,y)?:false) {
-                
+
+            }
+        }
+    }
+    class BoxPieAnimator(var renderer:BoxPieRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var animated:Boolean = false
+        var anim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        var dir = 0
+        init {
+            anim.addUpdateListener(this)
+            anim.addListener(this)
+            anim.duration = 500
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            renderer.update(vf.animatedValue as Float)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                animated = false
+                dir = (dir+1)%2
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when(dir) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
             }
         }
     }
