@@ -75,7 +75,10 @@ class MainActivity : AppCompatActivity() {
 //        BallUpView.addListener(BallUpListener(this))
       //  BallCircleLayoutView.create(this)
         //RightUpBallView.create(this)
-        BoxPieLoaderView.create(this)
+        //BoxPieLoaderView.create(this)
+        BoxPieLoaderList.create(this)
+        BoxPieLoaderList.addView()
+        BoxPieLoaderList.show(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
