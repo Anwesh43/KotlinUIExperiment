@@ -48,8 +48,14 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.scale(scale,scale)
+            paint.style = Paint.Style.STROKE
             canvas.drawCircle(0.0f,0.0f,r,paint)
+            canvas.save()
+            canvas.scale(scale,scale)
+
+            paint.style = Paint.Style.FILL
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            canvas.restore()
             canvas.restore()
         }
     }
@@ -59,19 +65,28 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
         init {
             var size = 2*Math.min(w,h)/3
             var edgeSize = size/(9)
-            var x = 3*edgeSize/2
-            for(i in 0..3) {
-                var edgeBall = EdgeBall(x,-h/3, edgeSize)
+            var x = w/6+3*edgeSize/2 - w/2
+            for(i in 0..4) {
+                var edgeBall = EdgeBall(x,-h/3, edgeSize/2)
                 edgeBalls.add(edgeBall)
                 x += 2*edgeSize
+                if(i == 3) {
+                    x -= edgeSize/2
+                }
             }
             pieBall = PieBall(w/2,h/2,size/5)
         }
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             pieBall?.draw(canvas,paint,scale)
-            edgeBalls.forEach { edgeBall ->
-                edgeBall.draw(canvas,paint,scale)
+            for(i in 0..3) {
+                canvas.save()
+                canvas.translate(w / 2, h / 2)
+                canvas.rotate(i*90.0f)
+                edgeBalls.forEach { edgeBall ->
+                    edgeBall.draw(canvas, paint, scale)
+                }
+                canvas.restore()
             }
             canvas.restore()
         }
