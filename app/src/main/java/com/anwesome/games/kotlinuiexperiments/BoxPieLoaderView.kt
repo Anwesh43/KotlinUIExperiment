@@ -3,24 +3,28 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 20/08/17.
  */
 class BoxPieLoaderView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = BoxPieRenderer(this)
     override fun onDraw(canvas: Canvas) {
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN ->{
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -99,5 +103,23 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
                 animated = true
             }
         }
+    }
+    companion object {
+        var view:BoxPieLoaderView?=null
+        fun create(activity: Activity) {
+            if(view == null) {
+                view = BoxPieLoaderView(activity)
+                var size = DimensionsUtil.getDimension(activity)
+                activity.addContentView(view, ViewGroup.LayoutParams(size.x, size.x))
+            }
+        }
+        fun create(parent: ViewGroup) {
+            if(view == null) {
+                view = BoxPieLoaderView(parent.context)
+                var size = DimensionsUtil.getDimension(parent.context as Activity)
+                parent.addView(view, ViewGroup.LayoutParams(size.x, size.x))
+            }
+        }
+
     }
 }
