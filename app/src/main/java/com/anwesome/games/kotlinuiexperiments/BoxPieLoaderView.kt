@@ -12,6 +12,7 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 
 /**
  * Created by anweshmishra on 20/08/17.
@@ -121,12 +122,57 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
             }
         }
         fun create(parent: ViewGroup) {
-            if(view == null) {
-                view = BoxPieLoaderView(parent.context)
-                var size = DimensionsUtil.getDimension(parent.context as Activity)
-                parent.addView(view, ViewGroup.LayoutParams(size.x, size.x))
-            }
+            var view = BoxPieLoaderView(parent.context)
+            var size = DimensionsUtil.getDimension(parent.context as Activity)
+            parent.addView(view, ViewGroup.LayoutParams(size.x, size.x))
         }
 
+    }
+}
+class BoxPieLoaderList(ctx:Context):ViewGroup(ctx) {
+    override fun onMeasure(wspec:Int,hspec:Int) {
+        var h = 0
+        var w = 0
+        for(i in 0..childCount-1) {
+            var view = getChildAt(i)
+            measureChild(view,wspec,hspec)
+            h += (view.measuredHeight*11)/10
+            w = Math.max(w,view.measuredWidth)
+        }
+        setMeasuredDimension(w,h)
+    }
+    override fun onLayout(reloaded:Boolean,a:Int,b:Int,w:Int,h:Int) {
+        var y = 0
+        for(i in 0..childCount-1) {
+            var view = getChildAt(i)
+            view.layout(0,y,view.measuredWidth,y+view.measuredHeight)
+            y += (view.measuredHeight*11)/10
+        }
+    }
+    fun addBoxPieLoader() {
+        BoxPieLoaderView.create(this)
+    }
+    companion object {
+        var isShown = false
+        var layout:BoxPieLoaderList?=null
+        fun create(activity: Activity) {
+            if(layout == null && !isShown) {
+                layout = BoxPieLoaderList(activity)
+            }
+        }
+        fun addView() {
+            if(!isShown) {
+                layout?.addBoxPieLoader()
+            }
+        }
+        fun show(activity: Activity) {
+            if(!isShown) {
+                var scrollView = ScrollView(activity)
+                scrollView.addView(layout,LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT))
+                activity.addContentView(scrollView, LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT))
+                isShown = true
+            }
+
+        }
     }
 }
