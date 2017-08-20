@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -73,6 +76,7 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean = pieBall?.handleTap(x,y)?:false
     }
     class REBRenderer(var view:RectEdgePieBallView) {
+        var animator = REBAnimator(this)
         var time = 0
         var rectEdgePieBall:RectEdgePieBall?=null
         fun render(canvas:Canvas,paint:Paint) {
@@ -92,7 +96,39 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(rectEdgePieBall?.handleTap(x,y)?:false) {
-
+                animator.start()
+            }
+        }
+    }
+    class REBAnimator(var renderer:REBRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var anim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        var animated = false
+        var dir = 0
+        init {
+            anim.addUpdateListener(this)
+            anim.addListener(this)
+            anim.duration = 500
+            reverseAnim.addUpdateListener(this)
+            reverseAnim.addListener(this)
+            reverseAnim.duration = 500
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            renderer.update(vf.animatedValue as Float)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                animated = false
+                dir = (dir+1)%2
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when(dir) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
+                animated = true
             }
         }
     }
