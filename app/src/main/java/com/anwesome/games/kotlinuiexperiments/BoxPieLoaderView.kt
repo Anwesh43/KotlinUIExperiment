@@ -51,6 +51,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
     class BoxPieRenderer(var view:BoxPieLoaderView) {
         var time = 0
         var loader:BoxPieLoader?=null
+        var animator = BoxPieAnimator(this)
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
@@ -66,7 +67,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(loader?.handleTap(x,y)?:false) {
-
+                animator.start()
             }
         }
     }
@@ -95,6 +96,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
                     0 -> anim.start()
                     1 -> reverseAnim.start()
                 }
+                animated = true
             }
         }
     }
