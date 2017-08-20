@@ -76,11 +76,12 @@ class MainActivity : AppCompatActivity() {
       //  BallCircleLayoutView.create(this)
         //RightUpBallView.create(this)
         //BoxPieLoaderView.create(this)
-        BoxPieLoaderList.create(this)
-        for(i in 0..12) {
-            BoxPieLoaderList.addView()
-        }
-        BoxPieLoaderList.show(this)
+//        BoxPieLoaderList.create(this)
+//        for(i in 0..12) {
+//            BoxPieLoaderList.addView()
+//        }
+//        BoxPieLoaderList.show(this)
+        RectEdgePieBallView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
