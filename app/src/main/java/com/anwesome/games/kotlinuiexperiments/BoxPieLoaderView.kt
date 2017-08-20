@@ -24,7 +24,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
     }
     data class BoxPieLoader(var h:Float,var w:Float,var scale:Float=0.0f) {
         var r = Math.min(w,h)/15
-        fun draw(canvas:Canvas,paint:Paint) { 
+        fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeWidth = r/3
             canvas.save()
             canvas.translate(w/2,h/2)
@@ -44,5 +44,26 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
             this.scale = scale
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.w/2-r && x<=this.w/2+r && y>=this.h/2-r && y<=this.h/2 +r
+    }
+    class BoxPieRenderer(var view:BoxPieLoaderView) {
+        var time = 0
+        var loader:BoxPieLoader?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                loader = BoxPieLoader(h,w)
+            }
+            loader?.draw(canvas,paint)
+            time++
+        }
+        fun update(factor:Float) {
+            loader?.update(factor)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(loader?.handleTap(x,y)?:false) {
+                
+            }
+        }
     }
 }
