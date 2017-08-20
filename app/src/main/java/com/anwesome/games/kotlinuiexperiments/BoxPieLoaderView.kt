@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -19,6 +20,7 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = BoxPieRenderer(this)
     override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -32,7 +34,6 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
     data class BoxPieLoader(var h:Float,var w:Float,var scale:Float=0.0f) {
         var r = Math.min(w,h)/15
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.strokeWidth = r/3
             canvas.save()
             canvas.translate(w/2,h/2)
             paint.style = Paint.Style.STROKE
@@ -61,6 +62,8 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 loader = BoxPieLoader(h,w)
+                paint.color = Color.parseColor("#0D47A1")
+                paint.strokeWidth = Math.min(w,h)/50
             }
             loader?.draw(canvas,paint)
             time++
