@@ -136,6 +136,9 @@ class BoxPieLoaderList(ctx:Context):ViewGroup(ctx) {
         for(i in 0..childCount-1) {
             var view = getChildAt(i)
             measureChild(view,wspec,hspec)
+            if(i == 0) {
+                h = view.measuredHeight/10
+            }
             h += (view.measuredHeight*11)/10
             w = Math.max(w,view.measuredWidth)
         }
@@ -145,6 +148,9 @@ class BoxPieLoaderList(ctx:Context):ViewGroup(ctx) {
         var y = 0
         for(i in 0..childCount-1) {
             var view = getChildAt(i)
+            if(i == 0) {
+                y = view.measuredHeight/10
+            }
             view.layout(0,y,view.measuredWidth,y+view.measuredHeight)
             y += (view.measuredHeight*11)/10
         }

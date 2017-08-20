@@ -77,7 +77,9 @@ class MainActivity : AppCompatActivity() {
         //RightUpBallView.create(this)
         //BoxPieLoaderView.create(this)
         BoxPieLoaderList.create(this)
-        BoxPieLoaderList.addView()
+        for(i in 0..12) {
+            BoxPieLoaderList.addView()
+        }
         BoxPieLoaderList.show(this)
     }
 }
