@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class RectEdgePieBallView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = REBRenderer(this)
+    var listener:REBOnSelectionListener? = null
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -140,6 +141,10 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
             if(animated) {
                 animated = false
                 dir = (dir+1)%2
+                when(dir) {
+                    1 -> renderer.view.listener?.onSelect()
+                    0 -> renderer.view.listener?.onUnSelect()
+                }
             }
         }
         fun start() {
@@ -153,10 +158,18 @@ class RectEdgePieBallView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:RectEdgePieBallView?=null
         fun create(activity:Activity) {
-            var view = RectEdgePieBallView(activity)
+            view = RectEdgePieBallView(activity)
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addSelectionListener(listener:REBOnSelectionListener) {
+            view?.listener = listener
+        }
+    }
+    interface REBOnSelectionListener {
+        fun onSelect()
+        fun onUnSelect()
     }
 }
