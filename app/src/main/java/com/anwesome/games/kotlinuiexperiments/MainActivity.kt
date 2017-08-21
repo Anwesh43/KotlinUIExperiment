@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        BoxPieLoaderList.show(this)
         RectEdgePieBallView.create(this)
+        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -195,5 +196,13 @@ class SearchButtonOpenCloseListener(var activity: MainActivity):SearchButtonView
 class BallUpListener(var activity:MainActivity):BallUpView.OnBallUpListener {
     override fun onBallUp(index:Int) {
         Toast.makeText(activity,"ball $index is up",Toast.LENGTH_SHORT).show()
+    }
+}
+class REBSelectionListener(var activity: MainActivity):RectEdgePieBallView.REBOnSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"Selected",Toast.LENGTH_SHORT).show()
+    }
+    override fun onUnSelect() {
+        Toast.makeText(activity,"Unselected",Toast.LENGTH_SHORT).show()
     }
 }
