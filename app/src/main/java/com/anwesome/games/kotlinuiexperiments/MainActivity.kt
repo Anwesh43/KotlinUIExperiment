@@ -76,13 +76,13 @@ class MainActivity : AppCompatActivity() {
       //  BallCircleLayoutView.create(this)
         //RightUpBallView.create(this)
         //BoxPieLoaderView.create(this)
-//        BoxPieLoaderList.create(this)
-//        for(i in 0..12) {
-//            BoxPieLoaderList.addView()
-//        }
-//        BoxPieLoaderList.show(this)
-        RectEdgePieBallView.create(this)
-        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
+        BoxPieLoaderList.create(this)
+        for(i in 0..12) {
+            BoxPieLoaderList.addView(BoxPieSelectionListener(this,i))
+        }
+        BoxPieLoaderList.show(this)
+//        RectEdgePieBallView.create(this)
+//        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -204,5 +204,14 @@ class REBSelectionListener(var activity: MainActivity):RectEdgePieBallView.REBOn
     }
     override fun onUnSelect() {
         Toast.makeText(activity,"Unselected",Toast.LENGTH_SHORT).show()
+    }
+}
+class BoxPieSelectionListener(var activity:MainActivity,var i:Int):BoxPieLoaderOnSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"Selected $i",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUnSelect() {
+        Toast.makeText(activity,"UnSelected $i",Toast.LENGTH_SHORT).show()
     }
 }
