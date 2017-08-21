@@ -20,6 +20,7 @@ import android.widget.ScrollView
 class BoxPieLoaderView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = BoxPieRenderer(this)
+    var listener:BoxPieLoaderOnSelectionListener?=null
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -100,6 +101,10 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
             if(animated) {
                 animated = false
                 dir = (dir+1)%2
+                when(dir) {
+                    1 -> renderer.view?.listener?.onSelect()
+                    0 -> renderer.view?.listener?.onUnSelect()
+                }
             }
         }
         fun start() {
@@ -121,13 +126,20 @@ class BoxPieLoaderView(ctx:Context):View(ctx) {
                 activity.addContentView(view, ViewGroup.LayoutParams(size.x, size.x))
             }
         }
-        fun create(parent: ViewGroup) {
+        fun create(parent: ViewGroup,vararg listeners:BoxPieLoaderOnSelectionListener) {
             var view = BoxPieLoaderView(parent.context)
+            if(listeners.size == 1) {
+                view.listener = listeners[0]
+            }
             var size = DimensionsUtil.getDimension(parent.context as Activity)
             parent.addView(view, ViewGroup.LayoutParams(size.x, size.x))
         }
 
     }
+}
+interface BoxPieLoaderOnSelectionListener {
+    fun onSelect()
+    fun onUnSelect()
 }
 class BoxPieLoaderList(ctx:Context):ViewGroup(ctx) {
     override fun onMeasure(wspec:Int,hspec:Int) {
@@ -155,8 +167,13 @@ class BoxPieLoaderList(ctx:Context):ViewGroup(ctx) {
             y += (view.measuredHeight*11)/10
         }
     }
-    fun addBoxPieLoader() {
-        BoxPieLoaderView.create(this)
+    fun addBoxPieLoader(vararg listener: BoxPieLoaderOnSelectionListener) {
+        if(listener.size == 1) {
+            BoxPieLoaderView.create(this, listener[0])
+        }
+        else {
+            BoxPieLoaderView.create(this)
+        }
     }
     companion object {
         var isShown = false
@@ -166,9 +183,14 @@ class BoxPieLoaderList(ctx:Context):ViewGroup(ctx) {
                 layout = BoxPieLoaderList(activity)
             }
         }
-        fun addView() {
+        fun addView(vararg listener: BoxPieLoaderOnSelectionListener) {
             if(!isShown) {
-                layout?.addBoxPieLoader()
+                if(listener.size == 1) {
+                    layout?.addBoxPieLoader(listener[0])
+                }
+                else {
+                    layout?.addBoxPieLoader()
+                }
             }
         }
         fun show(activity: Activity) {
