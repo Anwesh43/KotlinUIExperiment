@@ -76,13 +76,14 @@ class MainActivity : AppCompatActivity() {
       //  BallCircleLayoutView.create(this)
         //RightUpBallView.create(this)
         //BoxPieLoaderView.create(this)
-        BoxPieLoaderList.create(this)
-        for(i in 0..12) {
-            BoxPieLoaderList.addView(BoxPieSelectionListener(this,i))
-        }
-        BoxPieLoaderList.show(this)
+//        BoxPieLoaderList.create(this)
+//        for(i in 0..12) {
+//            BoxPieLoaderList.addView(BoxPieSelectionListener(this,i))
+//        }
+//        BoxPieLoaderList.show(this)
 //        RectEdgePieBallView.create(this)
 //        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
+        CircularPlayRectView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
