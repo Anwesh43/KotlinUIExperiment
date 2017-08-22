@@ -3,10 +3,12 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 22/08/17.
@@ -15,6 +17,7 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CPRVRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -31,12 +34,13 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
             circularPlay = CircularPlay(w/2,h/2,Math.min(w,h)/5)
         }
         fun draw(canvas:Canvas,paint:Paint) {
-            circularPlay?.draw(canvas,paint,scale)
+            paint.color = Color.parseColor("#00838F")
             canvas.save()
             canvas.translate(w/2,h/2)
             canvas.scale(scale,1.0f)
             canvas.drawRect(RectF(-w/2,-h/2,w/2,h/2),paint)
             canvas.restore()
+            circularPlay?.draw(canvas,paint,scale)
         }
         fun update(scale:Float) {
             this.scale = scale
@@ -59,6 +63,7 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.drawPath(path, paint)
             canvas.restore()
+            paint.color = Color.parseColor("#1565C0")
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.style = Paint.Style.FILL
@@ -118,6 +123,13 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
                 }
                 animated = true
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = CircularPlayRectView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
