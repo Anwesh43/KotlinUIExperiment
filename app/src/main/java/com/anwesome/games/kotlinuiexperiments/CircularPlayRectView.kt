@@ -13,13 +13,14 @@ import android.view.View
  */
 class CircularPlayRectView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = CPRVRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -68,6 +69,7 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
     }
     class CPRVRenderer(var view:CircularPlayRectView) {
         var time = 0
+        var animator = CPRVAnimator(this)
         var circularPlayRect:CircularPlayRect?=null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
@@ -82,7 +84,7 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(circularPlayRect?.handleTap(x,y)?:false) {
-
+                animator.start()
             }
         }
     }
