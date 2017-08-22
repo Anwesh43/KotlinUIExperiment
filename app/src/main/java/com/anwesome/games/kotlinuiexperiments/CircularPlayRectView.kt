@@ -51,10 +51,16 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(x,y)
+            paint.color = Color.parseColor("#1565C0")
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0.0f,0.0f,r,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
             var path = Path()
             path.moveTo(-r/6,-r/6)
             path.lineTo(-r/6,r/6)
             path.lineTo(r/6,0.0f)
+            path.lineTo(-r/6,-r/6)
             paint.style = Paint.Style.STROKE
             paint.color = Color.WHITE
             canvas.drawPath(path,paint)
@@ -63,11 +69,6 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.drawPath(path, paint)
             canvas.restore()
-            paint.color = Color.parseColor("#1565C0")
-            paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0.0f,0.0f,r,paint)
-            paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y <= this.y+r
@@ -79,6 +80,8 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
                 circularPlayRect = CircularPlayRect(canvas.width.toFloat(),canvas.height.toFloat())
+                paint.strokeWidth = 5.0f
+                paint.strokeCap = Paint.Cap.ROUND
             }
             circularPlayRect?.draw(canvas,paint)
             time++
