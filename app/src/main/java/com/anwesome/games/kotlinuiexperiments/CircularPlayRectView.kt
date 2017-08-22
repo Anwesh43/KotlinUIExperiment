@@ -63,4 +63,24 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y <= this.y+r
     }
+    class CPRVRenderer(var view:CircularPlayRectView) {
+        var time = 0
+        var circularPlayRect:CircularPlayRect?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                circularPlayRect = CircularPlayRect(canvas.width.toFloat(),canvas.height.toFloat())
+            }
+            circularPlayRect?.draw(canvas,paint)
+            time++
+        }
+        fun update(scale:Float) {
+            circularPlayRect?.update(scale)
+            view.postInvalidate()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(circularPlayRect?.handleTap(x,y)?:false) {
+
+            }
+        }
+    }
 }
