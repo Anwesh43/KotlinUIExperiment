@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
@@ -80,6 +83,38 @@ class CircularPlayRectView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             if(circularPlayRect?.handleTap(x,y)?:false) {
 
+            }
+        }
+    }
+    class CPRVAnimator(var renderer:CPRVRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var animated = false
+        var dir = 0
+        var anim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        init {
+            anim.addUpdateListener(this)
+            reverseAnim.addListener(this)
+            anim.addListener(this)
+            reverseAnim.addUpdateListener(this)
+            anim.duration = 500
+            reverseAnim.duration = 500
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            renderer.update(vf.animatedValue as Float)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                animated = false
+                dir = (dir+1)%2
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when(dir) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
+                animated = true
             }
         }
     }
