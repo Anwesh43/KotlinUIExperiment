@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -49,6 +52,7 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
     }
     class PieCornerMoverRenderer(var view:PieCornerBallMoverView) {
         var time = 0
+        var animator = PieCornerMoverAnimator(this)
         var pieCornerBallMover:PieCornerBallMover?=null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
@@ -59,10 +63,45 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
         }
         fun update(scale:Float) {
             pieCornerBallMover?.update(scale)
+            view.postInvalidate()
         }
         fun handleTap(x:Float,y:Float) {
             if(pieCornerBallMover?.handleTap(x,y)?:false) {
-
+                animator.start()
+            }
+        }
+    }
+    class PieCornerMoverAnimator(var renderer:PieCornerMoverRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var anim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var animated = false
+        var dir = 0
+        var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        init {
+            anim.addUpdateListener(this)
+            reverseAnim.addUpdateListener(this)
+            anim.addListener(this)
+            reverseAnim.addListener(this)
+            anim.duration = 500
+            reverseAnim.duration = 500
+        }
+        override fun onAnimationUpdate(animator:ValueAnimator) {
+            if(animated) {
+                renderer.update(animator.animatedValue as Float)
+            }
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                dir = (dir+1)%2
+                animated = false
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when(dir) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
+                animated = true
             }
         }
     }
