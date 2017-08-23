@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 //        RectEdgePieBallView.create(this)
 //        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
        // CircularPlayRectView.create(this)
-        PieCornerBallMoverView.create(this)
+        PieCornerBallMoverView.create(this,PieCornerSelectionListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -215,5 +215,14 @@ class BoxPieSelectionListener(var activity:MainActivity,var i:Int):BoxPieLoaderO
 
     override fun onUnSelect() {
         Toast.makeText(activity,"UnSelected $i",Toast.LENGTH_SHORT).show()
+    }
+}
+class PieCornerSelectionListener(var activity: MainActivity):PieCornerBallMoverView.PieCornerOnSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"Selected",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUnSelect() {
+        Toast.makeText(activity,"UnSelected",Toast.LENGTH_SHORT).show()
     }
 }
