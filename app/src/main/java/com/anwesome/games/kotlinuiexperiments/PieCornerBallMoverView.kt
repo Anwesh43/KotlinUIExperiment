@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 23/08/17.
@@ -104,6 +106,13 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
                 }
                 animated = true
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = PieCornerBallMoverView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
