@@ -19,6 +19,7 @@ import android.view.ViewGroup
 class PieCornerBallMoverView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PieCornerMoverRenderer(this)
+    var listener:PieCornerOnSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -97,6 +98,14 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
             if(animated) {
                 dir = (dir+1)%2
                 animated = false
+                when(dir) {
+                    0 -> {
+                        renderer.view.listener?.onUnSelect()
+                    }
+                    1 -> {
+                        renderer.view.listener?.onSelect()
+                    }
+                }
             }
         }
         fun start() {
@@ -110,10 +119,17 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:PieCornerOnSelectionListener) {
             var view = PieCornerBallMoverView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 1) {
+                view.listener = listeners[0]
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+    }
+    interface PieCornerOnSelectionListener {
+        fun onSelect()
+        fun onUnSelect()
     }
 }
