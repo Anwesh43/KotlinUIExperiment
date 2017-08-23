@@ -47,4 +47,23 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
             this.scale = scale
         }
     }
+    class PieCornerMoverRenderer(var view:PieCornerBallMoverView) {
+        var time = 0
+        var pieCornerBallMover:PieCornerBallMover?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                pieCornerBallMover = PieCornerBallMover(canvas.width.toFloat(),canvas.height.toFloat())
+            }
+            pieCornerBallMover?.draw(canvas,paint)
+            time++
+        }
+        fun update(scale:Float) {
+            pieCornerBallMover?.update(scale)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(pieCornerBallMover?.handleTap(x,y)?:false) {
+
+            }
+        }
+    }
 }
