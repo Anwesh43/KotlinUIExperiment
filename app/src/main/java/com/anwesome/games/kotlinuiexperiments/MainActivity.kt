@@ -83,7 +83,8 @@ class MainActivity : AppCompatActivity() {
 //        BoxPieLoaderList.show(this)
 //        RectEdgePieBallView.create(this)
 //        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
-        CircularPlayRectView.create(this)
+       // CircularPlayRectView.create(this)
+        PieCornerBallMoverView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

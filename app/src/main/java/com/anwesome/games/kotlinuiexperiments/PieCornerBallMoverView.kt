@@ -20,6 +20,7 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PieCornerMoverRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean  {
@@ -37,18 +38,18 @@ class PieCornerBallMoverView(ctx:Context):View(ctx) {
             canvas.translate(w/2,h/2)
             paint.strokeWidth = r/8
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0.0f,0.0f,r,paint)
+            canvas.drawCircle(0.0f,w/3,r,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
+            canvas.drawArc(RectF(-r,w/3-r,r,w/3+r),0.0f,360.0f*scale,true,paint)
             for(i in 0..3) {
                 canvas.save()
                 canvas.rotate(i*90.0f+45.0f)
-                canvas.drawCircle(0.0f,-h/3*scale,r,paint)
+                canvas.drawCircle(0.0f,-h/3*scale,r/2,paint)
                 canvas.restore()
             }
             canvas.restore()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.w/2-r && x<=this.w/2+r && y>=this.h/2 -r && y<=this.h/2+r
+        fun handleTap(x:Float,y:Float):Boolean = x>=(w/2)-r && x<=w/2+r && y>=(h/2+w/3) -r && y<=(h/2+w/3)+r
         fun update(scale:Float) {
             this.scale = scale
         }
