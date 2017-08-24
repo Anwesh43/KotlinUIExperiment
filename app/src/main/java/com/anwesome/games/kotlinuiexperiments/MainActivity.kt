@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 //        RectEdgePieBallView.addSelectionListener(REBSelectionListener(this))
        // CircularPlayRectView.create(this)
         //PieCornerBallMoverView.create(this,PieCornerSelectionListener(this))
-        PiePolygonalView.create(this)
+        PiePolygonalView.create(this,6)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
