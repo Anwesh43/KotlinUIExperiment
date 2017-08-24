@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -19,6 +20,7 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PiePolygonalRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -34,15 +36,15 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
             canvas.save()
             canvas.translate(w/2,h/2)
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = Math.min(w,h)/50
             canvas.drawCircle(0.0f,0.0f,r,paint)
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-r,-r,r,r),0.0f,360.0f*scale,true,paint)
             var deg = 360.0f/n
             for(i in 1..n) {
                 canvas.save()
-                var x_gap =  (w/3*Math.cos((i*deg/2)*Math.PI/180)).toFloat()
-                var y_gap = (w/3*Math.sin((i*deg/2)*Math.PI/180)).toFloat()
+                canvas.rotate(i*deg)
+                var x_gap =  (w/3*Math.sin((deg/2)*Math.PI/180)).toFloat()
+                var y_gap = (w/3*Math.cos((deg/2)*Math.PI/180)).toFloat()
                 canvas.drawLine(-x_gap*scale,y_gap,x_gap*scale,y_gap,paint)
                 canvas.restore()
             }
@@ -59,6 +61,9 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 piePolygonal = PiePolygonal(w,h,view.n)
+                paint.color = Color.parseColor("#0288D1")
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             piePolygonal?.draw(canvas,paint)
             time++
@@ -80,7 +85,11 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
         var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
         init {
             anim.addUpdateListener(this)
+            anim.addListener(this)
+            reverseAnim.addUpdateListener(this)
             reverseAnim.addListener(this)
+            reverseAnim.duration = 500
+            anim.duration = 500
         }
         override fun onAnimationUpdate(vf:ValueAnimator) {
             renderer.update(vf.animatedValue as Float)
