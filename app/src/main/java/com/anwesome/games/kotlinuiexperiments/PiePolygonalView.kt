@@ -48,6 +48,7 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
         fun handleTap(x:Float,y:Float) = x>=w/2-r && x<=w/2+r && y>=h/2-r && y<=h/2+r
     }
     class PiePolygonalRenderer(var view:PiePolygonalView) {
+        var animator = PiePolygonalAnimator(this)
         var time = 0
         var piePolygonal:PiePolygonal?=null
         fun render(canvas:Canvas,paint:Paint) {
@@ -61,7 +62,7 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(piePolygonal?.handleTap(x,y)?:false) {
-
+                animator.start()
             }
         }
         fun update(scale:Float) {
