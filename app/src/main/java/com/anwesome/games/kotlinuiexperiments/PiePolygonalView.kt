@@ -3,25 +3,28 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 24/08/17.
  */
 class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = PiePolygonalRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -96,6 +99,16 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
                     1 -> reverseAnim.start()
                 }
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity,vararg n:Int) {
+            var view = PiePolygonalView(activity)
+            if(n.size == 1) {
+                view.n = Math.max(n[0],view.n)
+            }
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
