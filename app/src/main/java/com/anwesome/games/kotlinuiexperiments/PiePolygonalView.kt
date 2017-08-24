@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -64,6 +67,34 @@ class PiePolygonalView(ctx:Context,var n:Int = 3):View(ctx) {
         fun update(scale:Float) {
             piePolygonal?.scale = scale
             view.postInvalidate()
+        }
+    }
+    class PiePolygonalAnimator(var renderer:PiePolygonalRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var animated = false
+        var anim = ValueAnimator.ofFloat(0.0f,1.0f)
+        var dir = 0
+        var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        init {
+            anim.addUpdateListener(this)
+            reverseAnim.addListener(this)
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            renderer.update(vf.animatedValue as Float)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                dir = (dir+1)%2
+                animated = false
+            }
+        }
+        fun start() {
+            if(!animated) {
+                animated = true
+                when(dir) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
+            }
         }
     }
 }
