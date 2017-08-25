@@ -34,7 +34,7 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
     data class LineDot(var radius:Float,var w:Float,var y:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
-            canvas.translate(y,radius)
+            canvas.translate(radius,y)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0.0f,0.0f,radius,paint)
             paint.style = Paint.Style.FILL
@@ -49,7 +49,7 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
     data class PieLineDot(var w:Float,var h:Float,var n:Int,var x:Float = w/2,var y:Float = 9*h/10,var r:Float = h/10,var scale:Float = 0.0f) {
         var lineDots:ConcurrentLinkedQueue<LineDot> = ConcurrentLinkedQueue()
         init {
-            var gap = (0.8f*h)/n
+            var gap = (0.8f*h)/(2*n+1)
             var y = 3*gap/2
             for(i in 1..n) {
                 var lineDot = LineDot(gap/2,w,y)
@@ -64,6 +64,9 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.save()
             canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-r,-r,r,r),0.0f,360f*scale,true,paint)
             canvas.restore()
         }
@@ -78,6 +81,8 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 pieLineDot = PieLineDot(w,h,view.n)
+                paint.color = Color.parseColor("#673ab7")
+                paint.strokeWidth = 5f
             }
             pieLineDot?.draw(canvas,paint)
             time++
