@@ -62,4 +62,26 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    class PieLineDotRenderer(var view:PieLineDotView) {
+        var time = 0
+        var pieLineDot:PieLineDot?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                pieLineDot = PieLineDot(w,h,view.n)
+            }
+            pieLineDot?.draw(canvas,paint)
+            time++
+        }
+        fun update(scale:Float) {
+            pieLineDot?.scale = scale
+            view.postInvalidate()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(pieLineDot?.handleTap(x,y)?:false) {
+                
+            }
+        }
+    }
 }
