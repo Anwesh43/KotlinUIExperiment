@@ -68,6 +68,7 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
     class PieLineDotRenderer(var view:PieLineDotView) {
         var time = 0
         var pieLineDot:PieLineDot?=null
+        var animator = PieLineDotAnimator(this)
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
@@ -83,7 +84,7 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(pieLineDot?.handleTap(x,y)?:false) {
-
+                animator.start()
             }
         }
     }
