@@ -3,27 +3,31 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 26/08/17.
  */
 class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
+    val renderer = PieLineDotRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
-            MotionEvent.ACTION_DOWN -> {
+            MotionEvent.ACTION_DOWN -> renderer.handleTap(event.x,event.y)
 
-            }
         }
         return true
     }
@@ -118,6 +122,13 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
                 }
                 animated = true
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = PieLineDotView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
