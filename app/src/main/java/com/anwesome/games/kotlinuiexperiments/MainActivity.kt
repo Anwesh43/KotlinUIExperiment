@@ -86,7 +86,8 @@ class MainActivity : AppCompatActivity() {
        // CircularPlayRectView.create(this)
         //PieCornerBallMoverView.create(this,PieCornerSelectionListener(this))
        // PiePolygonalView.create(this,6)
-        PieLineDotView.create(this,PLDSelectionListener(this))
+        //PieLineDotView.create(this,PLDSelectionListener(this))
+        MultiCircularButtonView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

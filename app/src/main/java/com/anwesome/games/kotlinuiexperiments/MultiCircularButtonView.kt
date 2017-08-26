@@ -40,7 +40,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             paint.color = Color.parseColor("#304FFE")
             canvas.drawCircle(0f,0f,r,paint)
             paint.color = Color.WHITE
-            paint.strokeWidth = r/30
+            paint.strokeWidth = r/10
             paint.strokeCap = Paint.Cap.ROUND
             for(i in 0..1) {
                 canvas.save()
@@ -73,6 +73,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             scale = Math.sin(deg*Math.PI/180).toFloat()
             if(deg > 180) {
                 deg = 0f
+                scale = 0f
             }
         }
         fun stopAnimating():Boolean = deg == 0f
@@ -88,7 +89,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                 var deg = i*gapDeg
                 var x = cx+(r-r1)*Math.cos(deg*Math.PI/180).toFloat()
                 var y = cy+(r-r1)*Math.sin(deg*Math.PI/180).toFloat()
-                var circularButton = CircularButton(x,y,r1)
+                var circularButton = CircularButton(x,y,finalR/5)
                 circularButtons.add(circularButton)
             }
         }
@@ -155,6 +156,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                     0 -> anim.start()
                     1 -> reverseAnim.start()
                 }
+                animated = true
             }
         }
     }
@@ -189,7 +191,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         var controlButton:ControlButton?=null
         var multiCircularButton:MultiCircularButton?=null
         var mcbAnimator:MultiCircularButtonAnimator = MultiCircularButtonAnimator(this)
-        var tapButtonAnimator:ButtonTapAnimator = ButtonTapAnimator(view,multiCircularButton)
+        var tapButtonAnimator:ButtonTapAnimator?=null
         fun render(canvas:Canvas,paint:Paint) {
             if(rendered == 0) {
                 create(canvas.width.toFloat(),canvas.height.toFloat())
@@ -202,6 +204,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         fun create(w:Float,h:Float) {
             multiCircularButton = MultiCircularButton(w/2,h/2,Math.min(w,h)/2,view.n)
             controlButton = ControlButton(w/2,h/2,Math.min(w,h)/10)
+            tapButtonAnimator = ButtonTapAnimator(view,multiCircularButton)
         }
         fun update(scale:Float) {
             multiCircularButton?.update(scale)
@@ -213,7 +216,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                 mcbAnimator.start()
             }
             else {
-                tapButtonAnimator.handleTap(x,y)
+                tapButtonAnimator?.handleTap(x,y)
             }
         }
     }
