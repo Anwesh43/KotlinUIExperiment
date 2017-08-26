@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
        // CircularPlayRectView.create(this)
         //PieCornerBallMoverView.create(this,PieCornerSelectionListener(this))
        // PiePolygonalView.create(this,6)
-        PieLineDotView.create(this)
+        PieLineDotView.create(this,PLDSelectionListener(this))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
@@ -226,5 +226,13 @@ class PieCornerSelectionListener(var activity: MainActivity):PieCornerBallMoverV
 
     override fun onUnSelect() {
         Toast.makeText(activity,"UnSelected",Toast.LENGTH_SHORT).show()
+    }
+}
+class PLDSelectionListener(var activity:MainActivity):PieLineDotView.PLDOnSelectionListener {
+    override fun onSelect() {
+        Toast.makeText(activity,"selected",Toast.LENGTH_SHORT).show()
+    }
+    override fun onUnSelect() {
+        Toast.makeText(activity,"unselected",Toast.LENGTH_SHORT).show()
     }
 }
