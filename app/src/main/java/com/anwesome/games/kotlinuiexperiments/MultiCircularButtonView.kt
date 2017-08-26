@@ -44,7 +44,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<this.x+r && y>=this.y-r && y<=this.y+r
     }
-    data class CircularButton(var x:Float,var y:Float,var r:Float,var scale:Float = 0f) {
+    data class CircularButton(var x:Float,var y:Float,var r:Float,var scale:Float = 0f,var deg:Float = 0f) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -58,8 +58,13 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             canvas.restore()
         }
         fun update() {
-            scale+=0.1f
+            deg+=18f
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+            if(deg > 180) {
+                deg = 0f
+            }
         }
+        fun stopAnimating():Boolean = deg == 0f
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class MultiCircularButton(var cx:Float,var cy:Float,var finalR:Float,var r:Float=0f,var n:Int,var gapDeg:Float = 360f/n) {
@@ -92,8 +97,11 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun updateTappedButon() {
-            tappedButtons.forEach {
-
+            tappedButtons.forEach { button ->
+                button.update()
+                if(button.stopAnimating()) {
+                    tappedButtons.remove(button)
+                }
             }
         }
         fun handleTap(x:Float,y:Float):Boolean {
