@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -67,7 +70,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         fun stopAnimating():Boolean = deg == 0f
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<this.x+r && y>=this.y-r && y<=this.y+r
     }
-    data class MultiCircularButton(var cx:Float,var cy:Float,var finalR:Float,var r:Float=0f,var n:Int,var gapDeg:Float = 360f/n) {
+    data class MultiCircularButton(var cx:Float,var cy:Float,var finalR:Float,var n:Int,var r:Float=0f,var gapDeg:Float = 360f/n) {
         var circularButtons:ConcurrentLinkedQueue<CircularButton> = ConcurrentLinkedQueue()
         var tappedButtons:ConcurrentLinkedQueue<CircularButton> = ConcurrentLinkedQueue()
         init {
@@ -113,4 +116,38 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             return false
         }
     }
+    class MultiCircularButtonAnimator():AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var anim = ValueAnimator.ofFloat(0f,1f)
+        var reverseAnim = ValueAnimator.ofFloat(1f,0f)
+        var animated:Boolean = false
+        var mode:Int = 0
+        init {
+            anim.addUpdateListener(this)
+            reverseAnim.addUpdateListener(this)
+            anim.addListener(this)
+            reverseAnim.addListener(this)
+            anim.duration = 500
+            reverseAnim.duration = 500
+        }
+        override fun onAnimationUpdate(animator:ValueAnimator) {
+            if(animated) {
+
+            }
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animated) {
+                mode = (mode+1)%2
+                animated = false
+            }
+        }
+        fun start() {
+            if(!animated) {
+                when(mode) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
+            }
+        }
+    }
+
 }
