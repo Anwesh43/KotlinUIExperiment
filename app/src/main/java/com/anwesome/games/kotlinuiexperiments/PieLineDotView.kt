@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
     val renderer = PieLineDotRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var listener:PLDOnSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -116,6 +117,10 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
         override fun onAnimationEnd(animator:Animator) {
             if(animated) {
                 animated = false
+                when(dir) {
+                    0 -> renderer.view.listener?.onSelect()
+                    1 -> renderer.view.listener?.onUnSelect()
+                }
                 dir = (dir+1)%2
             }
         }
@@ -130,10 +135,17 @@ class PieLineDotView(ctx:Context,var n:Int=4):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:PLDOnSelectionListener) {
             var view = PieLineDotView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 1) {
+                view.listener = listeners[0]
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+    }
+    interface PLDOnSelectionListener {
+        fun onSelect()
+        fun onUnSelect()
     }
 }
