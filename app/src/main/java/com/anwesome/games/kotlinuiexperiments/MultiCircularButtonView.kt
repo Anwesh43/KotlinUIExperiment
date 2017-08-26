@@ -3,12 +3,15 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Point
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -16,13 +19,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val controller = MultiCircularButtonController(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.argb(0,0,0,0))
+        controller.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                controller.handleTap(event.x,event.y)
             }
         }
         return true
@@ -187,7 +192,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         var tapButtonAnimator:ButtonTapAnimator = ButtonTapAnimator(view,multiCircularButton)
         fun render(canvas:Canvas,paint:Paint) {
             if(rendered == 0) {
-                create(canvas.width.toFloat(),canvas.height.toFloat())                
+                create(canvas.width.toFloat(),canvas.height.toFloat())
             }
             multiCircularButton?.draw(canvas,paint)
             controlButton?.draw(canvas,paint)
@@ -210,6 +215,14 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             else {
                 tapButtonAnimator.handleTap(x,y)
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var dimension:Point = DimensionsUtil.getDimension(activity)
+            var w = dimension.x/2
+            var view = MultiCircularButtonView(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(w,w))
         }
     }
 }
