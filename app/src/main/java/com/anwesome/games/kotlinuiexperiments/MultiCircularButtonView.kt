@@ -27,8 +27,8 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         return true
     }
-    data class ControlButton(var x:Float,var y:Float,var r:Float) {
-        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+    data class ControlButton(var x:Float,var y:Float,var r:Float,var scale:Float=0f) {
+        fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
             canvas.rotate(45*scale)
@@ -44,6 +44,9 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                 canvas.restore()
             }
             canvas.restore()
+        }
+        fun update(scale:Float) {
+            this.scale = scale
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<this.x+r && y>=this.y-r && y<=this.y+r
     }
@@ -117,7 +120,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             return false
         }
     }
-    class MultiCircularButtonAnimator():AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+    class MultiCircularButtonAnimator(var controller: MultiCircularButtonController):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
         var anim = ValueAnimator.ofFloat(0f,1f)
         var reverseAnim = ValueAnimator.ofFloat(1f,0f)
         var animated:Boolean = false
@@ -132,7 +135,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         override fun onAnimationUpdate(animator:ValueAnimator) {
             if(animated) {
-
+                controller.update(animator.animatedValue as Float)
             }
         }
         override fun onAnimationEnd(animator:Animator) {
@@ -150,12 +153,12 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
     }
-    class ButtonTapAnimator(var view:MultiCircularButtonView,var multiCircularButton: MultiCircularButton) {
+    class ButtonTapAnimator(var view:MultiCircularButtonView,var multiCircularButton: MultiCircularButton?) {
         var isUpdating:Boolean = false
         fun update() {
             if(isUpdating) {
-                multiCircularButton.updateTappedButon()
-                if(multiCircularButton.tappedButtons.size == 0) {
+                multiCircularButton?.updateTappedButon()
+                if((multiCircularButton?.tappedButtons?.size?:0) == 0) {
                     isUpdating = false
                 }
                 try {
@@ -168,11 +171,44 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float) {
-            if(multiCircularButton.handleTap(x,y)) {
-                if(multiCircularButton.tappedButtons.size == 1) {
+            if(multiCircularButton?.handleTap(x,y)?:false) {
+                if((multiCircularButton?.tappedButtons?.size?:0) == 1) {
                     isUpdating = true
                     view.postInvalidate()
                 }
+            }
+        }
+    }
+    class MultiCircularButtonController(var view:MultiCircularButtonView) {
+        var rendered = 0
+        var controlButton:ControlButton?=null
+        var multiCircularButton:MultiCircularButton?=null
+        var mcbAnimator:MultiCircularButtonAnimator = MultiCircularButtonAnimator(this)
+        var tapButtonAnimator:ButtonTapAnimator = ButtonTapAnimator(view,multiCircularButton)
+        fun render(canvas:Canvas,paint:Paint) {
+            if(rendered == 0) {
+                create(canvas.width.toFloat(),canvas.height.toFloat())                
+            }
+            multiCircularButton?.draw(canvas,paint)
+            controlButton?.draw(canvas,paint)
+            tapButtonAnimator?.update()
+            rendered++
+        }
+        fun create(w:Float,h:Float) {
+            multiCircularButton = MultiCircularButton(w/2,h/2,Math.min(w,h)/2,view.n)
+            controlButton = ControlButton(w/2,h/2,Math.min(w,h)/10)
+        }
+        fun update(scale:Float) {
+            multiCircularButton?.update(scale)
+            controlButton?.update(scale)
+            view.postInvalidate()
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(controlButton?.handleTap(x,y)?:false) {
+                mcbAnimator.start()
+            }
+            else {
+                tapButtonAnimator.handleTap(x,y)
             }
         }
     }
