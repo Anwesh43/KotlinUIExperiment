@@ -110,6 +110,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean {
             circularButtons.forEach { cb ->
                 if(cb.handleTap(x,y)) {
+                    tappedButtons.add(cb)
                     return true
                 }
             }
@@ -149,5 +150,30 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
     }
+    class ButtonTapAnimator(var view:MultiCircularButtonView,var multiCircularButton: MultiCircularButton) {
+        var isUpdating:Boolean = false
+        fun update() {
+            if(isUpdating) {
+                multiCircularButton.updateTappedButon()
+                if(multiCircularButton.tappedButtons.size == 0) {
+                    isUpdating = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
 
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(multiCircularButton.handleTap(x,y)) {
+                if(multiCircularButton.tappedButtons.size == 1) {
+                    isUpdating = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
