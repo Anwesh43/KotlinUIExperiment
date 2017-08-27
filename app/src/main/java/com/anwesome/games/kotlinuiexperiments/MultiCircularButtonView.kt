@@ -20,9 +20,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val controller = MultiCircularButtonController(this)
+    var listeners:ArrayList<()->Unit> = ArrayList()
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.argb(0,0,0,0))
         controller.render(canvas,paint)
+    }
+    fun addButton(listener:()->Unit) {
+        listeners.add(listener)
+        n = listeners.size
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -56,6 +61,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class CircularButton(var x:Float,var y:Float,var r:Float,var scale:Float = 0f,var deg:Float = 0f) {
+        var clickListener:CircularButtonClickListener?=null
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -74,23 +80,30 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             if(deg > 180) {
                 deg = 0f
                 scale = 0f
+                clickListener?.listener?.invoke()
             }
         }
         fun stopAnimating():Boolean = deg == 0f
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<this.x+r && y>=this.y-r && y<=this.y+r
     }
-    data class MultiCircularButton(var cx:Float,var cy:Float,var finalR:Float,var n:Int,var r:Float=0f,var gapDeg:Float = 360f/n) {
+    data class MultiCircularButton(var cx:Float,var cy:Float,var finalR:Float,var n:Int,var listeners:ArrayList<()->Unit>,var r:Float=0f,var gapDeg:Float = 360f/n) {
         var circularButtons:ConcurrentLinkedQueue<CircularButton> = ConcurrentLinkedQueue()
         var tappedButtons:ConcurrentLinkedQueue<CircularButton> = ConcurrentLinkedQueue()
         init {
             var gapDeg = 360f/n
             var r1 = r/5
+            if(listeners.size > 0) {
+                n = listeners.size
+            }
             for(i in 0..n-1) {
                 var deg = i*gapDeg
                 var x = cx+(r-r1)*Math.cos(deg*Math.PI/180).toFloat()
                 var y = cy+(r-r1)*Math.sin(deg*Math.PI/180).toFloat()
                 var circularButton = CircularButton(x,y,finalR/5)
                 circularButtons.add(circularButton)
+                if(i < listeners.size) {
+                    circularButton.clickListener = CircularButtonClickListener(listeners[i])
+                }
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
@@ -202,7 +215,7 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             rendered++
         }
         fun create(w:Float,h:Float) {
-            multiCircularButton = MultiCircularButton(w/2,h/2,Math.min(w,h)/2,view.n)
+            multiCircularButton = MultiCircularButton(w/2,h/2,Math.min(w,h)/2,view.n,view.listeners)
             controlButton = ControlButton(w/2,h/2,Math.min(w,h)/10)
             tapButtonAnimator = ButtonTapAnimator(view,multiCircularButton)
         }
@@ -221,11 +234,15 @@ class MultiCircularButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var dimension:Point = DimensionsUtil.getDimension(activity)
             var w = dimension.x/2
             var view = MultiCircularButtonView(activity)
+            listeners.forEach { listener->
+                view.addButton(listener)
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(w,w))
         }
     }
+    data class CircularButtonClickListener(var listener:()->Unit)
 }
