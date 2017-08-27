@@ -49,7 +49,7 @@ class BiDirecDotView(ctx:Context):View(ctx) {
         override fun onAnimationUpdate(vf:ValueAnimator) {
             if(animated) {
                 var factor = vf.animatedValue as Float
-                renderer.update(factor*(1-mode),factor*mode)
+                renderer.update(factor,index)
             }
         }
         override fun onAnimationEnd(animation: Animator) {
@@ -82,22 +82,26 @@ class BiDirecDotView(ctx:Context):View(ctx) {
     }
     data class BiDirecDot(var x:Float,var y:Float,var r:Float,var w:Float,var scale1:Float=0.0f,var scale2:Float =0.0f) {
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.BLUE
             for(i in 0..1) {
                 canvas.save()
                 canvas.translate(x, y)
-                canvas.scale(2*i-1f,0f)
-                canvas.drawCircle(-(w / 2) * scale2, (-w / 2) * scale2, r, paint)
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(-(w / 2) * scale2*(1-2*i), 0f, r, paint)
                 canvas.save()
                 canvas.scale(scale1, scale1)
-                canvas.drawCircle(-(w / 2) * scale2, (-w / 2) * scale2, r, paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawCircle(-(w / 2) * scale2*(1-2*i), 0f ,r, paint)
                 canvas.restore()
-                canvas.drawLine(-w / 2 * scale2, 0f, 0f, 0f, paint)
+                canvas.drawLine(-(w / 2) * scale2*(1-2*i), 0f, 0f, 0f, paint)
                 canvas.restore()
             }
         }
-        fun update(scale1: Float,scale2:Float) {
-            this.scale1 = scale1
-            this.scale2 = scale2
+        fun updateScale1(scale:Float) {
+            this.scale1 = scale
+        }
+        fun updateScale2(scale:Float) {
+            this.scale2 = scale
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x +r  && y>=this.y-r && y<=this.y+r
     }
@@ -109,13 +113,17 @@ class BiDirecDotView(ctx:Context):View(ctx) {
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
-                bidirecdot = BiDirecDot(w/2,h/2,Math.min(w,h)/20,w-Math.min(w,h)/20)
+                bidirecdot = BiDirecDot(w/2,h/2,2*h/5,w-4*h/5)
             }
             bidirecdot?.draw(canvas,paint)
             time++
         }
-        fun update(scale1: Float,scale2: Float) {
-            bidirecdot?.update(scale1,scale2)
+        fun update(scale:Float,i:Int) {
+            when(i) {
+                0 -> bidirecdot?.updateScale1(scale)
+                1 -> bidirecdot?.updateScale2(scale)
+            }
+
             view.postInvalidate()
         }
         fun handleTap(x:Float,y:Float) {
