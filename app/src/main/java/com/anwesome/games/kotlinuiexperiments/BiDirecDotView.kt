@@ -74,4 +74,25 @@ class BiDirecDotView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class BiDirecDot(var x:Float,var y:Float,var r:Float,var w:Float,var scale1:Float=0.0f,var scale2:Float =0.0f) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            for(i in 0..2) {
+                canvas.save()
+                canvas.translate(x, y)
+                canvas.scale(i-1f,0f)
+                canvas.drawCircle(-(w / 2) * scale2, (-w / 2) * scale2, r, paint)
+                canvas.save()
+                canvas.scale(scale1, scale1)
+                canvas.drawCircle(-(w / 2) * scale2, (-w / 2) * scale2, r, paint)
+                canvas.restore()
+                canvas.drawLine(-w / 2 * scale2, 0f, 0f, 0f, paint)
+                canvas.restore()
+            }
+        }
+        fun update(scale1: Float,scale2:Float) {
+            this.scale1 = scale1
+            this.scale2 = scale2
+        }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x +r  && y>=this.y-r && y<=this.y+r
+    }
 }
