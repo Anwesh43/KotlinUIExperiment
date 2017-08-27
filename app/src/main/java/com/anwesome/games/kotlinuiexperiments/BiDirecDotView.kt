@@ -3,12 +3,14 @@ package com.anwesome.games.kotlinuiexperiments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 28/08/17.
@@ -120,6 +122,13 @@ class BiDirecDotView(ctx:Context):View(ctx) {
             if(bidirecdot?.handleTap(x,y)?:false) {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = BiDirecDotView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y/12))
         }
     }
 }
