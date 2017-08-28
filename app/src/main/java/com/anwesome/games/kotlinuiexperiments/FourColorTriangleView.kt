@@ -1,8 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -81,6 +78,24 @@ class FourColorTriangleView(ctx:Context):View(ctx) {
                 state.startUpdating()
                 animated = true
             }
+        }
+    }
+    class FCTRenderer {
+        var time = 0
+        var animator:FCTAnimator?=null
+        fun render(canvas:Canvas,paint: Paint,view: FourColorTriangleView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var triangle = FourColorTriangle(w/2,h/2,Math.min(w,h)/2)
+                animator = FCTAnimator(triangle,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
         }
     }
 }
