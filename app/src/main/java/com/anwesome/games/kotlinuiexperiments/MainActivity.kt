@@ -88,7 +88,8 @@ class MainActivity : AppCompatActivity() {
        // PiePolygonalView.create(this,6)
         //PieLineDotView.create(this,PLDSelectionListener(this))
         //MultiCircularButtonView.create(this,{Toast.makeText(this,"1",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"2",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"3",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"4",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"5",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"6",Toast.LENGTH_SHORT).show()})
-        BiDirecDotView.create(this,{Toast.makeText(this,"Opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Closed",Toast.LENGTH_SHORT).show()})
+        //BiDirecDotView.create(this,{Toast.makeText(this,"Opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Closed",Toast.LENGTH_SHORT).show()})
+        FourColorTriangleView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

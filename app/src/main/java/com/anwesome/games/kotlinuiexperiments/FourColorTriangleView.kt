@@ -30,7 +30,7 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
     }
     data class FourColorTriangle(var x:Float,var y:Float,var size:Float,var colors:Array<String>) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
-            paint.style = Paint.Style.FILL
+            paint.style = Paint.Style.STROKE
             canvas.save()
             canvas.translate(x,y)
             for(i in 0..3) {
@@ -39,10 +39,9 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
                 canvas.rotate(90f*i)
                 canvas.scale(scale,scale)
                 var path = Path()
-                path.moveTo(0f,0f)
-                path.lineTo(-size/2,-size/2)
-                path.lineTo(size/2,-size/2)
+                path.moveTo(-size/2,-size)
                 path.lineTo(0f,0f)
+                path.lineTo(size/2,-size)
                 canvas.drawPath(path,paint)
                 canvas.restore()
             }
@@ -75,6 +74,13 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
                 if(state.stopUpdating()) {
                     animated = false
                 }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
@@ -84,6 +90,7 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
             if(!animated) {
                 state.startUpdating()
                 animated = true
+                view.postInvalidate()
             }
         }
     }
@@ -94,6 +101,7 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
             if(time == 0) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
+                paint.strokeWidth = w/40
                 var triangle = FourColorTriangle(w/2,h/2,Math.min(w,h)/2,view.colors)
                 animator = FCTAnimator(triangle,view)
             }
