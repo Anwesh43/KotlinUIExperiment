@@ -19,6 +19,7 @@ import android.view.ViewGroup
 class BiDirecDotView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer = BiDirecRenderer(this)
+    var onOpenCloseListener:BDDVOnOpenCloseListener?=null
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -67,6 +68,10 @@ class BiDirecDotView(ctx:Context):View(ctx) {
                     mode = (mode+1)%2
                     animated = false
                     index = 0
+                    when(mode) {
+                        0 -> renderer.view.onOpenCloseListener?.openListener?.invoke()
+                        1 -> renderer.view.onOpenCloseListener?.closeListener?.invoke()
+                    }
                 }
             }
         }
@@ -139,10 +144,14 @@ class BiDirecDotView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var view = BiDirecDotView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.onOpenCloseListener = BDDVOnOpenCloseListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y/12))
         }
     }
+    data class BDDVOnOpenCloseListener(var openListener:()->Unit,var closeListener:()->Unit)
 }
