@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 
@@ -21,5 +22,24 @@ class FourColorTriangleView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class FourColorTriangle(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            for(i in 0..3) {
+                canvas.save()
+                canvas.rotate(90f*i)
+                canvas.scale(scale,scale)
+                var path = Path()
+                path.moveTo(0f,0f)
+                path.lineTo(-size/2,-size/2)
+                path.lineTo(size/2,-size/2)
+                path.lineTo(0f,0f)
+                canvas.drawPath(path,paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
     }
 }
