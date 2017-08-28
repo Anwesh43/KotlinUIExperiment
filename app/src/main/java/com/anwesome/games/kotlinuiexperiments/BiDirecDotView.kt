@@ -33,8 +33,10 @@ class BiDirecDotView(ctx:Context):View(ctx) {
     }
     class BDDVAnimator(var renderer: BiDirecRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
         var anim = ValueAnimator.ofFloat(0.0f,1.0f)
-        var currAnim = anim
+        var expandAnim:ValueAnimator?=null
         var reverseAnim = ValueAnimator.ofFloat(1.0f,0.0f)
+        var collapseAnim:ValueAnimator? = null
+        var nextAnim:ValueAnimator?=null
         var mode = 0
         var index = 0
         var animated = false
@@ -43,24 +45,28 @@ class BiDirecDotView(ctx:Context):View(ctx) {
             anim.addListener(this)
             reverseAnim.addUpdateListener(this)
             reverseAnim.addListener(this)
+            expandAnim = anim.clone()
+            collapseAnim = reverseAnim.clone()
             anim.duration = 500
             reverseAnim.duration = 500
         }
         override fun onAnimationUpdate(vf:ValueAnimator) {
             if(animated) {
                 var factor = vf.animatedValue as Float
-                renderer.update(factor,index)
+                renderer.update(factor,(index+mode)%2)
             }
         }
         override fun onAnimationEnd(animation: Animator) {
             if(animated) {
                 if(index == 0) {
-                    currAnim.start()
                     index++
+                    nextAnim?.start()
+
                 }
                 else {
                     mode = (mode+1)%2
                     animated = false
+                    index = 0
                 }
             }
         }
@@ -69,11 +75,11 @@ class BiDirecDotView(ctx:Context):View(ctx) {
                 animated = true
                 when (mode) {
                     0 -> {
-                        currAnim = anim
+                        nextAnim = expandAnim
                         anim.start()
                     }
                     1 -> {
-                        currAnim = reverseAnim
+                        nextAnim = collapseAnim
                         reverseAnim.start()
                     }
                 }
@@ -82,18 +88,18 @@ class BiDirecDotView(ctx:Context):View(ctx) {
     }
     data class BiDirecDot(var x:Float,var y:Float,var r:Float,var w:Float,var scale1:Float=0.0f,var scale2:Float =0.0f) {
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.BLUE
-            for(i in 0..1) {
+            for(i in 0..2) {
                 canvas.save()
                 canvas.translate(x, y)
                 paint.style = Paint.Style.STROKE
-                canvas.drawCircle(-(w / 2) * scale2*(1-2*i), 0f, r, paint)
+                paint.color = Color.BLUE
+                canvas.drawCircle(-(w / 2) * scale2*(i-1), 0f, r, paint)
                 canvas.save()
                 canvas.scale(scale1, scale1)
                 paint.style = Paint.Style.FILL
-                canvas.drawCircle(-(w / 2) * scale2*(1-2*i), 0f ,r, paint)
+                canvas.drawCircle(-(w / 2) * scale2*(i-1), 0f ,r, paint)
                 canvas.restore()
-                canvas.drawLine(-(w / 2) * scale2*(1-2*i), 0f, 0f, 0f, paint)
+                canvas.drawLine(-(w / 2) * scale2*(i-1), 0f, 0f, 0f, paint)
                 canvas.restore()
             }
         }
