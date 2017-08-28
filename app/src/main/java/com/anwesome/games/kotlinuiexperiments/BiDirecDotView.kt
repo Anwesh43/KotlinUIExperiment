@@ -69,8 +69,8 @@ class BiDirecDotView(ctx:Context):View(ctx) {
                     animated = false
                     index = 0
                     when(mode) {
-                        0 -> renderer.view.onOpenCloseListener?.openListener?.invoke()
-                        1 -> renderer.view.onOpenCloseListener?.closeListener?.invoke()
+                        1 -> renderer.view.onOpenCloseListener?.openListener?.invoke()
+                        0 -> renderer.view.onOpenCloseListener?.closeListener?.invoke()
                     }
                 }
             }
