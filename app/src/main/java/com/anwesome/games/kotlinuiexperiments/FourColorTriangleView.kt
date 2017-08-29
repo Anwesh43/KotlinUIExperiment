@@ -13,7 +13,7 @@ import android.view.ViewGroup
 /**
  * Created by anweshmishra on 29/08/17.
  */
-class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76FF03","#03a9f4","#f44336","#4caf50")):View(ctx) {
+class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#9c27b0","#03a9f4","#f44336","#4caf50")):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = FCTRenderer()
     override fun onDraw(canvas:Canvas) {
@@ -30,9 +30,14 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
     }
     data class FourColorTriangle(var x:Float,var y:Float,var size:Float,var colors:Array<String>) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
-            paint.style = Paint.Style.FILL
+            var r = size/10
             canvas.save()
             canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = r/10
+            paint.color = Color.parseColor("#ffc107")
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
             for(i in 0..3) {
                 paint.color = Color.parseColor(colors[i])
                 canvas.save()
@@ -46,6 +51,11 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
                 canvas.drawPath(path,paint)
                 canvas.restore()
             }
+            paint.color = Color.parseColor("#ffc107")
+            canvas.save()
+            canvas.scale(scale,scale)
+            canvas.drawCircle(0f,0f,r,paint)
+            canvas.restore()
             canvas.restore()
         }
     }
