@@ -16,6 +16,7 @@ import android.view.ViewGroup
 class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#9c27b0","#03a9f4","#f44336","#4caf50")):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = FCTRenderer()
+    var listener:FCTOnOpenCloseListener? = null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -84,6 +85,10 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#9c2
                 state.update()
                 if(state.stopUpdating()) {
                     animated = false
+                    when(state.dir) {
+                        0 -> view.listener?.onCloseListener?.invoke()
+                        1 -> view.listener?.onOpenListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -125,13 +130,14 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#9c2
         }
     }
     companion object {
-        fun create(activity:Activity,vararg colors: Array<String>) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var view = FourColorTriangleView(activity)
             var size = DimensionsUtil.getDimension(activity)
-            if(colors.size == 1 && colors[0].size == 4) {
-                view.colors = colors[0]
+            if(listeners.size == 2) {
+                view.listener = FCTOnOpenCloseListener(listeners[0],listeners[1])
             }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class FCTOnOpenCloseListener(var onOpenListener:()->Unit,var onCloseListener:()->Unit)
 }
