@@ -85,9 +85,9 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#9c2
                 state.update()
                 if(state.stopUpdating()) {
                     animated = false
-                    when(state.dir) {
-                        0 -> view.listener?.onCloseListener?.invoke()
-                        1 -> view.listener?.onOpenListener?.invoke()
+                    when(state.scale) {
+                        0f -> view.listener?.onCloseListener?.invoke()
+                        1f -> view.listener?.onOpenListener?.invoke()
                     }
                 }
                 try {
