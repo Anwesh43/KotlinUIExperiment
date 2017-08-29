@@ -30,7 +30,7 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
     }
     data class FourColorTriangle(var x:Float,var y:Float,var size:Float,var colors:Array<String>) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
-            paint.style = Paint.Style.STROKE
+            paint.style = Paint.Style.FILL
             canvas.save()
             canvas.translate(x,y)
             for(i in 0..3) {
@@ -39,9 +39,10 @@ class FourColorTriangleView(ctx:Context,var colors:Array<String> = arrayOf("#76F
                 canvas.rotate(90f*i)
                 canvas.scale(scale,scale)
                 var path = Path()
+                path.moveTo(0f,0f)
                 path.moveTo(-size/2,-size)
-                path.lineTo(0f,0f)
                 path.lineTo(size/2,-size)
+                path.lineTo(0f,0f)
                 canvas.drawPath(path,paint)
                 canvas.restore()
             }
