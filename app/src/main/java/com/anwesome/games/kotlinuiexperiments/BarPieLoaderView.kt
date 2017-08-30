@@ -10,7 +10,7 @@ import android.view.View
 /**
  * Created by anweshmishra on 31/08/17.
  */
-class BarPieLoaderView(ctx:Context):View(ctx) {
+class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -59,6 +59,17 @@ class BarPieLoaderView(ctx:Context):View(ctx) {
         fun stopped():Boolean = dir == 0f
         fun startUpdating() {
             dir = 1-2*scale
+        }
+    }
+    data class PieShape(var x:Float,var y:Float,var r:Float,var deg:Float = 0f) {
+        fun draw(canvas: Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-r,-r,r,r),0f,deg,true,paint)
+            canvas.restore()
         }
     }
 }
