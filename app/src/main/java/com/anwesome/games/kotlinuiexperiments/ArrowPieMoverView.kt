@@ -16,6 +16,7 @@ import android.view.ViewGroup
 class ArrowPieMoverView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ArrowPieMoverRenderer(this)
+    var openCloseLisener:ArrowPieMoverOnOpenCloseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -74,7 +75,7 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
 
         fun handleTap(x: Float, y: Float): Boolean = x >= this.w / 2 - r && x <= this.w / 2 + r && y >= this.h / 2 - r && y <= this.h / 2 + r
     }
-    class ArrowPieMoverRenderer(var view:View) {
+    class ArrowPieMoverRenderer(var view:ArrowPieMoverView) {
         var animator = ArrowPieMoverAnimator(this)
         var render:Int = 0
         var arrowPieMover:ArrowPieMover?=null
@@ -117,6 +118,10 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
         override fun onAnimationEnd(animator:Animator) {
             if(animating) {
                 mode = (mode + 1) % 2
+                when(mode) {
+                    1 -> renderer.view.openCloseLisener?.openListener?.invoke()
+                    0 -> renderer.view.openCloseLisener?.closeListener?.invoke()
+                }
                 animating = false
             }
         }
@@ -131,10 +136,14 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var view = ArrowPieMoverView(activity)
+            if(listeners.size == 2) {
+                view.openCloseLisener = ArrowPieMoverOnOpenCloseListener(listeners[0],listeners[1])
+            }
             var size:Point = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class ArrowPieMoverOnOpenCloseListener(var openListener:()->Unit,var closeListener:()->Unit)
 }
