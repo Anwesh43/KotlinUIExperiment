@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 31/08/17.
@@ -41,7 +42,7 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
         fun startUpdating() {
             state.startUpdating()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.w/20 && x<=this.w && y>=this.y && y<=this.y+h
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.w/20 && x<=this.w && y>=this.y && y<=this.y+h && state.dir == 0f
         fun stopped():Boolean = state.stopped()
     }
     data class BarShapeState(var scale:Float=0f,var dir:Float = 0f) {
@@ -70,6 +71,46 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-r,-r,r,r),0f,deg,true,paint)
             canvas.restore()
+        }
+    }
+    class BarPieLoaderAnimator(var pieShape:PieShape,var barShapes:ConcurrentLinkedQueue<BarShape>,var view:BarPieLoaderView) {
+        var animated = false
+        var tappedBars:ConcurrentLinkedQueue<BarShape> = ConcurrentLinkedQueue()
+        fun draw(canvas:Canvas,paint:Paint) {
+            barShapes.forEach { barShape ->
+                barShape.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(animated) {
+                tappedBars.forEach { bar ->
+                    bar.update()
+                    if(bar.stopped()) {
+                        tappedBars.remove(bar)
+                        if(tappedBars.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            barShapes.forEach { barShape ->
+                if(barShape.handleTap(x,y)) {
+                    tappedBars.add(barShape)
+                    if(tappedBars.size == 1) {
+                        animated = true
+                        view.postInvalidate()
+                    }
+                }
+            }
         }
     }
 }
