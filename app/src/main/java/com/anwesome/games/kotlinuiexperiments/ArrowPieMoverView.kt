@@ -65,4 +65,26 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
 
         fun handleTap(x: Float, y: Float): Boolean = x >= this.w / 2 - r && x <= this.w / 2 + r && y >= this.h / 2 - r && y <= this.h / 2 + r
     }
+    class ArrowPieMoverRenderer(var view:View) {
+        var render:Int = 0
+        var arrowPieMover:ArrowPieMover?=null
+        fun update(scale:Float) {
+            arrowPieMover?.update(scale)
+            view.postInvalidate()
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            if(render == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                arrowPieMover = ArrowPieMover(w,h)
+            }
+            arrowPieMover?.draw(canvas,paint)
+            render++
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(arrowPieMover?.handleTap(x,y)?:false) {
+                
+            }
+        }
+    }
 }
