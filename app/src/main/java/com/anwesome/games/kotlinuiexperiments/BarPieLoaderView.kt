@@ -12,14 +12,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 31/08/17.
  */
 class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
+    val renderer = BarPieLoaderRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -123,7 +124,7 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
                 var barShapes:ConcurrentLinkedQueue<BarShape> = ConcurrentLinkedQueue()
                 var pieShape = PieShape(w/2,h/10,h/10)
                 var gap = (0.8f*h)/(2*view.n+1)
-                var y = 3*gap/2
+                var y = 0.2f*h+3*gap/2
                 for(i in 1..view.n) {
                     var barShape = BarShape(y,w,gap)
                     barShapes.add(barShape)
