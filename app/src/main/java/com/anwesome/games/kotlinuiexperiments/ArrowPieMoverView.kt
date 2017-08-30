@@ -40,7 +40,7 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
                 for (j in 0..2) {
                     canvas.save()
                     canvas.translate(0f, -size)
-                    canvas.rotate((2 * i - 1) * 45f)
+                    canvas.rotate((2 * j - 1) * 45f)
                     canvas.drawLine(0f, 0f, 0f, size / 4, paint)
                     canvas.restore()
                 }
