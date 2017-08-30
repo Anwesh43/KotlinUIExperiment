@@ -23,21 +23,23 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                renderer.handleTap(x,y)
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
     }
     data class ArrowPieMover(var w:Float,var h:Float,var scale:Float = 0.0f,var r:Float = Math.min(w,h)/15) {
         var drawArrow: (Canvas, Paint, Float, Float, Float) -> Unit = { canvas, paint, w, size, scale ->
+            paint.strokeWidth = w/65
             for (i in 0..3) {
                 paint.color = Color.WHITE
                 canvas.save()
                 canvas.rotate(90f * i + 45)
                 canvas.save()
-                canvas.translate(0f, (w - size) * scale)
+                canvas.translate(0f, -(w) * scale)
+                canvas.rotate(180f*scale)
                 canvas.drawLine(0f, 0f, 0f, -size, paint)
-                for (j in 0..2) {
+                for (j in 0..1) {
                     canvas.save()
                     canvas.translate(0f, -size)
                     canvas.rotate((2 * j - 1) * 45f)
@@ -62,7 +64,7 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
             paint.strokeWidth = Math.min(w, h) / 35
             paint.strokeCap = Paint.Cap.ROUND
             drawPie(canvas, paint, r, scale)
-            drawArrow(canvas, paint, Math.min(w, h), r, scale)
+            drawArrow(canvas, paint, Math.min(w, h)/2, r, scale)
             canvas.restore()
         }
 
@@ -105,6 +107,8 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
             reverseAnim.addUpdateListener(this)
             anim.addListener(this)
             reverseAnim.addListener(this)
+            anim.duration = 500
+            reverseAnim.duration = 500
         }
         override fun onAnimationUpdate(vf:ValueAnimator) {
             var factor = vf.animatedValue as Float
