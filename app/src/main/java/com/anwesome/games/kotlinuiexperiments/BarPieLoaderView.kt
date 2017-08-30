@@ -1,11 +1,14 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -15,6 +18,7 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
     val renderer = BarPieLoaderRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -137,6 +141,13 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = BarPieLoaderView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
