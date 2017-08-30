@@ -1,8 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 
@@ -21,5 +20,49 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class ArrowPieMover(var w:Float,var h:Float,var scale:Float = 0.0f,var r:Float = Math.min(w,h)/15) {
+        var drawArrow: (Canvas, Paint, Float, Float, Float) -> Unit = { canvas, paint, w, size, scale ->
+            for (i in 0..3) {
+                paint.color = Color.WHITE
+                canvas.save()
+                canvas.rotate(90f * i + 45)
+                canvas.save()
+                canvas.translate(0f, (w - size) * scale)
+                canvas.drawLine(0f, 0f, 0f, -size, paint)
+                for (j in 0..2) {
+                    canvas.save()
+                    canvas.translate(0f, -size)
+                    canvas.rotate((2 * i - 1) * 45f)
+                    canvas.drawLine(0f, 0f, 0f, size / 4, paint)
+                    canvas.restore()
+                }
+                canvas.restore()
+                canvas.restore()
+            }
+        }
+        var drawPie: (Canvas, Paint, Float, Float) -> Unit = { canvas, paint, r, scale ->
+            paint.color = Color.parseColor("#1976D2")
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f, 0f, r, paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-r, -r, r, r), 0f, 360 * scale, true, paint)
+        }
+
+        fun draw(canvas: Canvas, paint: Paint) {
+            canvas.save()
+            canvas.translate(w / 2, h / 2)
+            paint.strokeWidth = Math.min(w, h) / 35
+            paint.strokeCap = Paint.Cap.ROUND
+            drawPie(canvas, paint, r, scale)
+            drawArrow(canvas, paint, Math.min(w, h), r, scale)
+            canvas.restore()
+        }
+
+        fun update(scale: Float) {
+            this.scale = scale
+        }
+
+        fun handleTap(x: Float, y: Float): Boolean = x >= this.w / 2 - r && x <= this.w / 2 + r && y >= this.h / 2 - r && y <= this.h / 2 + r
     }
 }
