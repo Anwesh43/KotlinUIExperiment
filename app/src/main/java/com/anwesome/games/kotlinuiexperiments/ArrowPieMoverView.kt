@@ -1,5 +1,8 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
@@ -66,6 +69,7 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
         fun handleTap(x: Float, y: Float): Boolean = x >= this.w / 2 - r && x <= this.w / 2 + r && y >= this.h / 2 - r && y <= this.h / 2 + r
     }
     class ArrowPieMoverRenderer(var view:View) {
+        var animator = ArrowPieMoverAnimator(this)
         var render:Int = 0
         var arrowPieMover:ArrowPieMover?=null
         fun update(scale:Float) {
@@ -83,7 +87,38 @@ class ArrowPieMoverView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(arrowPieMover?.handleTap(x,y)?:false) {
-                
+                animator.start()
+            }
+        }
+    }
+    class ArrowPieMoverAnimator(var renderer:ArrowPieMoverRenderer):AnimatorListenerAdapter(),ValueAnimator.AnimatorUpdateListener {
+        var anim = ValueAnimator.ofFloat(0f,1f)
+        var reverseAnim = ValueAnimator.ofFloat(1f,0f)
+        var mode = 0
+        var animating = false
+        init {
+            anim.addUpdateListener(this)
+            reverseAnim.addUpdateListener(this)
+            anim.addListener(this)
+            reverseAnim.addListener(this)
+        }
+        override fun onAnimationUpdate(vf:ValueAnimator) {
+            var factor = vf.animatedValue as Float
+            renderer.update(factor)
+        }
+        override fun onAnimationEnd(animator:Animator) {
+            if(animating) {
+                mode = (mode + 1) % 2
+                animating = false
+            }
+        }
+        fun start() {
+            if(!animating) {
+                when (mode) {
+                    0 -> anim.start()
+                    1 -> reverseAnim.start()
+                }
+                animating = true
             }
         }
     }
