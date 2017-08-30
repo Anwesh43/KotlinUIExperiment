@@ -113,4 +113,29 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
             }
         }
     }
+    class BarPieLoaderRenderer {
+        var time = 0
+        var animator:BarPieLoaderAnimator?=null
+        fun render(canvas:Canvas,paint:Paint,view:BarPieLoaderView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var barShapes:ConcurrentLinkedQueue<BarShape> = ConcurrentLinkedQueue()
+                var pieShape = PieShape(w/2,h/10,h/10)
+                var gap = (0.8f*h)/(2*view.n+1)
+                var y = 3*gap/2
+                for(i in 1..view.n) {
+                    var barShape = BarShape(y,w,gap)
+                    barShapes.add(barShape)
+                    y += 2*gap
+                }
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
