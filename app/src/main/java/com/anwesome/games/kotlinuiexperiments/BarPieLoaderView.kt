@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
     val renderer = BarPieLoaderRenderer()
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onSelectionListener:BarPieLoaderOnSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -29,7 +30,7 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
         }
         return true
     }
-    data class BarShape(var y:Float,var w:Float,var h:Float,var state:BarShapeState = BarShapeState()) {
+    data class BarShape(var i:Int,var y:Float,var w:Float,var h:Float,var state:BarShapeState = BarShapeState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             var r = w/10
             canvas.save()
@@ -94,8 +95,14 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
                     if(bar.stopped()) {
                         tappedBars.remove(bar)
                         when(bar.state.scale) {
-                            0f -> pieShape.deg -= (360)/view.n
-                            1f -> pieShape.deg += (360)/view.n
+                            0f -> {
+                                view.onSelectionListener?.selectListener?.invoke(bar.i)
+                                pieShape.deg -= (360)/view.n
+                            }
+                            1f -> {
+                                view.onSelectionListener?.unselectListener?.invoke(bar.i)
+                                pieShape.deg += (360)/view.n
+                            }
                         }
                         if(tappedBars.size == 0) {
                             animated = false
@@ -139,7 +146,7 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
 
                 var y = 0.2f*h+3*gap/2
                 for(i in 1..view.n) {
-                    var barShape = BarShape(y,w,gap)
+                    var barShape = BarShape(i,y,w,gap)
                     barShapes.add(barShape)
                     y += 2*gap
                 }
@@ -154,10 +161,14 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             var view = BarPieLoaderView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.onSelectionListener = BarPieLoaderOnSelectionListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class BarPieLoaderOnSelectionListener(var selectListener:(Int)->Unit,var unselectListener:(Int)->Unit)
 }
