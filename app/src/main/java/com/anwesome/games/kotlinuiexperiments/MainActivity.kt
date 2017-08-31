@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         //BiDirecDotView.create(this,{Toast.makeText(this,"Opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Closed",Toast.LENGTH_SHORT).show()})
         //FourColorTriangleView.create(this,{Toast.makeText(this,"Opened",Toast.LENGTH_LONG).show()},{Toast.makeText(this,"Closed",Toast.LENGTH_LONG).show()})
         //ArrowPieMoverView.create(this,{Toast.makeText(this,"Opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Closed",Toast.LENGTH_SHORT).show()})
-        BarPieLoaderView.create(this)
+        BarPieLoaderView.create(this,{i->Toast.makeText(this,"$i selected",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"$i unselected",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

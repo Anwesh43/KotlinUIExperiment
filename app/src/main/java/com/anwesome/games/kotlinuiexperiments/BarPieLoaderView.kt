@@ -96,11 +96,11 @@ class BarPieLoaderView(ctx:Context,var n:Int = 4):View(ctx) {
                         tappedBars.remove(bar)
                         when(bar.state.scale) {
                             0f -> {
-                                view.onSelectionListener?.selectListener?.invoke(bar.i)
+                                view.onSelectionListener?.unselectListener?.invoke(bar.i)
                                 pieShape.deg -= (360)/view.n
                             }
                             1f -> {
-                                view.onSelectionListener?.unselectListener?.invoke(bar.i)
+                                view.onSelectionListener?.selectListener?.invoke(bar.i)
                                 pieShape.deg += (360)/view.n
                             }
                         }
