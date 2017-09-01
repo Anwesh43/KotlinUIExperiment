@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 02/09/17.
@@ -74,6 +75,46 @@ class SideSquarePieView(ctx:Context):View(ctx) {
         fun stopped():Boolean = dir == 0
         fun startUpdate() {
             dir = (1 - 2 * scale).toInt()
+        }
+    }
+    class SideSquareController(var sideSquarePies:ConcurrentLinkedQueue<SideSquarePie>,var view:SideSquarePieView) {
+        var tappedPies = ConcurrentLinkedQueue<SideSquarePie>()
+        var animated = false
+
+        fun draw(canvas:Canvas,paint:Paint) {
+            sideSquarePies.forEach { sideSquarePie ->
+                sideSquarePie.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(animated) {
+                tappedPies.forEach { tappedPie ->
+                    tappedPie.update()
+                    if (tappedPies.size == 0) {
+                        animated = false
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            sideSquarePies.forEach { sideSquarePie ->
+                if(sideSquarePie.handleTap(x,y)) {
+                    tappedPies.add(sideSquarePie)
+                    sideSquarePie.startUpdate()
+                    if(sideSquarePies.size == 1) {
+                        animated = true
+                        view.postInvalidate()
+                    }
+
+                }
+            }
         }
     }
 }
