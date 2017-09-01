@@ -77,6 +77,28 @@ class SideSquarePieView(ctx:Context):View(ctx) {
             dir = (1 - 2 * scale).toInt()
         }
     }
+    class SideSquareRenderer {
+        var time = 0
+        var controller:SideSquareController?=null
+        fun render(canvas: Canvas,paint: Paint,view:SideSquarePieView) {
+            var sideSquarePies:ConcurrentLinkedQueue<SideSquarePie> = ConcurrentLinkedQueue<SideSquarePie>()
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var sideSquarePies:ConcurrentLinkedQueue<SideSquarePie> = ConcurrentLinkedQueue<SideSquarePie>()
+                for(i in 0..3) {
+                    sideSquarePies.add(SideSquarePie(w,h,i))
+                }
+                controller = SideSquareController(sideSquarePies,view)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
+        }
+    }
     class SideSquareController(var sideSquarePies:ConcurrentLinkedQueue<SideSquarePie>,var view:SideSquarePieView) {
         var tappedPies = ConcurrentLinkedQueue<SideSquarePie>()
         var animated = false
