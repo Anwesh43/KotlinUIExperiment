@@ -50,9 +50,12 @@ class SideSquarePieView(ctx:Context):View(ctx) {
             canvas.restore()
             canvas.restore()
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(x-w/2,y-h/2,r,paint)
+            canvas.save()
+            canvas.translate(x-w/2,y-h/2)
+            canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
+            canvas.restore()
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - r && x<=this.x+r && y>=this.y-r && y<=this.y+r
@@ -87,9 +90,10 @@ class SideSquarePieView(ctx:Context):View(ctx) {
         fun render(canvas: Canvas,paint: Paint,view:SideSquarePieView) {
             var sideSquarePies:ConcurrentLinkedQueue<SideSquarePie> = ConcurrentLinkedQueue<SideSquarePie>()
             if(time == 0) {
+                paint.color = Color.parseColor("#1E88E5")
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
-                var sideSquarePies:ConcurrentLinkedQueue<SideSquarePie> = ConcurrentLinkedQueue<SideSquarePie>()
+                paint.strokeWidth = Math.min(w,h)/40
                 for(i in 0..3) {
                     sideSquarePies.add(SideSquarePie(w,h,i))
                 }
@@ -134,7 +138,7 @@ class SideSquarePieView(ctx:Context):View(ctx) {
                 if(sideSquarePie.handleTap(x,y)) {
                     tappedPies.add(sideSquarePie)
                     sideSquarePie.startUpdate()
-                    if(sideSquarePies.size == 1) {
+                    if(tappedPies.size == 1) {
                         animated = true
                         view.postInvalidate()
                     }
