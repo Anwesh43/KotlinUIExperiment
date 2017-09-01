@@ -41,12 +41,12 @@ class SideSquarePieView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.rotate(90f*i)
             paint.style = Paint.Style.STROKE
-            canvas.drawRoundRect(RectF(-2*w/5,-2*h/5,2*w/5,-2*h/5+h/10),rx,rx,paint)
+            canvas.drawRoundRect(RectF(-3*w/10,-2*h/5,3*w/10,-2*h/5+h/10),rx,rx,paint)
             paint.style = Paint.Style.FILL
             canvas.save()
-            canvas.translate(-2*w/5,-2*h/5+h/20)
+            canvas.translate(-3*w/10,-2*h/5+h/20)
             canvas.scale(state.scale,1f)
-            canvas.drawRoundRect(RectF(0f,-h/20,4*w/5,h/20),rx,rx,paint)
+            canvas.drawRoundRect(RectF(0f,-h/20,3*w/5,h/20),rx,rx,paint)
             canvas.restore()
             canvas.restore()
             paint.style = Paint.Style.STROKE
