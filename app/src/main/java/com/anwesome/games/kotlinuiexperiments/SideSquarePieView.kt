@@ -121,12 +121,15 @@ class SideSquarePieView(ctx:Context):View(ctx) {
             if(animated) {
                 tappedPies.forEach { tappedPie ->
                     tappedPie.update()
-                    when(tappedPie.state.scale) {
-                        0f -> view.listener?.closeListener?.invoke(tappedPie.i)
-                        1f -> view.listener?.openListener?.invoke(tappedPie.i)
-                    }
-                    if (tappedPies.size == 0) {
-                        animated = false
+                    if(tappedPie.stopped()) {
+                        tappedPies.remove(tappedPie)
+                        when(tappedPie.state.scale) {
+                            0f -> view.listener?.closeListener?.invoke(tappedPie.i)
+                            1f -> view.listener?.openListener?.invoke(tappedPie.i)
+                        }
+                        if (tappedPies.size == 0) {
+                            animated = false
+                        }
                     }
                 }
                 try {
