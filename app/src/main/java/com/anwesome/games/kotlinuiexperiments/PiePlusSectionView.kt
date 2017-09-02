@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class PiePlusSectionView(ctx:Context):View(ctx) {
     val renderer = PiePlusSectionRenderer()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var inOutListener:PPSOnOutInListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -101,6 +102,10 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
                     tappedPiePlusSection.update()
                     if(tappedPiePlusSection.stopped()) {
                         tappedPiePlusSections.remove(tappedPiePlusSection)
+                        when(tappedPiePlusSection.state.scale) {
+                            0f -> view.inOutListener?.closeListener?.invoke(tappedPiePlusSection.i)
+                            1f -> view.inOutListener?.openListener?.invoke(tappedPiePlusSection.i)
+                        }
                         if(tappedPiePlusSections.size == 0) {
                             animated = false
                         }
@@ -151,10 +156,14 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             var view = PiePlusSectionView(activity)
+            if(listeners.size == 2) {
+                view.inOutListener = PPSOnOutInListener(listeners[0],listeners[1])
+            }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class PPSOnOutInListener(var openListener:(Int)->Unit,var closeListener:(Int)->Unit)
 }
