@@ -12,14 +12,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 03/09/17.
  */
 class PiePlusSectionView(ctx:Context):View(ctx) {
+    val renderer = PiePlusSectionRenderer()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
