@@ -71,7 +71,7 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
             dir = (1-2*scale).toInt()
         }
     }
-    class PieSectionAnimator(var piePlusSections:ConcurrentLinkedQueue<PiePlusSection>,var view:PiePlusSectionView) {
+    class PiePlusSectionAnimator(var piePlusSections:ConcurrentLinkedQueue<PiePlusSection>,var view:PiePlusSectionView) {
         var animated = false
         var tappedPiePlusSections:ConcurrentLinkedQueue<PiePlusSection> = ConcurrentLinkedQueue()
         fun draw(canvas: Canvas,paint:Paint) {
@@ -115,6 +115,28 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
                     }
                 }
             }
+        }
+    }
+    class PiePlusSectionRenderer {
+        var animator:PiePlusSectionAnimator?=null
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,view:PiePlusSectionView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var r = 0.4f*Math.min(w,h)
+                var piePlusSections:ConcurrentLinkedQueue<PiePlusSection> = ConcurrentLinkedQueue()
+                for(i in 0..3) {
+                    piePlusSections.add(PiePlusSection(i,w/2,h/2,r))
+                }
+                animator = PiePlusSectionAnimator(piePlusSections,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
