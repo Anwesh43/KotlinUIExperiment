@@ -54,7 +54,7 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
             canvas.restore()
             canvas.restore()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=lx && y>=ly && x<=ux && y<=uy
+        fun handleTap(x:Float,y:Float):Boolean = x>=lx && y>=ly && x<=ux && y<=uy && state.dir == 0
         fun update() {
             state.update()
         }
