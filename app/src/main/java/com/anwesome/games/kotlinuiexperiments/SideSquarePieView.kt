@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class SideSquarePieView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SideSquareRenderer()
+    var listener:SideSquarePieOnOpenCloseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer?.render(canvas,paint,this)
@@ -120,6 +121,10 @@ class SideSquarePieView(ctx:Context):View(ctx) {
             if(animated) {
                 tappedPies.forEach { tappedPie ->
                     tappedPie.update()
+                    when(tappedPie.state.scale) {
+                        0f -> view.listener?.closeListener?.invoke(tappedPie.i)
+                        1f -> view.listener?.openListener?.invoke(tappedPie.i)
+                    }
                     if (tappedPies.size == 0) {
                         animated = false
                     }
@@ -148,10 +153,14 @@ class SideSquarePieView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             var view = SideSquarePieView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.listener = SideSquarePieOnOpenCloseListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class SideSquarePieOnOpenCloseListener(var openListener:(Int)->Unit,var closeListener:(Int)->Unit)
 }
