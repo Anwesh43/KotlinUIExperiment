@@ -53,4 +53,21 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
 
         }
     }
+    data class PieSectionState(var scale:Float = 0f,var dir:Int = 0) {
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                scale = 1f
+                dir = 0
+            }
+            if(scale < 0) {
+                dir = 0
+                scale = 0f
+            }
+        }
+        fun stopUpdating():Boolean = dir == 0
+        fun startUpdating() {
+            dir = (1-2*scale).toInt()
+        }
+    }
 }
