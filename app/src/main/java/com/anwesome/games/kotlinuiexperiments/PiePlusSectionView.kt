@@ -23,7 +23,7 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class PiePlusSection(var i:Int,var x:Float,var y:Float,var r:Float) {
+    data class PiePlusSection(var i:Int,var x:Float,var y:Float,var r:Float,var state:PieSectionState= PieSectionState()) {
         var lx = x - r + r*(i%2)
         var ly = y - r + r*(i/2)
         var ux = x + r*(i%2)
@@ -46,11 +46,11 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=lx && y>=ly && x<=ux && y<=uy
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopUpdating()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class PieSectionState(var scale:Float = 0f,var dir:Int = 0) {
