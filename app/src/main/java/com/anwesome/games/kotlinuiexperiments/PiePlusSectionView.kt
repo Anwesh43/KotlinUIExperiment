@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 03/09/17.
@@ -68,6 +69,52 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         fun stopUpdating():Boolean = dir == 0
         fun startUpdating() {
             dir = (1-2*scale).toInt()
+        }
+    }
+    class PieSectionAnimator(var piePlusSections:ConcurrentLinkedQueue<PiePlusSection>,var view:PiePlusSectionView) {
+        var animated = false
+        var tappedPiePlusSections:ConcurrentLinkedQueue<PiePlusSection> = ConcurrentLinkedQueue()
+        fun draw(canvas: Canvas,paint:Paint) {
+            paint.style = Paint.Style.STROKE
+            var r = 0.4f*Math.min(canvas.width.toFloat(),canvas.height.toFloat())
+            paint.strokeWidth = r/40
+            canvas.drawCircle(canvas.width.toFloat()/2,canvas.height.toFloat()/2,r,paint)
+            paint.style = Paint.Style.FILL
+            paint.strokeWidth = r/25
+            piePlusSections.forEach { piePlusSection ->
+                piePlusSection.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(animated) {
+                tappedPiePlusSections.forEach { tappedPiePlusSection ->
+                    tappedPiePlusSection.update()
+                    if(tappedPiePlusSection.stopped()) {
+                        tappedPiePlusSections.remove(tappedPiePlusSection)
+                        if(tappedPiePlusSections.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            piePlusSections.forEach { piePlusSection ->
+                if(piePlusSection.handleTap(x,y)) {
+                    tappedPiePlusSections.add(piePlusSection)
+                    if(tappedPiePlusSections.size == 1){
+                        animated = true
+                        view.postInvalidate()
+                    }
+                }
+            }
         }
     }
 }
