@@ -35,12 +35,16 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         var ux = x + r*(i%2)
         var uy = y + r*(i/2)
         fun draw(canvas:Canvas,paint:Paint) {
+            var index = i/2
+            var deg = 180f + (1-2*index)*(90f*(i%2)+90f*(i/2))
             canvas.save()
             canvas.translate(x,y)
-            canvas.drawArc(RectF(-r,-r,r,r),(180+i*90f),90f,true,paint)
+            paint.color = Color.parseColor("#1565C0")
+            canvas.drawArc(RectF(-r,-r,r,r),(deg),90f*state.scale,true,paint)
+            paint.color = Color.WHITE
             canvas.save()
             canvas.translate(-r/2+r*(i%2),-r/2+r*(i/2))
-            canvas.rotate(45f)
+            canvas.rotate(45f*state.scale)
             for(i in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*i)
@@ -80,6 +84,7 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         var animated = false
         var tappedPiePlusSections:ConcurrentLinkedQueue<PiePlusSection> = ConcurrentLinkedQueue()
         fun draw(canvas: Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#1565C0")
             paint.style = Paint.Style.STROKE
             var r = 0.4f*Math.min(canvas.width.toFloat(),canvas.height.toFloat())
             paint.strokeWidth = r/40
@@ -113,6 +118,7 @@ class PiePlusSectionView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             piePlusSections.forEach { piePlusSection ->
                 if(piePlusSection.handleTap(x,y)) {
+                    piePlusSection.startUpdating()
                     tappedPiePlusSections.add(piePlusSection)
                     if(tappedPiePlusSections.size == 1){
                         animated = true
