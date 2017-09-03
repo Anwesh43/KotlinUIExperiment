@@ -90,4 +90,22 @@ class RectCompArcView(ctx:Context):View(ctx) {
             }
         }
     }
+    class RCARenderer {
+        var time = 0
+        var animator:RCAAnimator?=null
+        fun render(canvas:Canvas,paint:Paint,view:RectCompArcView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var rectCompArc = RectCompArc(w,h)
+                animator = RCAAnimator(rectCompArc,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
