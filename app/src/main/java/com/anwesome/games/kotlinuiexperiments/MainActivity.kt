@@ -93,7 +93,8 @@ class MainActivity : AppCompatActivity() {
         //ArrowPieMoverView.create(this,{Toast.makeText(this,"Opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Closed",Toast.LENGTH_SHORT).show()})
         //BarPieLoaderView.create(this,{i->Toast.makeText(this,"$i selected",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"$i unselected",Toast.LENGTH_SHORT).show()})
         //SideSquarePieView.create(this,{i->Toast.makeText(this,"$i opened",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"$i closed",Toast.LENGTH_SHORT).show()})
-        PiePlusSectionView.create(this,{i->Toast.makeText(this,"$i is in",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"$i is out ",Toast.LENGTH_SHORT).show()})
+        //PiePlusSectionView.create(this,{i->Toast.makeText(this,"$i is in",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"$i is out ",Toast.LENGTH_SHORT).show()})
+        RectCompArcView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

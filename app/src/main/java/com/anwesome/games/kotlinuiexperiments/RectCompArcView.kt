@@ -45,7 +45,7 @@ class RectCompArcView(ctx:Context):View(ctx) {
         fun startUpdating() {
             this.state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = this.state.stopped()
     }
     data class RCAState(var scale:Float = 0f,var dir:Int = 0) {
         fun update() {
