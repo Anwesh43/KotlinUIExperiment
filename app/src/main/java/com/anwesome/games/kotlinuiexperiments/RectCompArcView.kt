@@ -16,6 +16,7 @@ import android.view.ViewGroup
 class RectCompArcView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RCARenderer()
+    var onOffListener:RectCompArcOnOffListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -76,6 +77,10 @@ class RectCompArcView(ctx:Context):View(ctx) {
                 rectCompArc.update()
                 if(rectCompArc.stopped()) {
                     animated = false
+                    when(rectCompArc.state.scale) {
+                        0f -> view.onOffListener?.offListener?.invoke()
+                        1f -> view.onOffListener?.onListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(75)
@@ -113,10 +118,14 @@ class RectCompArcView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var view = RectCompArcView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.onOffListener = RectCompArcOnOffListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x/10))
         }
     }
+    data class RectCompArcOnOffListener(var onListener:()->Unit,var offListener:()->Unit)
 }
