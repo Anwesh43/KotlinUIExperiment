@@ -63,4 +63,31 @@ class RectCompArcView(ctx:Context):View(ctx) {
             dir = (1-2*scale).toInt()
         }
     }
+    class RCAAnimator(var rectCompArc:RectCompArc,var view:RectCompArcView,var animated:Boolean= false) {
+        fun draw(canvas: Canvas,paint: Paint) {
+            rectCompArc.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                rectCompArc.update()
+                if(rectCompArc.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                rectCompArc.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
