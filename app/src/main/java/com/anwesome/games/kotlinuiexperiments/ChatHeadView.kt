@@ -1,22 +1,25 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 05/09/17.
  */
 class ChatHeadView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer:ChatHeadRenderer = ChatHeadRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -124,5 +127,12 @@ class ChatHeadView(ctx:Context):View(ctx) {
             }
         }
 
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var size = DimensionsUtil.getDimension(activity)
+            var view = ChatHeadView(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
+        }
     }
 }
