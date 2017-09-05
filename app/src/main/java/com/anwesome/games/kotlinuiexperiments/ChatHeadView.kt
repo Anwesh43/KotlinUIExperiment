@@ -88,4 +88,33 @@ class ChatHeadView(ctx:Context):View(ctx) {
 
         }
     }
+    class ChatHeadAnimator(var chatHead:ChatHead,var view:ChatHeadView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                chatHead.update()
+                if(chatHead.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            chatHead.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(chatHead.handleTap(x,y)) {
+                animated = true
+                chatHead.startUpdating()
+                view.postInvalidate()
+            }
+        }
+
+    }
 }
