@@ -27,6 +27,8 @@ class ChatHeadView(ctx:Context):View(ctx) {
             canvas.translate(4*size/5,4*size/5)
             paint.color = Color.GRAY
             canvas.drawCircle(0f,0f,size/10,paint)
+            paint.color = Color.WHITE
+            paint.strokeCap = Paint.Cap.ROUND
             for(i in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*i+45f*this.state.scale)
@@ -35,6 +37,7 @@ class ChatHeadView(ctx:Context):View(ctx) {
                 canvas.restore()
             }
             canvas.restore()
+            paint.color = Color.parseColor("#1565C0")
             canvas.save()
             canvas.translate(size/10,size/10)
             var clipPath = Path()
@@ -78,14 +81,19 @@ class ChatHeadView(ctx:Context):View(ctx) {
     }
     class ChatHeadRenderer {
         var time = 0
-        fun render(canvas:Canvas,paint: Paint) {
+        var chatHeadAnimator:ChatHeadAnimator?=null
+        fun render(canvas:Canvas,paint: Paint,view:ChatHeadView) {
             if(time == 0) {
-
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                chatHeadAnimator = ChatHeadAnimator(ChatHead(Math.min(w,h)),view)
             }
+            chatHeadAnimator?.draw(canvas,paint)
+            chatHeadAnimator?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            chatHeadAnimator?.handleTap(x,y)
         }
     }
     class ChatHeadAnimator(var chatHead:ChatHead,var view:ChatHeadView) {
