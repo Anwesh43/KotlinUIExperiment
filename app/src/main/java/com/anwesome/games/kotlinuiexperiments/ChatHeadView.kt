@@ -76,4 +76,16 @@ class ChatHeadView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
     }
+    class ChatHeadRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint: Paint) {
+            if(time == 0) {
+
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
