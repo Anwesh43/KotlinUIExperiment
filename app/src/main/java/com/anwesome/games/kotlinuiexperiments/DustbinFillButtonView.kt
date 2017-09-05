@@ -73,4 +73,32 @@ class DustbinFillButtonView(ctx:Context):View(ctx) {
             dir = 1f-2*scale
         }
     }
+    class DustbinAnimator(var dustbin:DustbinFill,var view:DustbinFillButtonView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                dustbin.update()
+                if(dustbin.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            dustbin.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                dustbin.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
