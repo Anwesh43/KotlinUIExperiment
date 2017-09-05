@@ -101,4 +101,22 @@ class DustbinFillButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class DustbinRenderer {
+        var time = 0
+        var animator:DustbinAnimator?=null
+        fun render(canvas: Canvas,paint:Paint,view: DustbinFillButtonView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var dustbinFill = DustbinFill(w,h)
+                animator = DustbinAnimator(dustbinFill,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
