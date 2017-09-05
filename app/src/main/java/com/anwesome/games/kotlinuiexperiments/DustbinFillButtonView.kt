@@ -14,6 +14,7 @@ class DustbinFillButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = DustbinRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -31,9 +32,9 @@ class DustbinFillButtonView(ctx:Context):View(ctx) {
             paint.color = Color.parseColor("#1565C0")
             canvas.save()
             var clipPath = Path()
-            clipPath.addRect(RectF(w/10,7*h/10-(6*h/10+h/30),7*w/10,7*h/10+h/30),Path.Direction.CCW)
+            clipPath.addRect(RectF(w/10,7*h/10+h/30-(6*h/10+2*h/30)*this.state.scale,7*w/10,7*h/10+h/30),Path.Direction.CCW)
             canvas.clipPath(clipPath)
-            drawBin(canvas,paint,paint.color)
+            drawBin(canvas,paint,Color.parseColor("#0D47A1"))
             canvas.restore()
         }
         private fun drawBin(canvas: Canvas,paint: Paint,color:Int) {
@@ -41,15 +42,15 @@ class DustbinFillButtonView(ctx:Context):View(ctx) {
             path.moveTo(w/5,7*h/10)
             path.lineTo(w/10,h/10)
             path.lineTo(7*w/10,h/10)
-            path.lineTo(4*w/10,7*h/10)
+            path.lineTo(6*w/10,7*h/10)
             path.lineTo(w/5,7*h/10)
             canvas.drawPath(path,paint)
-            drawEllipse(canvas,paint,w/2,7*h/10,3*w/20,h/30)
+            drawEllipse(canvas,paint,(w/5+6*w/10)/2,7*h/10,(0.6f*w-0.2f*w)/2,h/30)
             paint.color = color
-            drawEllipse(canvas,paint,w/2,h/10,3*w/10,h/30)
+            drawEllipse(canvas,paint,(w/10+7*w/10)/2,h/10,(3*w)/10,h/30)
         }
         private fun drawEllipse(canvas: Canvas,paint:Paint,x1:Float,y1:Float,r1:Float,r2:Float) {
-            canvas.drawArc(RectF(x1-r1,y1-r2,x1+r1,y1+r1),0f,360f,true,paint)
+            canvas.drawArc(RectF(x1-r1,y1-r2,x1+r1,y1+r2),0f,360f,true,paint)
         }
         fun update() {
             state.update()
