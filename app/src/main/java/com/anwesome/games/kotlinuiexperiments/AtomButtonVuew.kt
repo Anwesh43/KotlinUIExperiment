@@ -92,4 +92,22 @@ class AtomButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class AtomButtonRenderer {
+        var time = 0
+        var atomButtonAnimator:AtomButtonAnimator?=null
+        fun render(canvas: Canvas,paint: Paint,view:AtomButtonView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var atomButton = AtomButton(w/2,h/2,0.4f*Math.min(w,h))
+                atomButtonAnimator = AtomButtonAnimator(atomButton,view)
+            }
+            atomButtonAnimator?.draw(canvas,paint)
+            atomButtonAnimator?.update()
+            time++
+        }
+        fun handleTap() {
+            atomButtonAnimator?.startUpdating()
+        }
+    }
 }
