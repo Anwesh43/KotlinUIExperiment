@@ -64,4 +64,32 @@ class AtomButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class AtomButtonAnimator(var atomButtom:AtomButton,var view:AtomButtonView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            atomButtom.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                atomButtom.update()
+                if(atomButtom.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun startUpdating() {
+            if(!animated) {
+                animated = true
+                atomButtom.startUpdating()
+                view.postInvalidate()
+            }
+        }
+    }
 }
