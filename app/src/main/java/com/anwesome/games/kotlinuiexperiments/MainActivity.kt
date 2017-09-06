@@ -96,7 +96,8 @@ class MainActivity : AppCompatActivity() {
         //PiePlusSectionView.create(this,{i->Toast.makeText(this,"$i is in",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"$i is out ",Toast.LENGTH_SHORT).show()})
        //RectCompArcView.create(this,{Toast.makeText(this,"On",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Off",Toast.LENGTH_SHORT).show()})
         //ChatHeadView.create(this)
-        DustbinFillButtonView.create(this)
+       // DustbinFillButtonView.create(this)
+        AtomButtonView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
