@@ -32,14 +32,16 @@ class AtomButtonView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
+            paint.style = Paint.Style.FILL
             paint.color = Color.parseColor("#009688")
             canvas.drawCircle(0f,0f,r,paint)
             paint.color = Color.WHITE
             paint.strokeWidth = r/30
+            paint.style = Paint.Style.STROKE
             for(i in 0..2) {
                 canvas.save()
-                canvas.rotate(i*30f*state.scale)
-                canvas.drawArc(RectF(-r/2,-r/10,r/2,r/10),0f,360f,true,paint)
+                canvas.rotate(i*60f*state.scale)
+                canvas.drawArc(RectF(-3*r/4,-r/5,3*r/4,r/5),0f,360f,true,paint)
                 canvas.restore()
             }
             canvas.restore()
