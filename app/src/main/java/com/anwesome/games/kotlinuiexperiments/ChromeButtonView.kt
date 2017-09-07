@@ -32,17 +32,17 @@ class ChromeButtonView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            paint.color = Color.parseColor("#0288D1")
-            canvas.drawCircle(0f,0f,size/5,paint)
-            paint.color = Color.argb(100,0,0,0)
-            canvas.drawArc(RectF(-size/5,-size/5,size/5,size/5),0f,360f*state.scale,true,paint)
             val colors = arrayOf("#f44336","#FFD740","#388E3C")
             var deg = 0f
             colors.forEach{ color ->
                 paint.color = Color.parseColor(color)
-                canvas.drawArc(RectF(-size/3,-size/3,size/3,size/3),deg*state.scale,120f,true,paint)
+                canvas.drawArc(RectF(-size/3,-size/3,size/3,size/3),deg,120f*state.scale,true,paint)
                 deg += 120f
             }
+            paint.color = Color.parseColor("#0288D1")
+            canvas.drawCircle(0f,0f,size/5,paint)
+            paint.color = Color.argb(100,255,255,255)
+            canvas.drawArc(RectF(-size/5,-size/5,size/5,size/5),0f,360f*(1-state.scale),true,paint)
             canvas.restore()
         }
         fun update() {
@@ -68,7 +68,7 @@ class ChromeButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
         fun startUpdating() {
-            scale = 1-2*scale
+            dir = 1-2*scale
         }
     }
     class ChromeButtonAnimator(var chromeButton:ChromeButton,var view:ChromeButtonView) {
@@ -106,7 +106,7 @@ class ChromeButtonView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                chromeButtonAnimator = ChromeButtonAnimator(ChromeButton(w/2,h/2,0.4f*Math.min(w,h)),view)
+                chromeButtonAnimator = ChromeButtonAnimator(ChromeButton(w/2,h/2,0.9f*Math.min(w,h)),view)
             }
             chromeButtonAnimator?.draw(canvas,paint)
             chromeButtonAnimator?.update()
