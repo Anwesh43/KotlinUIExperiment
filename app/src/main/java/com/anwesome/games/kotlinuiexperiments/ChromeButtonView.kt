@@ -95,4 +95,21 @@ class ChromeButtonView(ctx:Context):View(ctx) {
             chromeButton.draw(canvas,paint)
         }
     }
+    class ChromeButtonRenderer {
+        var chromeButtonAnimator:ChromeButtonAnimator?=null
+        var time = 0
+        fun render(canvas: Canvas,paint: Paint,view:ChromeButtonView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                chromeButtonAnimator = ChromeButtonAnimator(ChromeButton(w/2,h/2,0.4f*Math.min(w,h)),view)
+            }
+            chromeButtonAnimator?.draw(canvas,paint)
+            chromeButtonAnimator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            chromeButtonAnimator?.handleTap(x,y)
+        }
+    }
 }
