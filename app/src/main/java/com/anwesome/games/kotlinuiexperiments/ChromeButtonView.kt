@@ -42,12 +42,12 @@ class ChromeButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float) = x>=this.x - size/5 && x<=this.x+size/5 && y>=this.y -size/5 && y<=this.y+size/5
     }
     data class ChromeButtonState(var scale:Float = 0f,var dir:Float = 0f) {
