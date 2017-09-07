@@ -50,4 +50,21 @@ class ChromeButtonView(ctx:Context):View(ctx) {
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float) = x>=this.x - size/5 && x<=this.x+size/5 && y>=this.y -size/5 && y<=this.y+size/5
     }
+    data class ChromeButtonState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0){
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            scale = 1-2*scale 
+        }
+    }
 }
