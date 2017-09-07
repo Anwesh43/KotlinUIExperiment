@@ -67,4 +67,32 @@ class ChromeButtonView(ctx:Context):View(ctx) {
             scale = 1-2*scale
         }
     }
+    class ChromeButtonAnimator(var chromeButton:ChromeButton,var view:ChromeButtonView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                chromeButton.update()
+                if(chromeButton.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && chromeButton.handleTap(x,y)) {
+                chromeButton.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            chromeButton.draw(canvas,paint)
+        }
+    }
 }
