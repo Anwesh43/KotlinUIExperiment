@@ -97,7 +97,8 @@ class MainActivity : AppCompatActivity() {
        //RectCompArcView.create(this,{Toast.makeText(this,"On",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Off",Toast.LENGTH_SHORT).show()})
         //ChatHeadView.create(this)
        // DustbinFillButtonView.create(this)
-        AtomButtonView.create(this)
+        //AtomButtonView.create(this)
+        ChromeButtonView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
