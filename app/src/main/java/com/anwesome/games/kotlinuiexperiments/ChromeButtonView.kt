@@ -16,6 +16,7 @@ import android.view.ViewGroup
 class ChromeButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ChromeButtonRenderer()
+    var listener:ChromeButtonOnFillListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -78,6 +79,14 @@ class ChromeButtonView(ctx:Context):View(ctx) {
                 chromeButton.update()
                 if(chromeButton.stopped()) {
                     animated = false
+                    when(chromeButton.state.scale) {
+                        0f -> {
+                            view.listener?.onCloseListener?.invoke()
+                        }
+                        1f -> {
+                            view.listener?.onOpenListener?.invoke()
+                        }
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -117,10 +126,14 @@ class ChromeButtonView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             val view = ChromeButtonView(activity)
+            if(listeners.size == 2) {
+                view.listener = ChromeButtonOnFillListener(listeners[0],listeners[1])
+            }
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class ChromeButtonOnFillListener(var onCloseListener:()->Unit,var onOpenListener:()->Unit)
 }
