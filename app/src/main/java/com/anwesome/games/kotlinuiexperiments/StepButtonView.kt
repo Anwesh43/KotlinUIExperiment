@@ -21,23 +21,23 @@ class StepButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class StepButton(var w:Float,var h:Float,var x:Float = w/2,var y:Float = 0.9f*h,var r:Float = Math.min(w,h)/25) {
+    data class StepButton(var w:Float,var h:Float,var x:Float = w/2,var y:Float = 0.9f*h,var r:Float = Math.min(w,h)/25,var state:StepButtonState = StepButtonState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
             canvas.restore()
             val size = Math.min(w,h)/10
             for(i in 1..4) {
                 val x = i*(w/5)
-                canvas.drawRect(RectF(x-size/2,0.8f*h-(size)*i,x+size/2,0.8f*size),paint)
+                canvas.drawRect(RectF(x-size/2,0.8f*h-(size)*i*state.scale,x+size/2,0.8f*size),paint)
             }
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
         fun stopped():Boolean = true
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - this.r && x<=this.x+this.r && y>=this.y - this.r && y<=this.y+r
