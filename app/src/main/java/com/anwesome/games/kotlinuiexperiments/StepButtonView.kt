@@ -88,4 +88,22 @@ class StepButtonView(ctx:Context):View(ctx) {
         }
 
     }
+    class StepButtonRenderer {
+        var animator:StepButtonAnimator?=null
+        var time = 0
+        fun render(canvas: Canvas,paint:Paint,view:StepButtonView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var stepButton = StepButton(w,h)
+                animator = StepButtonAnimator(stepButton,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
