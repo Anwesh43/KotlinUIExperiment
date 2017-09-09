@@ -42,4 +42,21 @@ class StepButtonView(ctx:Context):View(ctx) {
         fun stopped():Boolean = true
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - this.r && x<=this.x+this.r && y>=this.y - this.r && y<=this.y+r
     }
+    data class StepButtonState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update(){
+            scale += 0.1f*dir
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                dir = 0f
+                scale = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*scale
+        }
+    }
 }
