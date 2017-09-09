@@ -59,4 +59,33 @@ class StepButtonView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
     }
+    class StepButtonAnimator(var stepButton:StepButton,var view:StepButtonView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                stepButton.update()
+                if(stepButton.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            stepButton.draw(canvas, paint)
+        }
+        fun handleTap(x: Float,y:Float) {
+            if(!animated && stepButton.handleTap(x,y)) {
+                stepButton.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+
+    }
 }
