@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -16,6 +17,7 @@ class StepButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = StepButtonRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -30,12 +32,16 @@ class StepButtonView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = r/10
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
             canvas.restore()
             val size = Math.min(w,h)/10
             for(i in 1..4) {
-                val x = i*(w/5)
-                canvas.drawRect(RectF(x-size/2,0.8f*h-(size)*i*state.scale,x+size/2,0.8f*size),paint)
+                val rx = i*(w/5)
+                canvas.drawRect(RectF(rx-size/2,0.8f*h-(size)*i*state.scale,rx+size/2,0.8f*h),paint)
             }
         }
         fun update() {
@@ -44,7 +50,7 @@ class StepButtonView(ctx:Context):View(ctx) {
         fun startUpdating() {
             state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - this.r && x<=this.x+this.r && y>=this.y - this.r && y<=this.y+r
     }
     data class StepButtonState(var scale:Float = 0f,var dir:Float = 0f) {
@@ -101,6 +107,7 @@ class StepButtonView(ctx:Context):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 var stepButton = StepButton(w,h)
+                paint.color = Color.parseColor("#0097A7")
                 animator = StepButtonAnimator(stepButton,view)
             }
             animator?.draw(canvas,paint)
