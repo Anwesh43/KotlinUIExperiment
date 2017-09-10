@@ -103,4 +103,22 @@ class ColorRectBarView(ctx:Context):View(ctx) {
             }
         }
     }
+    class ColorRectBarRenderer {
+        var time = 0
+        var animator:ColorRectBarAnimator?=null
+        fun render(canvas:Canvas,paint:Paint,view:ColorRectBarView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var colorRectBar = ColorRectBar(w,h)
+                animator = ColorRectBarAnimator(colorRectBar,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
