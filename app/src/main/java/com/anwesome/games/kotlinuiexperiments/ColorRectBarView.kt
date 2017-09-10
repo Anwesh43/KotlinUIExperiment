@@ -76,4 +76,31 @@ class ColorRectBarView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class ColorRectBarAnimator(var rectBar:ColorRectBar,var view:ColorRectBarView,var animated:Boolean = false) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            rectBar.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                rectBar.update()
+                if(rectBar.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && rectBar.handleTap(x,y)) {
+                rectBar.startUpdating()
+                animated = false
+                view.postInvalidate()
+            }
+        }
+    }
 }
