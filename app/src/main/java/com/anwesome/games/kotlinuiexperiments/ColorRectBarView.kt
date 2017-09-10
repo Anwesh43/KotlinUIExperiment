@@ -21,7 +21,7 @@ class ColorRectBarView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ColorRectBar(var w:Float,var h:Float,var x:Float = w/2,var y:Float = h/2,var r:Float = Math.min(w,h)/10) {
+    data class ColorRectBar(var w:Float,var h:Float,var x:Float = w/2,var y:Float = h/2,var r:Float = Math.min(w,h)/10,var state:ColorRectBarState = ColorRectBarState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#FF5722")
             canvas.save()
@@ -30,7 +30,7 @@ class ColorRectBarView(ctx:Context):View(ctx) {
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
             canvas.restore()
             canvas.save()
             canvas.translate(0f,0.7f*h)
@@ -43,7 +43,7 @@ class ColorRectBarView(ctx:Context):View(ctx) {
                 canvas.save()
                 paint.color = color
                 var path = Path()
-                path.addRect(RectF(rx,0F,rx+(w+r)/5,h/10),Path.Direction.CW)
+                path.addRect(RectF(rx,0F,rx+((w+r)/5)*state.scale,h/10),Path.Direction.CW)
                 canvas.drawRoundRect(RectF(0f,0f,w,h/10),r/2,r/2,paint)
                 canvas.restore()
                 rx += (w+r)/5
@@ -52,12 +52,12 @@ class ColorRectBarView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x >= this.x - r && x <= this.x+r && y >= this.y - r && y <= this.y + r
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class ColorRectBarState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
