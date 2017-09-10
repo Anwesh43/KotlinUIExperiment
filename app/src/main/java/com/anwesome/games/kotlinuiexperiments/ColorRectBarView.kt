@@ -37,8 +37,6 @@ class ColorRectBarView(ctx:Context):View(ctx) {
             canvas.restore()
             canvas.save()
             canvas.translate(0f,0.7f*h)
-            paint.style = Paint.Style.STROKE
-            canvas.drawRoundRect(RectF(0f,0f,w,h/10),r/2,r/2,paint)
             val colors = arrayOf(Color.parseColor("#01579B"),Color.parseColor("#004D40"),Color.parseColor("#D81B60"),Color.parseColor("#00B8D4"),Color.parseColor("#c62828"))
             var rx = -r/2
             paint.style = Paint.Style.FILL
@@ -47,6 +45,7 @@ class ColorRectBarView(ctx:Context):View(ctx) {
                 paint.color = color
                 var path = Path()
                 path.addRect(RectF(rx,0F,rx+((w+r)/5)*state.scale,h/10),Path.Direction.CW)
+                canvas.clipPath(path)
                 canvas.drawRoundRect(RectF(0f,0f,w,h/10),r/2,r/2,paint)
                 canvas.restore()
                 rx += (w+r)/5
@@ -101,7 +100,7 @@ class ColorRectBarView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             if(!animated && rectBar.handleTap(x,y)) {
                 rectBar.startUpdating()
-                animated = false
+                animated = true
                 view.postInvalidate()
             }
         }
