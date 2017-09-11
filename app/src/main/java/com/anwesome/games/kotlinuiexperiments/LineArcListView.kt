@@ -48,7 +48,7 @@ class LineArcListView(ctx:Context,var n:Int = 5):View(ctx) {
     }
     data class LineArcState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
-            scale  = Math.abs(Math.cos(deg*Math.PI/180)).toFloat()
+            scale  = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
             deg += 4.5f
             if(deg > 180) {
                 deg = 0f
