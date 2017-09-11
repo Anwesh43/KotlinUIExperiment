@@ -100,7 +100,8 @@ class MainActivity : AppCompatActivity() {
         //AtomButtonView.create(this)
         //ChromeButtonView.create(this,{Toast.makeText(this,"Filled",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Emptied",Toast.LENGTH_SHORT).show()})
         //StepButtonView.create(this)
-        ColorRectBarView.create(this)
+        //ColorRectBarView.create(this)
+        LineArcListView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
