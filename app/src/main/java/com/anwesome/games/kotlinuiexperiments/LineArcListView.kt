@@ -14,13 +14,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class LineArcListView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = LineArcRenderer()
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -118,6 +120,9 @@ class LineArcListView(ctx:Context,var n:Int = 5):View(ctx) {
                 var w = canvas.width.toFloat()
                 var h = canvas.height.toFloat()
                 lineArcAnimator = LineArcViewAnimator(LineArcContainer(w,h,view.n),view)
+                paint.color = Color.parseColor("#4caf50")
+                paint.strokeWidth = Math.min(w,h)/40
+                paint.strokeCap = Paint.Cap.ROUND
             }
             lineArcAnimator?.draw(canvas,paint)
             lineArcAnimator?.update()
