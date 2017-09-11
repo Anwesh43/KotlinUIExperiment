@@ -58,4 +58,31 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f || deg == 90f
     }
+    class YTLogoAnimator(var ytLogoButton:YTLogoButton,var view:YTLogoButtonView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            ytLogoButton.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                ytLogoButton.update()
+                if(ytLogoButton.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float){
+            if(!animated && ytLogoButton.handleTap(x,y)) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
