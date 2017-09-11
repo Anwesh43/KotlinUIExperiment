@@ -9,14 +9,16 @@ import android.view.View
  * Created by anweshmishra on 12/09/17.
  */
 class YTLogoButtonView(ctx:Context):View(ctx) {
+    val renderer = YTLogoRenderer()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
