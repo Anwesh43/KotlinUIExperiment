@@ -45,4 +45,17 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = false
     }
+    data class YTLogoState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            deg += 4.5f
+            if(deg > 90) {
+                deg = 90f
+            }
+            if(deg < 0) {
+                deg = 0f
+            }
+        }
+        fun stopped():Boolean = deg == 0f || deg == 90f
+    }
 }
