@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -22,5 +23,25 @@ class LineArcListView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class LineArc(var x:Float,var y:Float,var r:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
+            canvas.drawLine(0f,-2*r,0f,-2*r-h,paint)
+            canvas.restore()
+        }
+        fun handleTap(x:Float,y:Float) = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = false
     }
 }
