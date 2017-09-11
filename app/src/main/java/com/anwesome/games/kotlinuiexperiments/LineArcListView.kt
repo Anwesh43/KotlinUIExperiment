@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 11/09/17.
@@ -50,5 +51,42 @@ class LineArcListView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = deg == 0f
+    }
+    data class LineArcContainer(var w:Float, var h:Float, var n:Int, var lineArcs:ConcurrentLinkedQueue<LineArc> = ConcurrentLinkedQueue(), var tappedLineArcs:ConcurrentLinkedQueue<LineArc> = ConcurrentLinkedQueue()) {
+        init {
+            var size = w/(2*n+1)
+            var x = 3*size/2
+            for(i in 1..n) {
+                var lineArc = LineArc(x,h-size,size/2,h-2*size)
+                lineArcs.add(lineArc)
+                x += 2*size
+            }
+        }
+        fun update(stopcb:()->Unit) {
+            tappedLineArcs.forEach { tappedLineArc ->
+                tappedLineArc.update()
+                if(tappedLineArc.stopped()) {
+                    tappedLineArcs.remove(tappedLineArc)
+                    if(tappedLineArcs.size == 0) {
+                        stopcb()
+                    }
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float,startCb:()->Unit) {
+            lineArcs.forEach { lineArc ->
+                if(lineArc.handleTap(x,y)) {
+                    tappedLineArcs.add(lineArc)
+                    if(tappedLineArcs.size == 1) {
+                        startCb()
+                    }
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            lineArcs.forEach { lineArc ->
+                lineArc.draw(canvas,paint)
+            }
+        }
     }
 }
