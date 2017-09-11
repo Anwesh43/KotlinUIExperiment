@@ -21,15 +21,15 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class YTLogoButton(var x:Float,var y:Float,var size:Float) {
+    data class YTLogoButton(var x:Float,var y:Float,var size:Float,var state:YTLogoState) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            paint.color = Color.rgb(255,0,0)
+            paint.color = Color.rgb((255*state.scale).toInt(),0,0)
             canvas.drawRoundRect(RectF(-size/2,size/2,size/2,size/2),size/10,size/10,paint)
-            paint.color = Color.rgb(255*(1-1),0,0)
+            paint.color = Color.rgb((255*(1-state.scale)).toInt(),0,0)
             canvas.save()
-            canvas.rotate(90f)
+            canvas.rotate(90f*state.scale)
             var path = Path()
             path.moveTo(-size/10,-size/10)
             path.lineTo(size/10,0f)
@@ -41,9 +41,9 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x - size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
     data class YTLogoState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
