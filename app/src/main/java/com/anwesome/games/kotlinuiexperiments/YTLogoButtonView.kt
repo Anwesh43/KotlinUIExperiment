@@ -29,9 +29,9 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            paint.color = Color.rgb((255*state.scale).toInt(),0,0)
-            canvas.drawRoundRect(RectF(-size/2,size/2,size/2,size/2),size/10,size/10,paint)
-            paint.color = Color.rgb((255*(1-state.scale)).toInt(),0,0)
+            paint.color = Color.rgb(255,(255*state.scale).toInt(),(255*state.scale).toInt())
+            canvas.drawRoundRect(RectF(-size/2,-size/3,size/2,size/3),size/10,size/10,paint)
+            paint.color = Color.rgb(255,(255*(1-state.scale)).toInt(),(255*(1-state.scale)).toInt())
             canvas.save()
             canvas.rotate(90f*state.scale)
             var path = Path()
@@ -43,24 +43,18 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
             canvas.restore()
             canvas.restore()
         }
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x - size/2 && x<=this.x+size/2 && y>=this.y-size/2 && y<=this.y+size/2
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x - size/2 && x<=this.x+size/2 && y>=this.y-size/3 && y<=this.y+size/3
         fun update() {
             state.update()
         }
         fun stopped():Boolean = state.stopped()
     }
-    data class YTLogoState(var scale:Float = 0f,var deg:Float = 0f) {
+    data class YTLogoState(var scale:Float = 0f,var deg:Float = 0f,var dir:Float = 1f) {
         fun update() {
             scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
             deg += 4.5f
-            if(deg > 90) {
-                deg = 90f
-            }
-            if(deg < 0) {
-                deg = 0f
-            }
         }
-        fun stopped():Boolean = deg == 0f || deg == 90f
+        fun stopped():Boolean = deg % 90 == 0f
     }
     class YTLogoAnimator(var ytLogoButton:YTLogoButton,var view:YTLogoButtonView) {
         var animated = false
