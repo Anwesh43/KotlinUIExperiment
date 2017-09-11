@@ -89,4 +89,26 @@ class LineArcListView(ctx:Context):View(ctx) {
             }
         }
     }
+    class LineArcViewAnimator(var lineArcContainer:LineArcContainer,var view:LineArcListView,var isAnimated:Boolean = false) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            lineArcContainer.draw(canvas,paint)
+        }
+        fun update() {
+            if(isAnimated) {
+                lineArcContainer.update { isAnimated = false }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                } catch (ex: Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            lineArcContainer.handleTap(x,y,{
+                isAnimated = true
+                view.postInvalidate()
+            })
+        }
+    }
 }
