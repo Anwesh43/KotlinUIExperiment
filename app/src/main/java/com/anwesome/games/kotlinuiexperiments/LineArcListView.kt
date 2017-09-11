@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 11/09/17.
  */
-class LineArcListView(ctx:Context):View(ctx) {
+class LineArcListView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
@@ -109,6 +109,22 @@ class LineArcListView(ctx:Context):View(ctx) {
                 isAnimated = true
                 view.postInvalidate()
             })
+        }
+    }
+    class LineArcRenderer(var time:Int = 0) {
+        var lineArcAnimator:LineArcViewAnimator?=null
+        fun render(canvas: Canvas,paint: Paint,view: LineArcListView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                lineArcAnimator = LineArcViewAnimator(LineArcContainer(w,h,view.n),view)
+            }
+            lineArcAnimator?.draw(canvas,paint)
+            lineArcAnimator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            lineArcAnimator?.handleTap(x,y)
         }
     }
 }
