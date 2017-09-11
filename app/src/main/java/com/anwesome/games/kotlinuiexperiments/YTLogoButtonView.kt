@@ -21,7 +21,7 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class YTLogoButton(var x:Float,var y:Float,var size:Float,var state:YTLogoState) {
+    data class YTLogoButton(var x:Float,var y:Float,var size:Float,var state:YTLogoState = YTLogoState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -83,6 +83,23 @@ class YTLogoButtonView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    class YTLogoRenderer {
+        var animator:YTLogoAnimator?=null
+        var time = 0
+        fun render(canvas: Canvas,paint:Paint,view:YTLogoButtonView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                animator = YTLogoAnimator(YTLogoButton(w/2,h/2,2*Math.min(w,h)/3),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
