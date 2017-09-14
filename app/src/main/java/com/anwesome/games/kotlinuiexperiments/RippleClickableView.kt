@@ -41,7 +41,7 @@ class RippleClickableView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun stopped():Boolean = true
     }
@@ -72,6 +72,13 @@ class RippleClickableView(ctx:Context):View(ctx) {
                         }
                     }
                 }
+                try {
+                    Thread.sleep(50)
+                    clickableView.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
             }
         }
         fun handleTap(x:Float,y:Float,r:Float) {
@@ -98,6 +105,7 @@ class RippleClickableView(ctx:Context):View(ctx) {
             }
             rippleClickableAnimator?.draw(canvas,paint)
             rippleClickableAnimator?.update()
+            time++
         }
         fun handleTap(x:Float,y:Float) {
             rippleClickableAnimator?.handleTap(x,y,r)
