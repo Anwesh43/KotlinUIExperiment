@@ -75,4 +75,22 @@ class RippleClickableView(ctx:Context):View(ctx) {
             }
         }
     }
+    class RippleClickableRenderer {
+        var r = 0f
+        var time = 0
+        var rippleClickableAnimator:RippleClickableAnimator? = null
+        fun render(canvas: Canvas,paint:Paint,view:RippleClickableView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                r = Math.min(w,h)/15
+                rippleClickableAnimator = RippleClickableAnimator(view)
+            }
+            rippleClickableAnimator?.draw(canvas,paint)
+            rippleClickableAnimator?.update()
+        }
+        fun handleTap(x:Float,y:Float) {
+            rippleClickableAnimator?.handleTap(x,y,r)
+        }
+    }
 }
