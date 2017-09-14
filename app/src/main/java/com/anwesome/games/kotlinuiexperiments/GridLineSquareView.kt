@@ -10,7 +10,7 @@ import android.view.View
 /**
  * Created by anweshmishra on 15/09/17.
  */
-class GridLineSquareView(ctx:Context):View(ctx) {
+class GridLineSquareView(ctx:Context,var n:Int = 4):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -25,8 +25,6 @@ class GridLineSquareView(ctx:Context):View(ctx) {
     }
     data class GridLineSquare(var x:Float,var y:Float,var w:Float,var h:Float,var n:Int,var state:GridLineState = GridLineState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.WHITE
-            paint.strokeWidth = w/30
             canvas.save()
             canvas.translate(x,y)
             for(i in 0..1) {
@@ -82,6 +80,26 @@ class GridLineSquareView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    class GridLineRenderer {
+        var time = 0
+        var gridLineAnimator:GridLineAnimator?=null
+        fun render(canvas: Canvas,paint:Paint,view:GridLineSquareView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var gridLineSquare = GridLineSquare(w/2,h/2,w,h,view.n)
+                gridLineAnimator = GridLineAnimator(gridLineSquare,view)
+                paint.color = Color.WHITE
+                paint.strokeWidth = w/30
+                paint.strokeCap = Paint.Cap.ROUND
+            }
+            gridLineAnimator?.draw(canvas,paint)
+            gridLineAnimator?.update()
+        }
+        fun handleTap() {
+            gridLineAnimator?.handleTap()
         }
     }
 }
