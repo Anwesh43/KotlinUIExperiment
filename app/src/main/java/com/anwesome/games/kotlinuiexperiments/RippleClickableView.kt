@@ -35,6 +35,7 @@ class RippleClickableView(ctx:Context):View(ctx) {
             canvas.translate(x,y)
             canvas.scale(state.scale,state.scale)
             paint.style = Paint.Style.STROKE
+            paint.color = Color.argb((255*state.scale).toInt(),255,255,255)
             canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
             canvas.drawRoundRect(RectF(-r/10,-r/10,r/10,r/10),r/40,r/40,paint)
@@ -43,12 +44,12 @@ class RippleClickableView(ctx:Context):View(ctx) {
         fun update() {
             state.update()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class RippleClickableState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
             deg += 4.5f
-            scale = Math.floor(Math.sin(deg*Math.PI/180)).toFloat()
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
             if(deg > 180) {
                 deg = 0f
             }
@@ -73,7 +74,7 @@ class RippleClickableView(ctx:Context):View(ctx) {
                     }
                 }
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(10)
                     clickableView.invalidate()
                 }
                 catch(ex:Exception) {
