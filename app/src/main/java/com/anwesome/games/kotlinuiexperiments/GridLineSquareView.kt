@@ -53,7 +53,7 @@ class GridLineSquareView(ctx:Context,var n:Int = 4):View(ctx) {
         fun update() {
             deg += 4.5f
             scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
-            if(deg > 180) {
+            if(deg >= 180) {
                 deg = 0f
             }
         }
