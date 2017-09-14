@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 14/09/17.
@@ -48,5 +49,30 @@ class RippleClickableView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = deg == 0f
+    }
+    class RippleClickableAnimator(var clickableView: RippleClickableView,var clickables:ConcurrentLinkedQueue<RippleClickable> = ConcurrentLinkedQueue(),var isAnimated:Boolean = false) {
+        fun draw(canvas: Canvas,paint:Paint) {
+            clickables.forEach { clickable ->
+                clickable.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(isAnimated) {
+                clickables.forEach { rippleClickable ->
+                    rippleClickable.update()
+                    if(rippleClickable.stopped()) {
+                        clickables.remove(rippleClickable)
+                    }
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float,r:Float) {
+            val rippleClickable = RippleClickable(x,y,r)
+            clickables.add(rippleClickable)
+            if(!isAnimated) {
+                isAnimated = true
+                clickableView.postInvalidate()
+            }
+        }
     }
 }
