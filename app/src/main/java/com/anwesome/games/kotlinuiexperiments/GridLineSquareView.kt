@@ -23,7 +23,7 @@ class GridLineSquareView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class GridLineSquare(var x:Float,var y:Float,var w:Float,var h:Float,var n:Int) {
+    data class GridLineSquare(var x:Float,var y:Float,var w:Float,var h:Float,var n:Int,var state:GridLineState = GridLineState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.WHITE
             paint.strokeWidth = w/30
@@ -31,11 +31,11 @@ class GridLineSquareView(ctx:Context):View(ctx) {
             canvas.translate(x,y)
             for(i in 0..1) {
                 canvas.save()
-                canvas.rotate(90f*i)
+                canvas.rotate(90f*i*state.scale)
                 var x_gap = w/(n+1)
                 var cx = x_gap
                 for(j in 1..n) {
-                    canvas.drawLine(cx-x,-h/2,cx-x,h/2,paint)
+                    canvas.drawLine(cx-x,-h/2*state.scale,cx-x,h/2*state.scale,paint)
                     cx += x_gap
                 }
                 canvas.restore()
@@ -43,9 +43,9 @@ class GridLineSquareView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class GridLineState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
