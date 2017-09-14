@@ -57,4 +57,31 @@ class GridLineSquareView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    class GridLineAnimator(var gridLineSquare: GridLineSquare,var view:GridLineSquareView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                gridLineSquare.update()
+                if(gridLineSquare.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            gridLineSquare.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
