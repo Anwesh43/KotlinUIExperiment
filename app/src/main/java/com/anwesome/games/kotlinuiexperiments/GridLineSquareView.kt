@@ -47,4 +47,14 @@ class GridLineSquareView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class GridLineState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            deg += 4.5f
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            if(deg > 180) {
+                deg = 0f
+            }
+        }
+        fun stopped():Boolean = deg == 0f
+    }
 }
