@@ -27,15 +27,15 @@ class RippleClickableView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class RippleClickable(var x:Float,var y:Float,var r:Float) {
+    data class RippleClickable(var x:Float,var y:Float,var r:Float,var state:RippleClickableState = RippleClickableState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.style = Paint.Style.STROKE
             canvas.save()
             canvas.translate(x,y)
+            canvas.scale(state.scale,state.scale)
+            paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,r,paint)
-            canvas.save()
+            paint.style = Paint.Style.FILL
             canvas.drawRoundRect(RectF(-r/10,-r/10,r/10,r/10),r/40,r/40,paint)
-            canvas.restore()
             canvas.restore()
         }
         fun update() {
