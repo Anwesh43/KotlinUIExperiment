@@ -62,6 +62,9 @@ class RippleClickableView(ctx:Context):View(ctx) {
                     rippleClickable.update()
                     if(rippleClickable.stopped()) {
                         clickables.remove(rippleClickable)
+                        if(clickables.size == 0) {
+                            isAnimated = false
+                        }
                     }
                 }
             }
