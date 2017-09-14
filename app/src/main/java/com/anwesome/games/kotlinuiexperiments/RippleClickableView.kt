@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 
@@ -21,5 +22,21 @@ class RippleClickableView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class RippleClickable(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            paint.style = Paint.Style.STROKE
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawCircle(0f,0f,r,paint)
+            canvas.save()
+            canvas.drawRoundRect(RectF(-r/10,-r/10,r/10,r/10),r/40,r/40,paint)
+            canvas.restore()
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun stopped():Boolean = true
     }
 }
