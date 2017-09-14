@@ -103,7 +103,8 @@ class MainActivity : AppCompatActivity() {
         //ColorRectBarView.create(this)
         //LineArcListView.create(this)
         //YTLogoButtonView.create(this)
-        RippleClickableView.create(this)
+        //RippleClickableView.create(this)
+        GridLineSquareView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
