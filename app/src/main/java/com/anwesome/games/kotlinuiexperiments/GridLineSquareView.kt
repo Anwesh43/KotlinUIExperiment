@@ -101,6 +101,7 @@ class GridLineSquareView(ctx:Context,var n:Int = 4):View(ctx) {
             }
             gridLineAnimator?.draw(canvas,paint)
             gridLineAnimator?.update()
+            time++
         }
         fun handleTap() {
             gridLineAnimator?.handleTap()
