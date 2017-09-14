@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -13,13 +14,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class RippleClickableView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = RippleClickableRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -88,6 +91,8 @@ class RippleClickableView(ctx:Context):View(ctx) {
                 var h = canvas.height.toFloat()
                 r = Math.min(w,h)/15
                 rippleClickableAnimator = RippleClickableAnimator(view)
+                paint.color = Color.WHITE
+                paint.strokeWidth = r/7
             }
             rippleClickableAnimator?.draw(canvas,paint)
             rippleClickableAnimator?.update()
