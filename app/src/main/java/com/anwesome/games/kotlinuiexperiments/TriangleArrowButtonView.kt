@@ -67,4 +67,29 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class TriangleArrowButtonAnimator(var triangleButton:TriangleArrowButton,var view:TriangleArrowButtonView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                triangleButton.update()
+                if(triangleButton.stopped()) {
+                    animated = false
+                }
+                try {
+                   Thread.sleep(50)
+                   view.invalidate()
+               }
+               catch(ex:Exception) {
+
+               }
+            }
+        }
+        fun startUpdating() {
+            if(!animated) {
+                triangleButton.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
