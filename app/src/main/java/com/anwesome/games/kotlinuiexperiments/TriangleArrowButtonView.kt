@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 16/09/17.
@@ -112,6 +114,13 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = TriangleArrowButtonView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
