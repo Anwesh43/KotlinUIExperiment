@@ -24,15 +24,15 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class TriangleArrowButton(var x:Float,var y:Float,var l:Float,var r:Float) {
+    data class TriangleArrowButton(var x:Float,var y:Float,var l:Float,var r:Float,var state:TriangleArrowButtonState = TriangleArrowButtonState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.WHITE
             canvas.save()
             canvas.translate(x,y)
             for(i in 1..4) {
                 canvas.save()
-                canvas.rotate(90f*i)
-                canvas.translate(0f,l)
+                canvas.rotate(90f*i*state.scale)
+                canvas.translate(0f,l*state.scale)
                 var path = Path()
                 path.moveTo(-r/2,r/2)
                 path.lineTo(r/2,r/2)
@@ -43,16 +43,16 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class TriangleArrowButtonState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
-            scale += 0.1f*dir 
+            scale += 0.1f*dir
             if(scale > 1) {
                 scale = 1f
                 dir = 0f
