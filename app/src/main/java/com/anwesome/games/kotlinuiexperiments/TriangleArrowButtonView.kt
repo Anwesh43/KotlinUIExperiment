@@ -84,12 +84,32 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
                }
             }
         }
+        fun draw(canvas: Canvas,paint: Paint) {
+            triangleButton.draw(canvas,paint)
+        }
         fun startUpdating() {
             if(!animated) {
                 triangleButton.startUpdating()
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    class TriangleButtonRenderer {
+        var time = 0
+        var animator:TriangleArrowButtonAnimator?=null
+        fun render(canvas:Canvas,paint:Paint,view:TriangleArrowButtonView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = TriangleArrowButtonAnimator(TriangleArrowButton(w/2,h/2,Math.min(w,h)/14,Math.min(w,h)/3),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.startUpdating()
         }
     }
 }
