@@ -30,12 +30,14 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
     }
     data class TriangleArrowButton(var x:Float,var y:Float,var l:Float,var r:Float,var state:TriangleArrowButtonState = TriangleArrowButtonState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.WHITE
+            paint.color = Color.argb((255*state.scale).toInt(),255,255,255)
             canvas.save()
             canvas.translate(x,y)
-            for(i in 1..4) {
+            val n = 8
+            val deg = 360f/n
+            for(i in 0..n-1) {
                 canvas.save()
-                canvas.rotate(90f*i*state.scale)
+                canvas.rotate(deg*i*state.scale)
                 canvas.translate(0f,l*state.scale)
                 var path = Path()
                 path.moveTo(-r/2,r/2)
@@ -106,7 +108,7 @@ class  TriangleArrowButtonView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = TriangleArrowButtonAnimator(TriangleArrowButton(w/2,h/2,Math.min(w,h)/14,Math.min(w,h)/3),view)
+                animator = TriangleArrowButtonAnimator(TriangleArrowButton(w/2,h/2,Math.min(w,h)/3,Math.min(w,h)/14),view)
             }
             animator?.draw(canvas,paint)
             animator?.update()
