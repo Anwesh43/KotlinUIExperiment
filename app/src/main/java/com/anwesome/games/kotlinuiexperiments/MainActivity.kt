@@ -105,7 +105,8 @@ class MainActivity : AppCompatActivity() {
         //YTLogoButtonView.create(this)
         //RippleClickableView.create(this)
         //GridLineSquareView.create(this)
-        TriangleArrowButtonView.create(this)
+        //TriangleArrowButtonView.create(this)
+        PlayBarView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
