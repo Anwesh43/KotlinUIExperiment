@@ -123,4 +123,22 @@ class PlayBarView(ctx:Context):View(ctx) {
             }
         }
     }
+    class PlayBarRenderer {
+        var time = 0
+        var playBarAnimator:PlayBarAnimator? = null
+        fun draw(canvas: Canvas,paint:Paint,view:PlayBarView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                val playBar = PlayBar(w,h)
+                playBarAnimator = PlayBarAnimator(playBar,view)
+            }
+            playBarAnimator?.draw(canvas,paint)
+            playBarAnimator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            playBarAnimator?.handleTap(x,y)
+        }
+    }
 }
