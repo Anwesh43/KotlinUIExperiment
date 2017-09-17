@@ -14,13 +14,14 @@ import android.view.View
 
 class PlayBarView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = PlayBarRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -31,13 +32,13 @@ class PlayBarView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(w/2,h/2)
             drawTriangle(canvas,paint,1f,Color.WHITE,false)
-            drawTriangle(canvas,paint,0f,color,true)
+            drawTriangle(canvas,paint,state.scale,color,true)
             paint.style = Paint.Style.STROKE
             drawCircle(canvas,paint,1f,Color.WHITE)
-            drawCircle(canvas,paint,0f,color)
+            drawCircle(canvas,paint,state.scale,color)
             canvas.restore()
             drawLine(canvas,paint,1f,Color.WHITE)
-            drawLine(canvas,paint,0f,color)
+            drawLine(canvas,paint,state.scale,color)
         }
         private fun drawTriangle(canvas: Canvas,paint:Paint,scale:Float,color:Int,fill:Boolean) {
             if(fill) {
@@ -126,7 +127,7 @@ class PlayBarView(ctx:Context):View(ctx) {
     class PlayBarRenderer {
         var time = 0
         var playBarAnimator:PlayBarAnimator? = null
-        fun draw(canvas: Canvas,paint:Paint,view:PlayBarView) {
+        fun render(canvas: Canvas,paint:Paint,view:PlayBarView) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
