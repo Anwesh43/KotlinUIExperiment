@@ -14,6 +14,7 @@ import android.view.ViewGroup
 class PlayBarView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PlayBarRenderer()
+    var listener:PlayBarListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -116,6 +117,10 @@ class PlayBarView(ctx:Context):View(ctx) {
                 playBar.update()
                 if(playBar.stopped()) {
                     animated = false
+                    when(playBar.state.scale) {
+                        0f -> view.listener?.emptyListener?.invoke()
+                        1f -> view.listener?.fillListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -158,10 +163,14 @@ class PlayBarView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var view = PlayBarView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.listener = PlayBarListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
+    data class PlayBarListener(var fillListener:()->Unit,var emptyListener:()->Unit)
 }
