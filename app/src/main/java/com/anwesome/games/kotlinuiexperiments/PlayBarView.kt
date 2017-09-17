@@ -53,6 +53,7 @@ class PlayBarView(ctx:Context):View(ctx) {
             paint.color = color
             canvas.drawPath(path,paint)
         }
+        fun handleTap(x:Float,y:Float) = x >= w/2 - w/10 && x <= w/2 + w/10 && y >= h/2 - h/10 && y <= h/2 + h/10
         private fun drawLine(canvas: Canvas,paint:Paint,scale:Float,color:Int) {
             canvas.drawLine(0f,4*h/5,w*scale,4*h/5,paint)
         }
@@ -94,5 +95,32 @@ class PlayBarView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class PlayBarAnimator(var playBar:PlayBar,var view:PlayBarView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                playBar.update()
+                if(playBar.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            playBar.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(playBar.stopped() && !animated) {
+                animated = true
+                playBar.startUpdating()
+                view.postInvalidate()
+            }
+        }
     }
 }
