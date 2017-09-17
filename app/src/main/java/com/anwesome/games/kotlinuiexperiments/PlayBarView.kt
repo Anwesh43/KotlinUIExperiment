@@ -25,7 +25,7 @@ class PlayBarView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class PlayBar(var w:Float,var h:Float) {
+    data class PlayBar(var w:Float,var h:Float,var state:PlayBarState = PlayBarState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             val color = Color.parseColor("#d32f2f")
             canvas.save()
@@ -71,11 +71,11 @@ class PlayBarView(ctx:Context):View(ctx) {
             canvas.drawPath(circlePath,paint)
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class PlayBarState(var scale:Float = 0f,var dir:Float = 0f) {
