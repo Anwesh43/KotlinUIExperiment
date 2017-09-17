@@ -2,10 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +15,7 @@ class PlayBarView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PlayBarRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -33,8 +31,13 @@ class PlayBarView(ctx:Context):View(ctx) {
             val color = Color.parseColor("#d32f2f")
             canvas.save()
             canvas.translate(w/2,h/2)
-            drawTriangle(canvas,paint,1f,Color.WHITE,false)
-            drawTriangle(canvas,paint,state.scale,color,true)
+            canvas.save()
+            var clipPath = Path()
+            clipPath.addRect(RectF(-w/10,-h/10,-w/10+(w/5)*state.scale,h/10),Path.Direction.CW)
+            canvas.clipPath(clipPath)
+            drawTriangle(canvas,paint,color,true)
+            canvas.restore()
+            drawTriangle(canvas,paint,Color.WHITE,false)
             paint.style = Paint.Style.STROKE
             drawCircle(canvas,paint,1f,Color.WHITE)
             drawCircle(canvas,paint,state.scale,color)
@@ -42,7 +45,7 @@ class PlayBarView(ctx:Context):View(ctx) {
             drawLine(canvas,paint,1f,Color.WHITE)
             drawLine(canvas,paint,state.scale,color)
         }
-        private fun drawTriangle(canvas: Canvas,paint:Paint,scale:Float,color:Int,fill:Boolean) {
+        private fun drawTriangle(canvas: Canvas,paint:Paint,color:Int,fill:Boolean) {
             if(fill) {
                 paint.style = Paint.Style.FILL
             }
@@ -50,14 +53,16 @@ class PlayBarView(ctx:Context):View(ctx) {
                 paint.style = Paint.Style.STROKE
             }
             val path = Path()
-            path.lineTo(-w/11,-h/11)
+            path.moveTo(-w/11,-h/11)
             path.lineTo(w/11,0f)
             path.lineTo(-w/11,h/11)
+            path.lineTo(-w/11,-h/11)
             paint.color = color
             canvas.drawPath(path,paint)
         }
         fun handleTap(x:Float,y:Float) = x >= w/2 - w/10 && x <= w/2 + w/10 && y >= h/2 - h/10 && y <= h/2 + h/10
         private fun drawLine(canvas: Canvas,paint:Paint,scale:Float,color:Int) {
+            paint.color = color
             canvas.drawLine(0f,4*h/5,w*scale,4*h/5,paint)
         }
         private fun drawCircle(canvas:Canvas,paint:Paint,scale:Float,color:Int) {
@@ -119,7 +124,7 @@ class PlayBarView(ctx:Context):View(ctx) {
             playBar.draw(canvas,paint)
         }
         fun handleTap(x:Float,y:Float) {
-            if(playBar.stopped() && !animated) {
+            if(playBar.handleTap(x,y) && !animated) {
                 animated = true
                 playBar.startUpdating()
                 view.postInvalidate()
@@ -133,6 +138,8 @@ class PlayBarView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
                 val playBar = PlayBar(w,h)
                 playBarAnimator = PlayBarAnimator(playBar,view)
             }
@@ -148,7 +155,7 @@ class PlayBarView(ctx:Context):View(ctx) {
         fun create(activity:Activity) {
             var view = PlayBarView(activity)
             var size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x/3,size.x/3))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
