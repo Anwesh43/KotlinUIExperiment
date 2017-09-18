@@ -66,4 +66,29 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class PieDirecAnimator(var pieDirectionLoader: PieDirectionLoader,var view:PieLoaderDirectionView,var animated:Boolean = false) {
+        fun draw(canvas: Canvas, paint: Paint) {
+            pieDirectionLoader.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                pieDirectionLoader.update()
+                if(pieDirectionLoader.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(pieDirectionLoader.handleTap(x,y) && !animated) {
+                pieDirectionLoader.startUpdating()
+            }
+        }
+    }
 }
