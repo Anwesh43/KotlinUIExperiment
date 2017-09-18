@@ -82,4 +82,29 @@ class GtoBView(ctx:Context):View(ctx) {
 
         }
     }
+    class GToBAnimator(var circle:GtoBCircle,var view:GtoBView) {
+        var animated = false
+        fun update() {
+            circle.update()
+            if(circle.stopped()) {
+                animated = false
+            }
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(circle.handleTap(x,y) && !animated) {
+                animated = true
+                circle.startUpdating()
+                view.postInvalidate()
+            }
+        }
+    }
 }
