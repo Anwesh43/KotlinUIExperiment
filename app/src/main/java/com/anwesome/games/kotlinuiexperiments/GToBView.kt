@@ -22,29 +22,29 @@ class GtoBView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class GtoBCircle(var x:Float,var y:Float,var r:Float) {
+    data class GtoBCircle(var x:Float,var y:Float,var r:Float,var state:GtoBState = GtoBState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
             canvas.save()
-            clipRectPath(-r,-r+2*r,canvas)
+            clipRectPath(-r,-r+2*r*(1-state.scale),canvas)
             paint.color = Color.GREEN
             canvas.drawCircle(0f,0f,r,paint)
             canvas.restore()
             canvas.save()
-            clipRectPath(r-2*r,r,canvas)
+            clipRectPath(r-2*r*(state.scale),r,canvas)
             paint.color = Color.BLUE
             canvas.drawCircle(0f,0f,r,paint)
             canvas.restore()
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         private fun clipRectPath(yStart:Float,yEnd:Float,canvas: Canvas) {
             val path = Path()
             path.addRect(RectF(-r,yStart,r,yEnd),Path.Direction.CW)
