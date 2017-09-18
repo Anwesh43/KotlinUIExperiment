@@ -71,19 +71,26 @@ class GtoBView(ctx:Context):View(ctx) {
     }
     class GToBRenderer {
         var time = 0
+        var animator:GToBAnimator?=null
         fun render(canvas:Canvas,paint:Paint,view:GtoBView) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
+                animator = GToBAnimator(GtoBCircle(w/2,h/2,w/3),view)
             }
+            animator?.draw(canvas,paint)
+            animator?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            animator?.handleTap(x,y)
         }
     }
     class GToBAnimator(var circle:GtoBCircle,var view:GtoBView) {
         var animated = false
+        fun draw(canvas: Canvas,paint:Paint) {
+            circle.draw(canvas,paint)
+        }
         fun update() {
             circle.update()
             if(circle.stopped()) {
