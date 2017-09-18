@@ -24,7 +24,7 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class PieDirectionLoader(var w:Float,var h:Float) {
+    data class PieDirectionLoader(var w:Float,var h:Float,var state:PieDirecState = PieDirecState()) {
         fun draw(canvas: Canvas,paint:Paint) {
             val color = Color.parseColor("00ACC1")
             paint.color = color
@@ -41,12 +41,29 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
             canvas.drawCircle(-w/20+(w),4*h/5,w/30,paint)
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2-w/10 && x<=w/2+w/10 && y>=h/2-w/10 && y<=h/2+w/10
+    }
+    data class PieDirecState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1f - 2*scale
+        }
+        fun stopped():Boolean = dir == 0f
     }
 }
