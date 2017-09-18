@@ -69,4 +69,17 @@ class GtoBView(ctx:Context):View(ctx) {
             dir = 1f-2*scale
         }
     }
+    class GToBRenderer {
+        var time = 0
+        fun render(canvas:Canvas,paint:Paint,view:GtoBView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
