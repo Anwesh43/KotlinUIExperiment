@@ -52,4 +52,21 @@ class GtoBView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    data class GtoBState(var scale:Float = 0f,var dir:Float=0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                dir = 0f
+                scale = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1f-2*scale
+        }
+    }
 }
