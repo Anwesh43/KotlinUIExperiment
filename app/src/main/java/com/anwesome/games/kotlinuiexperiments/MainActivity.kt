@@ -107,7 +107,8 @@ class MainActivity : AppCompatActivity() {
         //GridLineSquareView.create(this)
         //TriangleArrowButtonView.create(this)
         //PlayBarView.create(this,{Toast.makeText(this,"Filled",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Empty",Toast.LENGTH_LONG).show()})
-        PieLoaderDirectionView.create(this)
+        //PieLoaderDirectionView.create(this)
+        GtoBView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
