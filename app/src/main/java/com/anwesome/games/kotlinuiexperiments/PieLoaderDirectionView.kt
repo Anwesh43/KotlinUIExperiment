@@ -91,4 +91,21 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
             }
         }
     }
+    class PieDirecRenderer {
+        var time = 0
+        var animator:PieDirecAnimator?=null
+        fun render(canvas: Canvas,paint:Paint,view:PieLoaderDirectionView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = PieDirecAnimator(PieDirectionLoader(w,h),view)
+            }
+            animator?.draw(canvas, paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
