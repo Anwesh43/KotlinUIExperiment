@@ -17,6 +17,7 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PieDirecRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -29,19 +30,19 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
     }
     data class PieDirectionLoader(var w:Float,var h:Float,var state:PieDirecState = PieDirecState()) {
         fun draw(canvas: Canvas,paint:Paint) {
-            val color = Color.parseColor("00ACC1")
+            val color = Color.parseColor("#00ACC1")
             paint.color = color
             canvas.save()
             canvas.translate(w / 2, h / 2)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f, 0f, w / 5, paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-w / 5, -w / 5, w / 5, w / 5), 0f, 360f, true, paint)
+            canvas.drawArc(RectF(-w / 5, -w / 5, w / 5, w / 5), 0f, 360f*state.scale, true, paint)
             canvas.restore()
-            canvas.drawLine(-w / 20, 4 * h / 5, -w / 20 + (w), 4 * h / 5, paint)
-            canvas.drawCircle(-w / 20 + (w), 4 * h / 5, w / 40, paint)
+            canvas.drawLine(-w / 20, 4 * h / 5, -w / 20 + (w)*(state.scale), 4 * h / 5, paint)
+            canvas.drawCircle(-w / 20 + (w)*(state.scale), 4 * h / 5, w / 40, paint)
             paint.color = Color.argb(150, Color.red(color), Color.green(color), Color.blue(color))
-            canvas.drawCircle(-w/20+(w),4*h/5,w/30,paint)
+            canvas.drawCircle(-w/20+(w)*state.scale,4*h/5,w/30,paint)
         }
         fun update() {
             state.update()
@@ -91,6 +92,8 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             if(pieDirectionLoader.handleTap(x,y) && !animated) {
                 pieDirectionLoader.startUpdating()
+                animated = true
+                view.postInvalidate()
             }
         }
     }
@@ -102,6 +105,7 @@ class PieLoaderDirectionView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = PieDirecAnimator(PieDirectionLoader(w,h),view)
+                paint.strokeWidth = w/60
             }
             animator?.draw(canvas, paint)
             animator?.update()
