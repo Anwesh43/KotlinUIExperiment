@@ -1,9 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 19/09/17.
@@ -113,6 +115,13 @@ class GtoBView(ctx:Context):View(ctx) {
                 circle.startUpdating()
                 view.postInvalidate()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = GtoBView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
