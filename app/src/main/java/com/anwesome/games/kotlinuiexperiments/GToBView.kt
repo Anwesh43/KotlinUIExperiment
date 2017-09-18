@@ -15,6 +15,7 @@ class GtoBView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = GToBRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -32,12 +33,12 @@ class GtoBView(ctx:Context):View(ctx) {
             canvas.save()
             clipRectPath(-r,-r+2*r*(1-state.scale),canvas)
             paint.color = Color.GREEN
-            canvas.drawCircle(0f,0f,r,paint)
+            canvas.drawCircle(0f,0f,0.8f*r,paint)
             canvas.restore()
             canvas.save()
             clipRectPath(r-2*r*(state.scale),r,canvas)
             paint.color = Color.BLUE
-            canvas.drawCircle(0f,0f,r,paint)
+            canvas.drawCircle(0f,0f,0.8f*r,paint)
             canvas.restore()
             canvas.restore()
         }
