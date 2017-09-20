@@ -21,7 +21,7 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
         }
         return true
     }
-    data class TwoColorSwitchTriangle(var x:Float,var y:Float,var size:Float,var color1:Int,var color2:Int) {
+    data class TwoColorSwitchTriangle(var x:Float,var y:Float,var size:Float,var color1:Int,var color2:Int,var state:TwoColorSwitchTriangleState = TwoColorSwitchTriangleState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -31,12 +31,12 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
             path.lineTo(0f,-size/2)
             canvas.save()
             paint.color = color1
-            clipRectColorPath(canvas,-size/2,-size/2+size)
+            clipRectColorPath(canvas,-size/2,-size/2+size*state.scale)
             canvas.drawPath(path,paint)
             canvas.restore()
             canvas.save()
             paint.color = color2
-            clipRectColorPath(canvas,size/2-size,size/2)
+            clipRectColorPath(canvas,size/2-size*(1-state.scale),size/2)
             canvas.drawPath(path, paint)
             canvas.restore()
             canvas.restore()
@@ -47,12 +47,9 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
             canvas.clipPath(path)
         }
         fun update() {
-
+            state.update()
         }
-        fun startUpdating() {
-
-        }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
     data class TwoColorSwitchTriangleState(var scale:Float = 0f,var deg:Float = 0f,var prevDeg:Float = 0f) {
         fun update() {
