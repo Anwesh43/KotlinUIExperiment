@@ -1,9 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 20/09/17.
@@ -12,6 +14,7 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = TwoSwitchRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -104,6 +107,13 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = TwoColorSwitchTriangleView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
