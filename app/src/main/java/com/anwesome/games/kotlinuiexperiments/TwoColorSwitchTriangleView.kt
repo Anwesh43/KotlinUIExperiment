@@ -62,4 +62,30 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
         }
         fun stopped():Boolean = deg%90 == 0f
     }
+    class TwoColorSwitchAnimator(var triangle:TwoColorSwitchTriangle,var view:TwoColorSwitchTriangleView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                triangle.update()
+                if(triangle.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            triangle.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
