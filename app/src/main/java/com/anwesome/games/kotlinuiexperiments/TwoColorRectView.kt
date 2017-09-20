@@ -27,25 +27,26 @@ class TwoColorRectView(ctx:Context):View(ctx) {
     }
     data class TwoColorRect(var x:Float,var y:Float,var size:Float,var state:TwoColorState = TwoColorState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            val a = (size/Math.sqrt(2.0)).toFloat()
+
             canvas.save()
             canvas.translate(x,y)
-            clipCirclePathAndDrawRect(0f,360f*state.scale,a,Color.parseColor("#f44336"),canvas,paint)
-            clipCirclePathAndDrawRect(360f*state.scale,360f*(1-state.scale),a,Color.parseColor("#2196F3"),canvas,paint)
+            clipCirclePathAndDrawRect(0f,360f*state.scale,size,Color.parseColor("#f44336"),canvas,paint)
+            clipCirclePathAndDrawRect(360f*state.scale,360f*(1-state.scale),size,Color.parseColor("#2196F3"),canvas,paint)
             canvas.restore()
         }
-        private fun clipCirclePathAndDrawRect(degStart:Float,degSweep:Float,a:Float,color:Int,canvas: Canvas,paint:Paint) {
+        private fun clipCirclePathAndDrawRect(degStart:Float,degSweep:Float,size:Float,color:Int,canvas: Canvas,paint:Paint) {
+            val a = (size/Math.sqrt(2.0)).toFloat()
             canvas.save()
             val path = Path()
             path.moveTo(0f,0f)
             for(deg in degStart.toInt()..(degStart+degSweep).toInt()) {
-                val x = Math.cos(deg*Math.PI/180).toFloat()
-                val y = Math.sin(deg*Math.PI/180).toFloat()
-                paint.color = Color.parseColor("#f44336")
-                canvas.drawRect(RectF(-a,-a,a,a),paint)
+                val x = (size/2)*Math.cos(deg*Math.PI/180).toFloat()
+                val y = (size/2)*Math.sin(deg*Math.PI/180).toFloat()
                 path.lineTo(x,y)
             }
             canvas.clipPath(path)
+            paint.color = color
+            canvas.drawRect(RectF(-a/2,-a/2,a/2,a/2),paint)
             canvas.restore()
         }
         fun update() {
@@ -65,7 +66,7 @@ class TwoColorRectView(ctx:Context):View(ctx) {
             }
             if(scale < 0) {
                 scale = 0f
-                dir = 1f
+                dir = 0f
             }
         }
         fun startUpdating() {
@@ -112,6 +113,7 @@ class TwoColorRectView(ctx:Context):View(ctx) {
             }
             animator?.draw(canvas,paint)
             animator?.update()
+            time++
         }
         fun handleTap() {
             animator?.handleTap()
