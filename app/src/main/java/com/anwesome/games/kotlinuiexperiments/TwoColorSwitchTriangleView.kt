@@ -12,6 +12,7 @@ import android.view.ViewGroup
  */
 class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("#f44336"),var color2:Int = Color.parseColor("#00897B")):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var listener:TwoColorSwitchOnOffListener?=null
     val renderer = TwoSwitchRenderer()
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
@@ -73,6 +74,10 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
                 triangle.update()
                 if(triangle.stopped()) {
                     animated = false
+                    when(triangle.state.scale) {
+                        0f -> view.listener?.offListener?.invoke()
+                        1f -> view.listener?.onListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -111,10 +116,14 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             var view = TwoColorSwitchTriangleView(activity)
+            if(listeners.size == 2){
+                view.listener = TwoColorSwitchOnOffListener(listeners[0],listeners[1])
+            }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class TwoColorSwitchOnOffListener(var onListener:()->Unit,var offListener:()->Unit)
 }
