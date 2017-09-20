@@ -1,22 +1,26 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 21/09/17.
  */
 class TwoColorRectView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = TwoColorRectRenderer()
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -111,6 +115,13 @@ class TwoColorRectView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = TwoColorRectView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
