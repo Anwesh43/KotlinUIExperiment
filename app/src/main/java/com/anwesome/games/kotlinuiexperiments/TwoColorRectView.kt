@@ -21,13 +21,13 @@ class TwoColorRectView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class TwoColorRect(var x:Float,var y:Float,var size:Float) {
+    data class TwoColorRect(var x:Float,var y:Float,var size:Float,var state:TwoColorState = TwoColorState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             val a = (size/Math.sqrt(2.0)).toFloat()
             canvas.save()
             canvas.translate(x,y)
-            clipCirclePathAndDrawRect(0f,360f,a,Color.parseColor("#f44336"),canvas,paint)
-            clipCirclePathAndDrawRect(360f,360f,a,Color.parseColor("#2196F3"),canvas,paint)
+            clipCirclePathAndDrawRect(0f,360f*state.scale,a,Color.parseColor("#f44336"),canvas,paint)
+            clipCirclePathAndDrawRect(360f*state.scale,360f*(1-state.scale),a,Color.parseColor("#2196F3"),canvas,paint)
             canvas.restore()
         }
         private fun clipCirclePathAndDrawRect(degStart:Float,degSweep:Float,a:Float,color:Int,canvas: Canvas,paint:Paint) {
@@ -45,12 +45,12 @@ class TwoColorRectView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class TwoColorState(var scale:Float=0f,var dir:Float = 0f,var animated:Boolean = false) {
         fun update() {
