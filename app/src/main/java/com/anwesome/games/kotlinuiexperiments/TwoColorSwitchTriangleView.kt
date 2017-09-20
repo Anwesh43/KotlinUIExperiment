@@ -58,10 +58,11 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
     data class TwoColorSwitchTriangleState(var scale:Float = 0f,var deg:Float = 0f,var prevDeg:Float = 0f) {
         fun update() {
             scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
-            deg += 4.5f
+            deg += 4f
             if(deg -prevDeg > 90f) {
                 deg = prevDeg+90f
                 prevDeg = deg
+                scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
             }
         }
         fun stopped():Boolean = deg%90 == 0f
@@ -99,7 +100,7 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = TwoColorSwitchAnimator(TwoColorSwitchTriangle(w/2,h/2,Math.min(w,h)/3,view.color1,view.color2),view)
+                animator = TwoColorSwitchAnimator(TwoColorSwitchTriangle(w/2,h/2,0.8f*Math.min(w,h),view.color1,view.color2),view)
             }
             animator?.draw(canvas,paint)
             animator?.update()
