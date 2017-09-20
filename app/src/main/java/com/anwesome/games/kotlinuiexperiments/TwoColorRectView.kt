@@ -69,4 +69,32 @@ class TwoColorRectView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class TwoColorRectAnimator(var rect:TwoColorRect,var view:TwoColorRectView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                rect.update()
+                if(rect.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            rect.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                rect.startUpdating()
+                view.postInvalidate()
+            }
+        }
+    }
 }
