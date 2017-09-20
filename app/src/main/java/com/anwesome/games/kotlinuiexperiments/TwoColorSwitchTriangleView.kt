@@ -88,4 +88,21 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
             }
         }
     }
+    class TwoSwitchRenderer {
+        var time = 0
+        var animator:TwoColorSwitchAnimator?= null
+        fun render(canvas: Canvas,paint:Paint,view:TwoColorSwitchTriangleView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = TwoColorSwitchAnimator(TwoColorSwitchTriangle(w/2,h/2,Math.min(w,h)/3,view.color1,view.color2),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
