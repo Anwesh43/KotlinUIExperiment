@@ -97,4 +97,20 @@ class TwoColorRectView(ctx:Context):View(ctx) {
             }
         }
     }
+    class TwoColorRectRenderer {
+        var time = 0
+        var animator:TwoColorRectAnimator?=null
+        fun render(canvas: Canvas,paint:Paint,view: TwoColorRectView) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                animator = TwoColorRectAnimator(TwoColorRect(w/2,h/2,Math.min(w,h)*0.8f),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
