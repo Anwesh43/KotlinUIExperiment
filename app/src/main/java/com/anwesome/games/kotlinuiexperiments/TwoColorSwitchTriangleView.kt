@@ -47,11 +47,22 @@ class TwoColorSwitchTriangleView(ctx:Context,var color1:Int = Color.parseColor("
             canvas.clipPath(path)
         }
         fun update() {
-            
+
         }
         fun startUpdating() {
 
         }
         fun stopped():Boolean = false
+    }
+    data class TwoColorSwitchTriangleState(var scale:Float = 0f,var deg:Float = 0f,var prevDeg:Float = 0f) {
+        fun update() {
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            deg += 4.5f
+            if(deg -prevDeg > 90f) {
+                deg = prevDeg+90f
+                prevDeg = deg
+            }
+        }
+        fun stopped():Boolean = deg%90 == 0f
     }
 }
