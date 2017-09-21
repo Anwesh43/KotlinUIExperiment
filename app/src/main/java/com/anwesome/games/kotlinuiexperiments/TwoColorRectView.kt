@@ -13,6 +13,7 @@ import android.view.ViewGroup
 class TwoColorRectView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = TwoColorRectRenderer()
+    var onColorFillListener:OnColorFillListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -27,7 +28,6 @@ class TwoColorRectView(ctx:Context):View(ctx) {
     }
     data class TwoColorRect(var x:Float,var y:Float,var size:Float,var state:TwoColorState = TwoColorState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-
             canvas.save()
             canvas.translate(x,y)
             clipCirclePathAndDrawRect(0f,360f*state.scale,size,Color.parseColor("#f44336"),canvas,paint)
@@ -80,6 +80,14 @@ class TwoColorRectView(ctx:Context):View(ctx) {
             if(animated) {
                 rect.update()
                 if(rect.stopped()) {
+                    when(rect.state.scale) {
+                        0f -> {
+                            view.onColorFillListener?.firstColorFill?.invoke()
+                        }
+                        1f -> {
+                            view.onColorFillListener?.secondColorFill?.invoke()
+                        }
+                    }
                     animated = false
                 }
                 try {
@@ -120,10 +128,14 @@ class TwoColorRectView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg fillListeners:()->Unit) {
             var view = TwoColorRectView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(fillListeners.size == 2) {
+                view.onColorFillListener = OnColorFillListener(fillListeners[0],fillListeners[1])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class OnColorFillListener(var firstColorFill:()->Unit,var secondColorFill:()->Unit)
 }
