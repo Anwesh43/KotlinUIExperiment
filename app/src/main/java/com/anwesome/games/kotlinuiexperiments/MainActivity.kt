@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         //PieLoaderDirectionView.create(this)
         //GtoBView.create(this)
         //TwoColorSwitchTriangleView.create(this,{Toast.makeText(this,"On",Toast.LENGTH_LONG)},{Toast.makeText(this,"Off",Toast.LENGTH_LONG)})
-        TwoColorRectView.create(this)
+        TwoColorRectView.create(this,{Toast.makeText(this,"1st color filled",Toast.LENGTH_LONG).show()},{Toast.makeText(this,"2nd color filled",Toast.LENGTH_LONG).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
