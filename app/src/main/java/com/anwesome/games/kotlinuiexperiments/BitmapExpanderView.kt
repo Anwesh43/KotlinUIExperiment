@@ -11,7 +11,7 @@ import android.view.View
 /**
  * Created by anweshmishra on 22/09/17.
  */
-class BitmapExpanderView(ctx:Context):View(ctx) {
+class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -90,6 +90,24 @@ class BitmapExpanderView(ctx:Context):View(ctx) {
                 expander.startUpdating()
                 view.postInvalidate()
             }
+        }
+    }
+    class BitmapExpanderRenderer {
+        var time = 0
+        var bitmapExpanderAnimator:BitmapExpanderAnimator?=null
+        fun render(canvas:Canvas,paint:Paint,view:BitmapExpanderView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                val bitmap = Bitmap.createScaledBitmap(view.bitmap,w.toInt(),(h/5).toInt(),true)
+                bitmapExpanderAnimator = BitmapExpanderAnimator(BitmapExpander(w,h,bitmap),view)
+            }
+            bitmapExpanderAnimator?.draw(canvas,paint)
+            bitmapExpanderAnimator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            bitmapExpanderAnimator?.handleTap(x,y)
         }
     }
 }
