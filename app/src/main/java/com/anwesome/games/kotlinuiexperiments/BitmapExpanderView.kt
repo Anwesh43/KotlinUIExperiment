@@ -1,12 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 22/09/17.
@@ -15,6 +14,7 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = BitmapExpanderRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -109,6 +109,13 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             bitmapExpanderAnimator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity,bitmap: Bitmap) {
+            var view = BitmapExpanderView(activity,bitmap)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
