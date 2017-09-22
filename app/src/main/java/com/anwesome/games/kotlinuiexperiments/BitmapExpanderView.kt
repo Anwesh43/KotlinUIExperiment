@@ -48,4 +48,21 @@ class BitmapExpanderView(ctx:Context):View(ctx) {
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float):Boolean = x >= this.cx - w/20 && x <= this.cx + w/20 && y>=(cy+h/5)-w/20 && y<=(cy+h/5)+w/20
     }
+    data class BitmapExpanderState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
