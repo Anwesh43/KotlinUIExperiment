@@ -25,11 +25,11 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         }
         return true
     }
-    data class BitmapExpander(var w:Float,var h:Float,var bitmap:Bitmap,var cx:Float = w/2,var cy:Float = h/20) {
+    data class BitmapExpander(var w:Float,var h:Float,var bitmap:Bitmap,var cx:Float = w/2,var cy:Float = h/20,var state:BitmapExpanderState = BitmapExpanderState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
-            canvas.translate(cx,cy)
-            canvas.rotate(180f)
+            canvas.translate(cx,cy+(h/5)*state.scale)
+            canvas.rotate(180f*state.scale)
             paint.style = Paint.Style.STROKE
             val path = Path()
             path.moveTo(-w/20,w/20)
@@ -37,17 +37,16 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             path.lineTo(w/20,w/20)
             canvas.drawPath(path,paint)
             canvas.restore()
-            canvas.drawBitmap(bitmap,0f,-h/5+h/5,paint)
-
+            canvas.drawBitmap(bitmap,0f,-h/5+(h/5)*state.scale,paint)
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = false
-        fun handleTap(x:Float,y:Float):Boolean = x >= this.cx - w/20 && x <= this.cx + w/20 && y>=(cy+h/5)-w/20 && y<=(cy+h/5)+w/20
+        fun stopped():Boolean = state.stopped()
+        fun handleTap(x:Float,y:Float):Boolean = x >= this.cx - w/20 && x <= this.cx + w/20 && y>=(cy+(h/5)*state.scale)-w/20 && y<=(cy+(h/5)*state.scale)+w/20
     }
     data class BitmapExpanderState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
@@ -102,6 +101,9 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
                 val h = canvas.height.toFloat()
                 val bitmap = Bitmap.createScaledBitmap(view.bitmap,w.toInt(),(h/5).toInt(),true)
                 bitmapExpanderAnimator = BitmapExpanderAnimator(BitmapExpander(w,h,bitmap),view)
+                paint.strokeWidth = w/40
+                paint.strokeCap = Paint.Cap.ROUND
+                paint.color = Color.WHITE
             }
             bitmapExpanderAnimator?.draw(canvas,paint)
             bitmapExpanderAnimator?.update()
