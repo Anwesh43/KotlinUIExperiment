@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         //GtoBView.create(this)
         //TwoColorSwitchTriangleView.create(this,{Toast.makeText(this,"On",Toast.LENGTH_LONG)},{Toast.makeText(this,"Off",Toast.LENGTH_LONG)})
         //TwoColorRectView.create(this,{Toast.makeText(this,"1st color filled",Toast.LENGTH_LONG).show()},{Toast.makeText(this,"2nd color filled",Toast.LENGTH_LONG).show()})
-        BitmapExpanderView.create(this,bitmap)
+        BitmapExpanderView.create(this,bitmap,{Toast.makeText(this,"Expanded",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Collapsed",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
