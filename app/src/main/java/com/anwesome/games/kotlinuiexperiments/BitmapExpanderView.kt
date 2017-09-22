@@ -13,6 +13,7 @@ import android.view.ViewGroup
 class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = BitmapExpanderRenderer()
+    var listener:OnBitmapExpandListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
@@ -71,6 +72,10 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
                 expander.update()
                 if(expander.stopped()) {
                     animated = false
+                    when(expander.state.scale) {
+                        0f -> view.listener?.collapseListener?.invoke()
+                        1f -> view.listener?.expandListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -114,10 +119,14 @@ class BitmapExpanderView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity,bitmap: Bitmap) {
+        fun create(activity:Activity,bitmap: Bitmap,vararg listeners:()->Unit) {
             var view = BitmapExpanderView(activity,bitmap)
+            if(listeners.size == 2) {
+                view.listener = OnBitmapExpandListener(listeners[0],listeners[1])
+            }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
+    data class OnBitmapExpandListener(var expandListener:()->Unit,var collapseListener:()->Unit)
 }
