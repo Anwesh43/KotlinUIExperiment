@@ -1,8 +1,10 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 
@@ -21,5 +23,29 @@ class BitmapExpanderView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class BitmapExpander(var w:Float,var h:Float,var bitmap:Bitmap,var cx:Float = w/2,var cy:Float = h/20) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(cx,cy)
+            canvas.rotate(180f)
+            paint.style = Paint.Style.STROKE
+            val path = Path()
+            path.moveTo(-w/20,w/20)
+            path.lineTo(0f,0f)
+            path.lineTo(w/20,w/20)
+            canvas.drawPath(path,paint)
+            canvas.restore()
+            canvas.drawBitmap(bitmap,0f,-h/5+h/5,paint)
+
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = false
+        fun handleTap(x:Float,y:Float):Boolean = x >= this.cx - w/20 && x <= this.cx + w/20 && y>=(cy+h/5)-w/20 && y<=(cy+h/5)+w/20
     }
 }
