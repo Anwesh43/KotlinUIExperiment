@@ -15,6 +15,7 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ColorScreenRadioRenderer()
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint,this)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean{
@@ -90,6 +91,7 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
         var animator:ColorScreenRadioAnimator?=null
         fun render(canvas: Canvas,paint:Paint,view:ColorScreenRadioView) {
             if(time == 0) {
+                paint.color = Color.parseColor("#FDD835")
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = ColorScreenRadioAnimator(ColorScreenRadio(w,h),view)
