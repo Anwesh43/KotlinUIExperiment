@@ -15,6 +15,7 @@ import android.view.ViewGroup
  */
 class ColorScreenRadioView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var listener:ColorScreenRadioFillListener?=null
     val renderer = ColorScreenRadioRenderer()
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
@@ -68,6 +69,10 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
                 screen.update()
                 if(screen.stopped()) {
                     animated = false
+                    when(screen.state.scale) {
+                        0f -> view.listener?.emptyListener?.invoke()
+                        1f -> view.listener?.fillListener?.invoke()
+                    }
                 }
                 try{
                     Thread.sleep(50)
@@ -110,10 +115,14 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity: Activity) {
+        fun create(activity: Activity,vararg listeners:()->Unit) {
             var view = ColorScreenRadioView(activity)
+            if(listeners.size == 2) {
+                view.listener = ColorScreenRadioFillListener(listeners[0],listeners[1])
+            }
             var size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class ColorScreenRadioFillListener(var fillListener:()->Unit,var emptyListener:()->Unit)
 }
