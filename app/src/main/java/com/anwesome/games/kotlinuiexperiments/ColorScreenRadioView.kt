@@ -40,4 +40,21 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
         fun stopped():Boolean = true
         fun handleTap(x:Float,y:Float):Boolean = x>=rx-r && x<=rx+r && y>=ry-r && y<=ry+r
     }
+    data class ColorScreenRadioState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                dir = 0f
+                scale = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*scale
+        }
+    }
 }
