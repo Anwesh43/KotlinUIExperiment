@@ -84,4 +84,21 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
             }
         }
     }
+    class ColorScreenRadioRenderer {
+        var time = 0
+        var animator:ColorScreenRadioAnimator?=null
+        fun render(canvas: Canvas,paint:Paint,view:ColorScreenRadioView) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ColorScreenRadioAnimator(ColorScreenRadio(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
