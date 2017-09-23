@@ -57,4 +57,31 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
     }
+    class ColorScreenRadioAnimator(var screen:ColorScreenRadio,var view:ColorScreenRadioView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                screen.update()
+                if(screen.stopped()) {
+                    animated = false
+                }
+                try{
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            screen.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(screen.handleTap(x,y) && !animated) {
+                screen.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
