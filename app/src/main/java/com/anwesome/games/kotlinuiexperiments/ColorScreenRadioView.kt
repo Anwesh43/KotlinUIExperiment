@@ -24,20 +24,20 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ColorScreenRadio(var w:Float,var h:Float,var rx:Float = w/20,var ry:Float = 19*h/20-w/20,var r:Float = w/20,var orx:Float = rx) {
+    data class ColorScreenRadio(var w:Float,var h:Float,var rx:Float = w/20,var ry:Float = 19*h/20-w/20,var r:Float = w/20,var orx:Float = rx,var state:ColorScreenRadioState = ColorScreenRadioState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            canvas.drawRect(RectF(0f,0f,w,9*h/10),paint)
-            canvas.drawLine(0f,ry,0.9f*w,ry,paint)
+            canvas.drawRect(RectF(0f,0f,w*state.scale,9*h/10),paint)
+            canvas.drawLine(0f,ry,0.9f*w*state.scale,ry,paint)
             canvas.drawCircle(rx,ry,r,paint)
-            rx = orx+(9*w/10)
+            rx = orx+(9*w/10)*state.scale
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=rx-r && x<=rx+r && y>=ry-r && y<=ry+r
     }
     data class ColorScreenRadioState(var scale:Float = 0f,var dir:Float = 0f) {
