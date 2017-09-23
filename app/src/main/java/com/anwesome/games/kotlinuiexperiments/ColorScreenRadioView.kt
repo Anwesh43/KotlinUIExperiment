@@ -30,10 +30,11 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
     }
     data class ColorScreenRadio(var w:Float,var h:Float,var rx:Float = w/20,var ry:Float = 19*h/20-w/20,var r:Float = w/20,var orx:Float = rx,var state:ColorScreenRadioState = ColorScreenRadioState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            canvas.drawRect(RectF(0f,0f,w*state.scale,9*h/10),paint)
+            rx = orx+(9*w/10)*state.scale
+            canvas.drawRect(RectF(0f,0f,w*state.scale,0.8f*h),paint)
             canvas.drawLine(0f,ry,0.9f*w*state.scale,ry,paint)
             canvas.drawCircle(rx,ry,r,paint)
-            rx = orx+(9*w/10)*state.scale
+
         }
         fun update() {
             state.update()
@@ -97,6 +98,8 @@ class ColorScreenRadioView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = ColorScreenRadioAnimator(ColorScreenRadio(w,h),view)
+                paint.strokeWidth = Math.min(w,h)/40
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
