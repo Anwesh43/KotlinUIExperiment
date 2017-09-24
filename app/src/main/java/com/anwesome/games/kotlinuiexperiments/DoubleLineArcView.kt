@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -17,6 +18,7 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
     val renderer = DoubleLineArcRenderer(this)
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -116,6 +118,8 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
                     circleAlongLines.add(CircleAlongLine(i,w,h))
                 }
                 animator = DoubleLineArcAnimator(circleAlongLines,view)
+                paint.color = Color.parseColor("#FBC02D")
+                paint.strokeWidth = Math.min(w,h)/40
             }
             animator?.draw(canvas,paint)
             animator?.update()
