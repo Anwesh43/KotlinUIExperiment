@@ -103,4 +103,23 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
             }
         }
     }
+    class DoubleLineArcRenderer(var view:DoubleLineArcView,var time:Int = 0,var animator:DoubleLineArcAnimator? = null) {
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                var circleAlongLines:ConcurrentLinkedQueue<CircleAlongLine> = ConcurrentLinkedQueue()
+                for(i in 0..1) {
+                    circleAlongLines.add(CircleAlongLine(i,w,h))
+                }
+                animator = DoubleLineArcAnimator(circleAlongLines,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
