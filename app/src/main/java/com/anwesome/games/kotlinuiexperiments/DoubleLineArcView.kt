@@ -24,6 +24,7 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         return true
     }
     data class CircleAlongLine(var i:Int,var w:Float,var h:Float,var oy:Float = 0.95f*h/20,var y:Float = oy,var r:Float = h/20,var cr:Float = h/5,var x:Float = w/20+0.9f*w*i) {
+        var state:CALState = CALState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
@@ -35,10 +36,10 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
