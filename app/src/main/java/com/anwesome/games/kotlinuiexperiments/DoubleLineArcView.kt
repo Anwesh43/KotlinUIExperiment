@@ -29,7 +29,7 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class CircleAlongLine(var i:Int,var w:Float,var h:Float,var oy:Float = 0.95f*h/20,var y:Float = oy,var r:Float = h/20,var cr:Float = h/5,var x:Float = w/20+0.9f*w*i) {
+    data class CircleAlongLine(var i:Int,var w:Float,var h:Float,var oy:Float = 0.95f*h,var y:Float = oy,var r:Float = h/20,var cr:Float = h/5,var x:Float = w/20+0.9f*w*i) {
         var state:CALState = CALState()
         fun draw(canvas:Canvas,paint:Paint) {
             y = oy - 0.9f*h*state.scale
@@ -48,7 +48,7 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         fun startUpdating() {
             state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class CALState(var scale:Float = 0f,var dir:Float = 0f) {
@@ -99,6 +99,7 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             circleAlongLines.forEach { circleAlongLine ->
                 if(circleAlongLine.handleTap(x,y)) {
+                    circleAlongLine.startUpdating()
                     tappedCircleAlongLines.add(circleAlongLine)
                     if(tappedCircleAlongLines.size == 1) {
                         animated = true
