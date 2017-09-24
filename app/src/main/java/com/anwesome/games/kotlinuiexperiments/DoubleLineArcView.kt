@@ -43,4 +43,21 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    data class CALState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 1f
+                dir = 0f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*scale
+        }
+    }
 }
