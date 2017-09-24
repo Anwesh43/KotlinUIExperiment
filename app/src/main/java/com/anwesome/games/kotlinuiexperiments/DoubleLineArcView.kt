@@ -27,9 +27,10 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
     data class CircleAlongLine(var i:Int,var w:Float,var h:Float,var oy:Float = 0.95f*h/20,var y:Float = oy,var r:Float = h/20,var cr:Float = h/5,var x:Float = w/20+0.9f*w*i) {
         var state:CALState = CALState()
         fun draw(canvas:Canvas,paint:Paint) {
+            y = oy - 0.9f*h*state.scale
             canvas.save()
             canvas.translate(w/2,h/2)
-            canvas.drawArc(RectF(-cr,-cr,cr,cr),i*180f,180f,true,paint)
+            canvas.drawArc(RectF(-cr,-cr,cr,cr),i*180f,180f*state.scale,true,paint)
             canvas.restore()
             canvas.save()
             canvas.drawLine(x,y,x,oy,paint)
