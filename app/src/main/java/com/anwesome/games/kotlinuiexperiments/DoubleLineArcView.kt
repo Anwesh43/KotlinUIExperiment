@@ -12,14 +12,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 24/09/17.
  */
 class DoubleLineArcView(ctx:Context):View(ctx) {
+    val renderer = DoubleLineArcRenderer(this)
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
