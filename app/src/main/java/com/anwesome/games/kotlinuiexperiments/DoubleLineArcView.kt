@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class DoubleLineArcView(ctx:Context):View(ctx) {
     val renderer = DoubleLineArcRenderer(this)
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var listener:DoubleLineArcExpandCollapseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -77,6 +78,10 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
                     tappedCircleAlongLine.update()
                     if(tappedCircleAlongLine.stopped()) {
                         tappedCircleAlongLines.remove(tappedCircleAlongLine)
+                        when(tappedCircleAlongLine.state.scale) {
+                            0f -> view.listener?.collapseListener?.invoke(tappedCircleAlongLine.i)
+                            1f -> view.listener?.expandListener?.invoke(tappedCircleAlongLine.i)
+                        }
                         if(tappedCircleAlongLines.size == 0) {
                             animated = false
                         }
@@ -131,10 +136,14 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             var view = DoubleLineArcView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.listener = DoubleLineArcExpandCollapseListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class DoubleLineArcExpandCollapseListener(var expandListener:(Int)->Unit,var collapseListener:(Int)->Unit)
 }
