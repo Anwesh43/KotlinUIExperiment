@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 24/09/17.
@@ -59,6 +60,46 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
         fun stopped():Boolean = dir == 0f
         fun startUpdating() {
             dir = 1-2*scale
+        }
+    }
+    class DoubleLineArcAnimator(var circleAlongLines:ConcurrentLinkedQueue<CircleAlongLine>,var view:DoubleLineArcView) {
+        var tappedCircleAlongLines = ConcurrentLinkedQueue<CircleAlongLine>()
+        var animated = false
+        fun update() {
+            if(animated) {
+                tappedCircleAlongLines.forEach { tappedCircleAlongLine ->
+                    tappedCircleAlongLine.update()
+                    if(tappedCircleAlongLine.stopped()) {
+                        tappedCircleAlongLines.remove(tappedCircleAlongLine)
+                        if(tappedCircleAlongLines.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            circleAlongLines.forEach { circleAlongLine ->
+                circleAlongLine.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            circleAlongLines.forEach { circleAlongLine ->
+                if(circleAlongLine.handleTap(x,y)) {
+                    tappedCircleAlongLines.add(circleAlongLine)
+                    if(tappedCircleAlongLines.size == 1) {
+                        animated = true
+                        view.postInvalidate()
+                    }
+                }
+            }
         }
     }
 }
