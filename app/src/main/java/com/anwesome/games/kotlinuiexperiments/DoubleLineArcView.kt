@@ -126,6 +126,7 @@ class DoubleLineArcView(ctx:Context):View(ctx) {
                 animator = DoubleLineArcAnimator(circleAlongLines,view)
                 paint.color = Color.parseColor("#FBC02D")
                 paint.strokeWidth = Math.min(w,h)/40
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
