@@ -113,7 +113,8 @@ class MainActivity : AppCompatActivity() {
         //TwoColorRectView.create(this,{Toast.makeText(this,"1st color filled",Toast.LENGTH_LONG).show()},{Toast.makeText(this,"2nd color filled",Toast.LENGTH_LONG).show()})
         //BitmapExpanderView.create(this,bitmap,{Toast.makeText(this,"Expanded",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Collapsed",Toast.LENGTH_SHORT).show()})
         //ColorScreenRadioView.create(this,{Toast.makeText(this,"Filled",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"Emptied",Toast.LENGTH_SHORT).show()})
-        DoubleLineArcView.create(this,{i->Toast.makeText(this,"$i expanded",Toast.LENGTH_SHORT).show()},{i -> Toast.makeText(this,"$i collapsed",Toast.LENGTH_SHORT).show()})
+        //DoubleLineArcView.create(this,{i->Toast.makeText(this,"$i expanded",Toast.LENGTH_SHORT).show()},{i -> Toast.makeText(this,"$i collapsed",Toast.LENGTH_SHORT).show()})
+        SwiperSquareView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

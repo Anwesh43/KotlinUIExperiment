@@ -20,6 +20,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
     val renderer = SwiperSquareRenderer(this)
     val detector = GestureDetector(ctx,GestureListener(renderer))
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
 
@@ -42,14 +43,14 @@ class SwiperSquareView(ctx:Context):View(ctx) {
             return true
         }
     }
-    data class SwiperSquare(var y:Float,var w:Float,var x:Float = w/2,var isSelected:Boolean = false,var state:SwiperSquareState = SwiperSquareState(x,w)) {
+    data class SwiperSquare(var y:Float,var w:Float,var isSelected:Boolean = false,var state:SwiperSquareState = SwiperSquareState(w/2,w)) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#FFEB3B")
             if(isSelected) {
                 paint.color = Color.parseColor("#009688")
             }
             canvas.save()
-            canvas.translate(x,y)
+            canvas.translate(state.x,y)
             canvas.drawRect(-w/10,-w/10,w/10,w/10,paint)
             canvas.restore()
         }
@@ -60,11 +61,11 @@ class SwiperSquareView(ctx:Context):View(ctx) {
             state.setSwiperDirection(dir)
         }
         fun stopped():Boolean = state.stopped()
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/10 && x<=this.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10 && !isSelected && state.dir == 0f
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.state.x-w/10 && x<=this.state.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10 && !isSelected && state.dir == 0f
     }
     data class SwiperSquareState(var x:Float=0f,var w:Float,var dir:Float = 0f) {
         fun update() {
-            x += (w/13)*dir
+            x += (w/8)*dir
             if(x>w) {
                 dir = 0f
             }
@@ -91,6 +92,13 @@ class SwiperSquareView(ctx:Context):View(ctx) {
             swiperSquareContainer?.draw(canvas,paint)
             swiperSquareContainer?.update()
             time++
+            try {
+                Thread.sleep(75)
+                view.invalidate()
+            }
+            catch(ex:Exception) {
+
+            }
         }
         fun handleTap(x:Float,y:Float) {
             swiperSquareContainer?.handleTap(x,y)
@@ -114,41 +122,31 @@ class SwiperSquareView(ctx:Context):View(ctx) {
             }
         }
         fun update() {
-            if(animated) {
-                updatedSwiperSquares.forEach { square ->
-                    square.update()
-                    if (square.stopped()) {
-                        updatedSwiperSquares.remove(square)
-                        if (updatedSwiperSquares.size == 0) {
-                            animated = false
-                        }
+            updatedSwiperSquares.forEach { square ->
+                square.update()
+                if (square.stopped()) {
+                    updatedSwiperSquares.remove(square)
+                    swiperSquares.remove(square)
+                    if (updatedSwiperSquares.size == 0) {
+                        animated = false
                     }
                 }
-                try {
-                    Thread.sleep(50)
-                }
-                catch(ex:Exception) {
-
-                }
             }
+
         }
         fun handleTap(x:Float,y:Float) {
             swiperSquares.forEach { swiperSquare ->
                 if(swiperSquare.handleTap(x,y)) {
+                    swiperSquare.isSelected = true
                     tappedSwiperSquares.add(swiperSquare)
                 }
             }
         }
         fun setSwiperDirection(dir:Float) {
-            val firstSquare = updatedSwiperSquares.size == 0
             tappedSwiperSquares.forEach { swiperSquare ->
                 swiperSquare.startUpdating(dir)
                 updatedSwiperSquares.add(swiperSquare)
                 tappedSwiperSquares.remove(swiperSquare)
-            }
-            if(firstSquare){
-                animated = true
-                view.postInvalidate()
             }
         }
     }
