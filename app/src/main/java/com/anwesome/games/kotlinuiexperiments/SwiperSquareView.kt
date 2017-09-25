@@ -54,4 +54,19 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class SwiperStateRenderer(var view:Float = 0f,var time:Int = 0) {
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width
+                val h = canvas.height
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+        fun startUpdating(dir:Float) {
+
+        }
+    }
 }
