@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.Paint
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -15,12 +17,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class SwiperSquareView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = SwiperSquareRenderer(this)
+    val detector = GestureDetector(ctx,GestureListener(renderer))
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return true
+        return detector.onTouchEvent(event)
     }
     data class GestureListener(var renderer:SwiperSquareRenderer):GestureDetector.SimpleOnGestureListener() {
         override fun onDown(event:MotionEvent):Boolean {
@@ -146,6 +150,13 @@ class SwiperSquareView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            var view = SwiperSquareView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
