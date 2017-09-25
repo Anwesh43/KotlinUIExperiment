@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 
@@ -19,7 +20,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return true
     }
-    data class SwiperSquare(var y:Float,var w:Float,var x:Float = w/2,var isSelected:Boolean = false) {
+    data class SwiperSquare(var y:Float,var w:Float,var x:Float = w/2,var isSelected:Boolean = false,var state:SwiperSquareState = SwiperSquareState(x,w)) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#FFEB3B")
             if(isSelected) {
@@ -31,8 +32,26 @@ class SwiperSquareView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
+        }
+        fun startUpdating(dir:Float) {
+            state.setSwiperDirection(dir)
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/10 && x<=this.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10
+    }
+    data class SwiperSquareState(var x:Float=0f,var w:Float,var dir:Float = 0f) {
+        fun update() {
+            x += (w/13)*dir
+            if(x>w) {
+                dir = 0f
+            }
+            if(x<0) {
+                dir = 0f
+            }
+        }
+        fun setSwiperDirection(dir:Float) {
+            this.dir = dir
+        }
+        fun stopped():Boolean = dir == 0f
     }
 }
