@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 import java.util.*
@@ -57,22 +56,26 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    class SwiperStateRenderer(var view:Float = 0f,var time:Int = 0) {
+    class SwiperStateRenderer(var view:SwiperSquareView,var time:Int = 0) {
+        var swiperSquareContainer:SwiperSquareContainer? = null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
-                val w = canvas.width
-                val h = canvas.height
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                swiperSquareContainer = SwiperSquareContainer(w,h,view)
             }
             if((time+1)% 30 == 0) {
-
+                swiperSquareContainer?.create()
             }
+            swiperSquareContainer?.draw(canvas,paint)
+            swiperSquareContainer?.update()
             time++
         }
         fun handleTap(x:Float,y:Float) {
-
+            swiperSquareContainer?.handleTap(x,y)
         }
         fun startUpdating(dir:Float) {
-
+            swiperSquareContainer?.setSwiperDirection(dir)
         }
     }
     class SwiperSquareContainer(var w:Float,var h:Float,var view:SwiperSquareView,var swiperSquares:ConcurrentLinkedQueue<SwiperSquare> = ConcurrentLinkedQueue()) {
