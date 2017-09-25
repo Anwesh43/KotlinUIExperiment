@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import java.util.*
@@ -20,6 +21,22 @@ class SwiperSquareView(ctx:Context):View(ctx) {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return true
+    }
+    data class GestureListener(var renderer:SwiperSquareRenderer):GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(event:MotionEvent):Boolean {
+            renderer.handleTap(event.x,event.y)
+            return true
+        }
+        override fun onSingleTapUp(event:MotionEvent):Boolean {
+            return true
+        }
+        override fun onFling(e1:MotionEvent,e2:MotionEvent,velx:Float,vely:Float):Boolean {
+            if(Math.abs(velx)>Math.abs(vely) && e1.x != e2.x) {
+                val diff = e2.x-e1.x
+                renderer.startUpdating((diff)/Math.abs(diff))
+            }
+            return true
+        }
     }
     data class SwiperSquare(var y:Float,var w:Float,var x:Float = w/2,var isSelected:Boolean = false,var state:SwiperSquareState = SwiperSquareState(x,w)) {
         fun draw(canvas:Canvas,paint:Paint) {
@@ -39,7 +56,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
             state.setSwiperDirection(dir)
         }
         fun stopped():Boolean = state.stopped()
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/10 && x<=this.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/10 && x<=this.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10 && !isSelected && state.dir == 0f
     }
     data class SwiperSquareState(var x:Float=0f,var w:Float,var dir:Float = 0f) {
         fun update() {
@@ -56,7 +73,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    class SwiperStateRenderer(var view:SwiperSquareView,var time:Int = 0) {
+    class SwiperSquareRenderer(var view:SwiperSquareView,var time:Int = 0) {
         var swiperSquareContainer:SwiperSquareContainer? = null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
