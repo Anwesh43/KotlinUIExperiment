@@ -103,6 +103,12 @@ class SwiperSquareView(ctx:Context):View(ctx) {
                         }
                     }
                 }
+                try {
+                    Thread.sleep(50)
+                }
+                catch(ex:Exception) {
+
+                }
             }
         }
         fun handleTap(x:Float,y:Float) {
