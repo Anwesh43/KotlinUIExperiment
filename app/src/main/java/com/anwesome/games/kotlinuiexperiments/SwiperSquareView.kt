@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 25/09/17.
@@ -37,6 +39,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         fun startUpdating(dir:Float) {
             state.setSwiperDirection(dir)
         }
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/10 && x<=this.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10
     }
     data class SwiperSquareState(var x:Float=0f,var w:Float,var dir:Float = 0f) {
@@ -60,6 +63,9 @@ class SwiperSquareView(ctx:Context):View(ctx) {
                 val w = canvas.width
                 val h = canvas.height
             }
+            if((time+1)% 30 == 0) {
+                 
+            }
             time++
         }
         fun handleTap(x:Float,y:Float) {
@@ -67,6 +73,49 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         }
         fun startUpdating(dir:Float) {
 
+        }
+    }
+    class SwiperSquareContainer(var w:Float,var h:Float,var view:SwiperSquareView,var swiperSquares:ConcurrentLinkedQueue<SwiperSquare> = ConcurrentLinkedQueue()) {
+        var swiperSquare:SwiperSquare ? = null
+        var animated:Boolean = false
+        var updatedSwiperSquares = ConcurrentLinkedQueue<SwiperSquare>()
+        fun create() {
+            var random = Random()
+            var y = (random.nextInt(h.toInt())).toFloat()
+            swiperSquares.add(SwiperSquare(y,w))
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            swiperSquares.forEach { swiperSquare ->
+                swiperSquare.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(animated) {
+                updatedSwiperSquares.forEach { square ->
+                    square.update()
+                    if (square.stopped()) {
+                        updatedSwiperSquares.remove(square)
+                        if (updatedSwiperSquares.size == 0) {
+                            animated = false
+                        }
+                    }
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            swiperSquares.forEach { swiperSquare ->
+                if(swiperSquare.handleTap(x,y)) {
+                    this.swiperSquare = swiperSquare
+                }
+            }
+        }
+        fun setSwiperDirection(dir:Float) {
+            swiperSquare?.startUpdating(dir)
+            updatedSwiperSquares.add(swiperSquare)
+            if(updatedSwiperSquares.size == 1){
+                animated = true
+                view.postInvalidate()
+            }
         }
     }
 }
