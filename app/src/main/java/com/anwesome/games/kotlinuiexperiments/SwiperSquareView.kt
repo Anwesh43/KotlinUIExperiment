@@ -64,7 +64,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
                 val h = canvas.height
             }
             if((time+1)% 30 == 0) {
-                 
+
             }
             time++
         }
@@ -76,7 +76,7 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         }
     }
     class SwiperSquareContainer(var w:Float,var h:Float,var view:SwiperSquareView,var swiperSquares:ConcurrentLinkedQueue<SwiperSquare> = ConcurrentLinkedQueue()) {
-        var swiperSquare:SwiperSquare ? = null
+        var tappedSwiperSquares:ConcurrentLinkedQueue<SwiperSquare>  = ConcurrentLinkedQueue()
         var animated:Boolean = false
         var updatedSwiperSquares = ConcurrentLinkedQueue<SwiperSquare>()
         fun create() {
@@ -105,14 +105,18 @@ class SwiperSquareView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             swiperSquares.forEach { swiperSquare ->
                 if(swiperSquare.handleTap(x,y)) {
-                    this.swiperSquare = swiperSquare
+                    tappedSwiperSquares.add(swiperSquare)
                 }
             }
         }
         fun setSwiperDirection(dir:Float) {
-            swiperSquare?.startUpdating(dir)
-            updatedSwiperSquares.add(swiperSquare)
-            if(updatedSwiperSquares.size == 1){
+            val firstSquare = updatedSwiperSquares.size == 0
+            tappedSwiperSquares.forEach { swiperSquare ->
+                swiperSquare.startUpdating(dir)
+                updatedSwiperSquares.add(swiperSquare)
+                tappedSwiperSquares.remove(swiperSquare)
+            }
+            if(firstSquare){
                 animated = true
                 view.postInvalidate()
             }
