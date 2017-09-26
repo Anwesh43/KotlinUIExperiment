@@ -89,14 +89,16 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
                 view.postInvalidate()
             }
         }
-        fun handleTap(x:Float,y:Float) {
+        fun handleTap(x:Float,y:Float):Boolean {
             if(touchDownFillScreen.handleTap(x,y)) {
                 touchDownFillScreen.startUpdating(1f)
                 startUpdatingIfStopped()
+                return true
             }
+            return false
         }
     }
-    class TouchUpFillRenderer(var view:TouchDownFillScreenView,var time:Int = 0) {
+    class TouchDownFillRenderer(var view:TouchDownFillScreenView,var time:Int = 0) {
         var animator:TouchDownFillAnimator?=null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
@@ -108,11 +110,28 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
             animator?.update()
             time++
         }
-        fun handleTap(x:Float,y:Float) {
-            animator?.handleTap(x,y)
+        fun handleTap(x:Float,y:Float):Boolean {
+            return animator?.handleTap(x,y)?:false
         }
         fun startCollapsing() {
             animator?.startCollapsing()
+        }
+    }
+    data class TouchDownHandler(var renderer:TouchDownFillRenderer,var down:Boolean = false) {
+        fun handleTouch(event:MotionEvent) {
+            when(event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    if(!down) {
+                        down = renderer.handleTap(event.x, event.y)
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    if(down) {
+                        renderer.startCollapsing()
+                        down = false
+                    }
+                }
+            }
         }
     }
 }
