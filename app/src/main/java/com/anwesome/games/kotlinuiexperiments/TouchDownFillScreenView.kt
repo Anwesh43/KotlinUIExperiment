@@ -60,7 +60,7 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
             this.dir = dir
         }
     }
-    class TouchUpFillAnimator(var touchDownFillScreen:TouchDownFillScreen,var view:TouchDownFillScreenView,var animated:Boolean = false) {
+    class TouchDownFillAnimator(var touchDownFillScreen:TouchDownFillScreen,var view:TouchDownFillScreenView,var animated:Boolean = false) {
         fun update(){
             if(animated) {
                 touchDownFillScreen.update()
@@ -94,6 +94,25 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
                 touchDownFillScreen.startUpdating(1f)
                 startUpdatingIfStopped()
             }
+        }
+    }
+    class TouchUpFillRenderer(var view:TouchDownFillScreenView,var time:Int = 0) {
+        var animator:TouchDownFillAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = TouchDownFillAnimator(TouchDownFillScreen(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+        fun startCollapsing() {
+            animator?.startCollapsing()
         }
     }
 }
