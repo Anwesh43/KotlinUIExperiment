@@ -23,7 +23,7 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class TouchDownFillScreen(var w:Float,var h:Float,var state:TouchUpFillState = TouchUpFillState()) {
+    data class TouchDownFillScreen(var w:Float,var h:Float,var state:TouchDownFillState = TouchDownFillState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,0.9f*h)
@@ -44,7 +44,7 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
         fun stopped():Boolean = state.dir == 0f
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2 - w/20 && x<=w/2+w/20 && y>=0.9f*h-w/20 && y<=0.9f*h+w/20
     }
-    data class TouchUpFillState(var scale:Float = 0f,var dir:Float = 0f) {
+    data class TouchDownFillState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
             scale += 0.1f*dir
             if(scale > 1) {
@@ -58,6 +58,42 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
         }
         fun startUpdating(dir:Float) {
             this.dir = dir
+        }
+    }
+    class TouchUpFillAnimator(var touchDownFillScreen:TouchDownFillScreen,var view:TouchDownFillScreenView,var animated:Boolean = false) {
+        fun update(){
+            if(animated) {
+                touchDownFillScreen.update()
+                if(touchDownFillScreen.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            touchDownFillScreen.draw(canvas,paint)
+        }
+        fun startCollapsing() {
+            touchDownFillScreen.startUpdating(-1f)
+            startUpdatingIfStopped()
+        }
+        fun startUpdatingIfStopped() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(touchDownFillScreen.handleTap(x,y)) {
+                touchDownFillScreen.startUpdating(1f)
+                startUpdatingIfStopped()
+            }
         }
     }
 }
