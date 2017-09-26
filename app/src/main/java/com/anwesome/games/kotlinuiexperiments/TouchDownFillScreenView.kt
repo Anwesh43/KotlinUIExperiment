@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -17,6 +18,7 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
     val renderer = TouchDownFillRenderer(this)
     val touchDownHandler = TouchDownHandler(renderer)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -27,7 +29,6 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,0.9f*h)
-            paint.strokeWidth = w/60
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,w/20,paint)
             paint.style = Paint.Style.FILL
@@ -102,8 +103,10 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
         var animator:TouchDownFillAnimator?=null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
+                paint.color = Color.parseColor("#FDD835")
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
+                paint.strokeWidth = Math.min(w,h)/40
                 animator = TouchDownFillAnimator(TouchDownFillScreen(w,h),view)
             }
             animator?.draw(canvas,paint)
