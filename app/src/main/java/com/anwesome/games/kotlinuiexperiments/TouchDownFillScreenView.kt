@@ -1,11 +1,13 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 26/09/17.
@@ -130,6 +132,13 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
                     }
                 }
             }
+        }
+    }
+    companion object {
+        fun create(activity: Activity){
+            var view = TouchDownFillScreenView(activity)
+            var size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
