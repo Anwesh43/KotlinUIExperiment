@@ -12,15 +12,13 @@ import android.view.View
  */
 class TouchDownFillScreenView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = TouchDownFillRenderer(this)
+    val touchDownHandler = TouchDownHandler(renderer)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
-        when(event.action) {
-            MotionEvent.ACTION_DOWN -> {
-
-            }
-        }
+        touchDownHandler.handleTouch(event)
         return true
     }
     data class TouchDownFillScreen(var w:Float,var h:Float,var state:TouchDownFillState = TouchDownFillState()) {
