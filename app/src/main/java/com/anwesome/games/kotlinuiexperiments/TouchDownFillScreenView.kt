@@ -44,4 +44,19 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2 - w/20 && x<=w/2+w/20 && y>=0.9f*h-w/20 && y<=0.9f*h+w/20
     }
+    data class TouchUpFillState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                scale = 1f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating(dir:Float) {
+            this.dir = dir
+        }
+    }
 }
