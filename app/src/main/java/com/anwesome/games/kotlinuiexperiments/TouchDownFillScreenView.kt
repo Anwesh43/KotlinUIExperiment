@@ -28,7 +28,7 @@ class TouchDownFillScreenView(ctx:Context):View(ctx) {
     data class TouchDownFillScreen(var w:Float,var h:Float,var state:TouchDownFillState = TouchDownFillState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
-            canvas.translate(w/2,0.9f*h)
+            canvas.translate(w/2,0.86f*h)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,w/20,paint)
             paint.style = Paint.Style.FILL
