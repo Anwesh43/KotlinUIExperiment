@@ -74,6 +74,13 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
                     updatingArrows.remove(arrow)
                 }
             }
+            try {
+                Thread.sleep(50)
+                view.invalidate()
+            }
+            catch(ex:Exception) {
+
+            }
         }
         fun create() {
             val random = Random()
@@ -90,6 +97,25 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
             arrows.forEach { arrow ->
                 arrow.draw(canvas,paint)
             }
+        }
+    }
+    class DATMRenderer(var time:Int = 0,var view:DoubleArrowTapMoverView) {
+        var animator:DATMAnimator?=null
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = DATMAnimator(w,h,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            if((time+1)%30 == 0) {
+                animator?.create()
+            }
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
