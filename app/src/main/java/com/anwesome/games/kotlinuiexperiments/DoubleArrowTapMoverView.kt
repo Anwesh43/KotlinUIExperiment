@@ -23,16 +23,16 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class DoubleArrowTapMover(var x:Float,var y:Float,var size:Float,var maxGap:Float = 0f,var gap:Float = 0f) {
+    data class DoubleArrowTapMover(var x:Float,var y:Float,var size:Float,var maxGap:Float = 0f,var state:DoubleArrowTapMoverState = DoubleArrowTapMoverState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.rotate(90f)
+            canvas.rotate(90f*(state.scale*(1-state.mode)))
             for(i in 0..1) {
                 canvas.save()
                 canvas.scale(1f,2*i-1f)
                 canvas.save()
-                canvas.translate(0f,gap)
+                canvas.translate(0f,maxGap*(state.scale*state.mode))
                 canvas.drawPath(arrowPath(),paint)
                 canvas.restore()
                 canvas.restore()
@@ -46,9 +46,9 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
             path.lineTo(size/2,-size/2)
             return path
         }
-        fun stopped():Boolean = gap >= maxGap
+        fun stopped():Boolean = state.stopped()
         fun update() {
-
+            state.update()
         }
         fun handleTap(x:Float,y:Float):Boolean = x >= this.x - size/2 && x <= this.x+size/2 && y >= this.y -size/2 && y <= this.y+size/2
     }
