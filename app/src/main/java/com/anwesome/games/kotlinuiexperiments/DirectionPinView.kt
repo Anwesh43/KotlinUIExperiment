@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -107,6 +108,12 @@ class DirectionPinView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float) {
             animator?.handleTap(x)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = DirectionPinView(activity)
+            activity.setContentView(view)
         }
     }
 }
