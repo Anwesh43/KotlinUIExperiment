@@ -25,7 +25,7 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                renderer.handleTap(x,y)
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -50,7 +50,7 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
             val path = Path()
             path.moveTo(-size/2,0f)
             path.lineTo(0f,-size/2)
-            path.lineTo(size/2,-size/2)
+            path.lineTo(size/2,0f)
             return path
         }
         fun stopped():Boolean = state.stopped()
@@ -76,6 +76,7 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
             updatingArrows.forEach { arrow ->
                 arrow.update()
                 if(arrow.stopped()) {
+                    arrows.remove(arrow)
                     updatingArrows.remove(arrow)
                 }
             }
@@ -114,6 +115,7 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
                 paint.color = Color.WHITE
                 paint.strokeWidth = w/60
                 paint.style = Paint.Style.STROKE
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
