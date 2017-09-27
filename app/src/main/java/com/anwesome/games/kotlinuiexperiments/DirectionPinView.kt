@@ -35,7 +35,7 @@ class DirectionPinView(ctx:Context):View(ctx) {
                 canvas.translate(x, y)
                 canvas.rotate(90 * dir*state.scales[2])
                 canvas.save()
-                canvas.translate(0f, w / 2*state.scales[3])
+                canvas.translate(0f, -w / 2*state.scales[3])
                 canvas.drawLine(0f, 0f, 0f, -size*state.scales[1], paint)
                 canvas.drawCircle(0f, -size*state.scales[1], r*state.scales[0], paint)
                 canvas.restore()
@@ -66,7 +66,10 @@ class DirectionPinView(ctx:Context):View(ctx) {
                 directionPins.forEach { updatingPin ->
                     updatingPin.update()
                     if(updatingPin.stopped()) {
-                        animated = false
+                        directionPins.remove(updatingPin)
+                        if(directionPins.size == 0) {
+                            animated = false
+                        }
                     }
                 }
                 try {
@@ -101,6 +104,8 @@ class DirectionPinView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = DPAnimator(w,h,view)
+                paint.strokeWidth = w/50
+                paint.color = Color.parseColor("#FFC107")
             }
             animator?.draw(canvas,paint)
             animator?.update()
