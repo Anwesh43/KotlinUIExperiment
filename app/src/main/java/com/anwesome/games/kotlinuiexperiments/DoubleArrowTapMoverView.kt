@@ -34,16 +34,16 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            var deg = 180f*(state.scale*(1-state.mode))
+            var deg = 90f*(state.scale*(1-state.mode))
             if(state.mode == 1) {
-                deg = 180f
+                deg = 90f
             }
             canvas.rotate(deg)
             for(i in 0..1) {
                 canvas.save()
                 canvas.scale(1f,2*i-1f)
                 canvas.save()
-                canvas.translate(maxGap*(state.scale*state.mode)*(2*i-1f),0f)
+                canvas.translate(0f,maxGap*(state.scale*state.mode))
                 canvas.drawPath(arrowPath(),paint)
                 canvas.restore()
                 canvas.restore()
