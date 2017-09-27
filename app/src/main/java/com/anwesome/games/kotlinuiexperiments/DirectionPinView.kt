@@ -74,11 +74,14 @@ class DirectionPinView(ctx:Context):View(ctx) {
                 directionPin.draw(canvas,paint)
             }
         }
-        fun handleTap(x:Float,y:Float,dir:Float) {
-            directionPins.add(DirectionPin(w,h,dir))
-            if(directionPins.size == 1) {
-                animated = true
-                view.postInvalidate()
+        fun handleTap(x:Float) {
+            if(x!=w/2) {
+                var dir = (x - w / 2) / Math.abs(x - w / 2)
+                directionPins.add(DirectionPin(w, h, dir))
+                if (directionPins.size == 1) {
+                    animated = true
+                    view.postInvalidate()
+                }
             }
         }
     }
@@ -94,8 +97,8 @@ class DirectionPinView(ctx:Context):View(ctx) {
             animator?.update()
             time++
         }
-        fun handleTap(x:Float,y:Float,dir:Float) {
-            animator?.handleTap(x,y,dir)
+        fun handleTap(x:Float) {
+            animator?.handleTap(x)
         }
     }
 }
