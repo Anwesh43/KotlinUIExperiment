@@ -82,4 +82,20 @@ class DirectionPinView(ctx:Context):View(ctx) {
             }
         }
     }
+    class DPRenderer(var time:Int = 0,var view:DirectionPinView) {
+        var animator:DPAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = DPAnimator(w,h,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float,dir:Float) {
+            animator?.handleTap(x,y,dir)
+        }
+    }
 }
