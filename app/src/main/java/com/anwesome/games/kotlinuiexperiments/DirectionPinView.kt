@@ -18,23 +18,27 @@ class DirectionPinView(ctx:Context):View(ctx) {
         return true
     }
     data class DirectionPin(var w:Float,var h:Float,var dir:Float,var x:Float = w/2,var y:Float = h/2,var size:Float = h/6,var r:Float = h/15) {
+        var state = DirectionPinState()
         fun draw(canvas:Canvas,paint:Paint) {
-            canvas.save()
-            canvas.translate(x,y)
-            canvas.rotate(90*dir)
-            canvas.save()
-            canvas.translate(0f,w/2)
-            canvas.drawLine(0f,0f,0f,-size,paint)
-            canvas.drawCircle(0f,-size,r,paint)
-            canvas.restore()
-            canvas.restore()
+            if(state.scales.size == 4) {
+                canvas.save()
+                canvas.translate(x, y)
+                canvas.rotate(90 * dir*state.scales[2])
+                canvas.save()
+                canvas.translate(0f, w / 2*state.scales[3])
+                canvas.drawLine(0f, 0f, 0f, -size*state.scales[1], paint)
+                canvas.drawCircle(0f, -size*state.scales[1], r*state.scales[0], paint)
+                canvas.restore()
+                canvas.restore()
+            }
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
-    data class DirectionPinState(var scales:Array<Float> = arrayOf(0f,0f,0f,0f),var j:Int = 0) {
+    data class DirectionPinState(var j:Int = 0) {
+        var scales:Array<Float> = arrayOf(0f,0f,0f,0f)
         fun update() {
             if(j < scales.size) {
                 scales[j] += 0.1f
