@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
@@ -12,10 +13,17 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class DirectionPinView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DPRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                renderer.handleTap(event.x)
+            }
+        }
         return true
     }
     data class DirectionPin(var w:Float,var h:Float,var dir:Float,var x:Float = w/2,var y:Float = h/2,var size:Float = h/6,var r:Float = h/15) {
@@ -85,7 +93,7 @@ class DirectionPinView(ctx:Context):View(ctx) {
             }
         }
     }
-    class DPRenderer(var time:Int = 0,var view:DirectionPinView) {
+    class DPRenderer(var view:DirectionPinView,var time:Int = 0) {
         var animator:DPAnimator?=null
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
