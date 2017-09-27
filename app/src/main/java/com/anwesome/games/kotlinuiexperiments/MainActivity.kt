@@ -116,7 +116,8 @@ class MainActivity : AppCompatActivity() {
         //DoubleLineArcView.create(this,{i->Toast.makeText(this,"$i expanded",Toast.LENGTH_SHORT).show()},{i -> Toast.makeText(this,"$i collapsed",Toast.LENGTH_SHORT).show()})
         //SwiperSquareView.create(this)
        // TouchDownFillScreenView.create(this)
-        DoubleArrowTapMoverView.create(this)
+        //DoubleArrowTapMoverView.create(this)
+        DirectionPinView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
