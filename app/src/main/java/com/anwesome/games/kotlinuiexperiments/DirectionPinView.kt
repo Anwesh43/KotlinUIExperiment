@@ -32,9 +32,17 @@ class DirectionPinView(ctx:Context):View(ctx) {
         fun update() {
 
         }
-        fun startUpdating(){
-            
-        }
         fun stopped():Boolean = false
+    }
+    data class DirectionPinState(var scales:Array<Float> = arrayOf(0f,0f,0f,0f),var j:Int = 0) {
+        fun update() {
+            if(j < scales.size) {
+                scales[j] += 0.1f
+                if (scales[j] > 1) {
+                    j++
+                }
+            }
+        }
+        fun stopped():Boolean = j == scales.size
     }
 }
