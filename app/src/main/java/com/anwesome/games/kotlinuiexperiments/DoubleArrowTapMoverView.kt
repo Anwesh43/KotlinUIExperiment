@@ -1,11 +1,14 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -14,18 +17,20 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DATMRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(x,y)
             }
         }
         return true
     }
-    data class DoubleArrowTapMover(var x:Float,var y:Float,var size:Float,var maxGap:Float = 0f,var state:DoubleArrowTapMoverState = DoubleArrowTapMoverState()) {
+    data class DoubleArrowTapMover(var x:Float,var y:Float,var size:Float,var maxGap:Float,var state:DoubleArrowTapMoverState = DoubleArrowTapMoverState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -84,7 +89,7 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
         }
         fun create() {
             val random = Random()
-            arrows.add(DoubleArrowTapMover(random.nextInt(w.toInt()).toFloat(),h/2,h/2))
+            arrows.add(DoubleArrowTapMover(random.nextInt(w.toInt()).toFloat(),h/2,w/15,h/2))
         }
         fun handleTap(x:Float,y:Float) {
             arrows.forEach { arrow ->
@@ -99,13 +104,16 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
             }
         }
     }
-    class DATMRenderer(var time:Int = 0,var view:DoubleArrowTapMoverView) {
+    class DATMRenderer(var view:DoubleArrowTapMoverView,var time:Int = 0) {
         var animator:DATMAnimator?=null
         fun render(canvas: Canvas,paint:Paint) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = DATMAnimator(w,h,view)
+                paint.color = Color.WHITE
+                paint.strokeWidth = w/60
+                paint.style = Paint.Style.STROKE
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -116,6 +124,13 @@ class DoubleArrowTapMoverView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = DoubleArrowTapMoverView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
