@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 28/09/17.
@@ -48,5 +49,37 @@ class DirectionPinView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = j == scales.size
+    }
+    class DPAnimator(var w:Float,var h:Float,var view:DirectionPinView,var  directionPins:ConcurrentLinkedQueue<DirectionPin> = ConcurrentLinkedQueue()) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                directionPins.forEach { updatingPin ->
+                    updatingPin.update()
+                    if(updatingPin.stopped()) {
+                        animated = false
+                    }
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            directionPins.forEach { directionPin ->
+                directionPin.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float,dir:Float) {
+            directionPins.add(DirectionPin(w,h,dir))
+            if(directionPins.size == 1) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
     }
 }
