@@ -117,7 +117,8 @@ class MainActivity : AppCompatActivity() {
         //SwiperSquareView.create(this)
        // TouchDownFillScreenView.create(this)
         //DoubleArrowTapMoverView.create(this)
-        DirectionPinView.create(this)
+        //DirectionPinView.create(this)
+        DirectionColoredArrowView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
