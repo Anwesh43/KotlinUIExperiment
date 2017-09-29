@@ -107,5 +107,22 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
                 view.postInvalidate()
             }
         }
+        class DirectionColoredArrowRenderer(var view:DirectionColoredArrowView,var time:Int = 0) {
+            var animator:DirectionColoredArrowAnimator?=null
+            fun render(canvas: Canvas,paint:Paint,view:DirectionColoredArrowView) {
+                if(time == 0) {
+                    val w = canvas.width.toFloat()
+                    val h = canvas.height.toFloat()
+                    animator = DirectionColoredArrowAnimator(w,h, arrayOf(Color.parseColor("#009688"),Color.parseColor("#FF5722"),Color.parseColor("#3949AB"),Color.parseColor("#e53935"),Color.parseColor("#C2185B")),view)
+                }
+                animator?.draw(canvas,paint)
+                animator?.update()
+                time++
+            }
+
+            fun handleTap() {
+                animator?.handleTap()
+            }
+        }
     }
 }
