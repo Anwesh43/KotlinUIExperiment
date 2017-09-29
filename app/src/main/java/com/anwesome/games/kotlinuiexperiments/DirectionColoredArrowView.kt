@@ -13,6 +13,7 @@ import android.view.ViewGroup
 class DirectionColoredArrowView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = DirectionColoredArrowRenderer(this)
+    var listener:ArrowColorSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -89,6 +90,11 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
                 if(curr.stopped()) {
                     prev = curr
                     animated = false
+                    var index = i-1
+                    if(index == -1) {
+                        index = colors.size-1
+                    }
+                    view.listener?.selectedListener?.invoke(index)
                 }
                 try {
                     Thread.sleep(50)
@@ -138,10 +144,14 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listener:(Int)->Unit) {
             var view = DirectionColoredArrowView(activity)
             var size = DimensionsUtil.getDimension(activity)
+            if(listener.size == 1) {
+                view.listener = ArrowColorSelectionListener(listener[0])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class ArrowColorSelectionListener(var selectedListener:(Int)->Unit)
 }
