@@ -27,8 +27,6 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
     }
     data class DirectionColoredArrow(var w:Float,var h:Float,var color:Int,var state:DirectionColoredArrowState = DirectionColoredArrowState()) {
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.WHITE
-            drawArrow(canvas,paint)
             canvas.save()
             clipColorPath(canvas)
             paint.color = color
@@ -47,7 +45,7 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
                 canvas.save()
                 canvas.translate(w/2,h/20)
                 canvas.scale(1f-2*i,1f)
-                canvas.drawLine(0f,0f,-w/3,h/5,paint)
+                canvas.drawLine(0f,0f,-w/6,h/5,paint)
                 canvas.restore()
             }
         }
@@ -76,9 +74,13 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
     }
-    class DirectionColoredArrowAnimator(var w:Float,var h:Float,var colors:Array<Int>,var view:DirectionColoredArrowView,var i:Int = 0) {
-        var curr:DirectionColoredArrow= DirectionColoredArrow(w,h,colors[i])
+    class DirectionColoredArrowAnimator(var w:Float,var h:Float,var colors:Array<Int>,var view:DirectionColoredArrowView,var i:Int = 0,var curr:DirectionColoredArrow = DirectionColoredArrow(w,h,colors[i])) {
         var prev:DirectionColoredArrow?=null
+        init {
+            curr.state.scale = 1f
+            i = 1
+            prev = curr
+        }
         var animated:Boolean = false
         fun update() {
             if(animated) {
@@ -86,6 +88,7 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
                 prev?.update()
                 if(curr.stopped()) {
                     prev = curr
+                    animated = false
                 }
                 try {
                     Thread.sleep(50)
@@ -103,6 +106,8 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
         fun handleTap() {
             if(!animated) {
                 curr = DirectionColoredArrow(w,h,colors[i])
+                curr.startUpdating()
+                prev?.startUpdating()
                 i++
                 if(i >= colors.size ) {
                     i = 0
@@ -119,7 +124,9 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = DirectionColoredArrowAnimator(w,h, arrayOf(Color.parseColor("#009688"),Color.parseColor("#FF5722"),Color.parseColor("#3949AB"),Color.parseColor("#e53935"),Color.parseColor("#C2185B")),view)
+                animator = DirectionColoredArrowAnimator(w,h, arrayOf(Color.WHITE,Color.parseColor("#009688"),Color.parseColor("#FF5722"),Color.parseColor("#3949AB"),Color.parseColor("#e53935"),Color.parseColor("#C2185B")),view)
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
