@@ -72,4 +72,40 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
     }
+    class DirectionColoredArrowAnimator(var w:Float,var h:Float,var colors:Array<Int>,var view:DirectionColoredArrowView,var i:Int = 0) {
+        var curr:DirectionColoredArrow= DirectionColoredArrow(w,h,colors[i])
+        var prev:DirectionColoredArrow?=null
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                curr.update()
+                prev?.update()
+                if(curr.stopped()) {
+                    prev = curr
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            curr.draw(canvas,paint)
+            prev?.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                curr = DirectionColoredArrow(w,h,colors[i])
+                i++
+                if(i >= colors.size ) {
+                    i = 0
+                }
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
