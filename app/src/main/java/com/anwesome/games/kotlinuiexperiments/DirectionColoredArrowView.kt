@@ -1,10 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 
@@ -24,11 +21,23 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class DirectionColoredArrow(var w:Float,var h:Float,var color:Int) {
+    data class DirectionColoredArrow(var w:Float,var h:Float,var color:Int,var state:DirectionColoredArrowState = DirectionColoredArrowState()) {
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.WHITE
+            drawArrow(canvas,paint)
             canvas.save()
+            clipColorPath(canvas)
+            paint.color = color
+            drawArrow(canvas,paint)
+            canvas.restore()
+        }
+        fun clipColorPath(canvas: Canvas) {
             val path = Path()
-            path.addRect(RectF(0f,0f,w,h),Path.Direction.CW)
+            val dir = (state.dir+1)/2
+            path.addRect(RectF(0f,h*(1-state.scale)*dir,w,(h*dir+h*state.scale*(1f-dir))),Path.Direction.CW)
+            canvas.clipPath(path)
+        }
+        fun drawArrow(canvas:Canvas,paint:Paint) {
             canvas.drawLine(w/2,h-h/20,w/2,h/20,paint)
             for(i in 0..1) {
                 canvas.save()
@@ -37,15 +46,14 @@ class DirectionColoredArrowView(ctx:Context):View(ctx) {
                 canvas.drawLine(0f,0f,-w/3,h/5,paint)
                 canvas.restore()
             }
-            canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
     data class DirectionColoredArrowState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
