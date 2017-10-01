@@ -128,13 +128,14 @@ class ClockTapView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit):ClockTapView {
             val view = ClockTapView(activity)
             val size = DimensionsUtil.getDimension(activity)
             if(listeners.size == 1) {
                 view.listener = OnTimeChangeListener(listeners[0])
             }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
+            return view
         }
     }
     data class OnTimeChangeListener(var timeChangeListener:(Int)->Unit)

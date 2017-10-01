@@ -124,7 +124,11 @@ class MainActivity : AppCompatActivity() {
 //        })
         val textView = TextView(this)
         textView.textSize = 30f
-        ClockTapView.create(this,{i -> textView.text = "${i}'O clock"})
+        var view = ClockTapView.create(this,{i -> textView.text = "${i}'O clock"})
+        view.x = 200f
+        view.y = 400f
+        textView.x = 230f
+        textView.y = 150f
         addContentView(textView,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
     }
 }
