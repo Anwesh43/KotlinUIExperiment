@@ -15,6 +15,7 @@ import android.view.ViewGroup
 class ClockTapView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ClockTapRenderer(this)
+    var listener:OnTimeChangeListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -86,6 +87,7 @@ class ClockTapView(ctx:Context):View(ctx) {
                 tapClock.update()
                 if(tapClock.stopped()) {
                     animated = false
+                    view.listener?.timeChangeListener?.invoke((tapClock.hDeg/30).toInt())
                 }
                 try {
                     Thread.sleep(50)
@@ -126,10 +128,14 @@ class ClockTapView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             val view = ClockTapView(activity)
             val size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 1) {
+                view.listener = OnTimeChangeListener(listeners[0])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class OnTimeChangeListener(var timeChangeListener:(Int)->Unit)
 }
