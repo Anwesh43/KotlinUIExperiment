@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
@@ -121,7 +122,10 @@ class MainActivity : AppCompatActivity() {
 //        DirectionColoredArrowView.create(this,{i ->
 //            Toast.makeText(this,"selected $i",Toast.LENGTH_SHORT).show()
 //        })
-        ClockTapView.create(this)
+        val textView = TextView(this)
+        textView.textSize = 30f
+        ClockTapView.create(this,{i -> textView.text = "${i}'O clock"})
+        addContentView(textView,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
