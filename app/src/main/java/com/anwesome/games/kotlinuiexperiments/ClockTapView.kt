@@ -97,4 +97,20 @@ class ClockTapView(ctx:Context):View(ctx) {
             }
         }
     }
+    class ClockTapRenderer(var view:ClockTapView,var time:Int = 0) {
+        var animator:ClockTapAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ClockTapAnimator(TapClock(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
