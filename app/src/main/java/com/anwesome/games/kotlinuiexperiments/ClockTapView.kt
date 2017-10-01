@@ -32,11 +32,11 @@ class ClockTapView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(w/2,h/2)
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = size/60
+            paint.strokeWidth = size/25
             canvas.drawCircle(0f,0f,size,paint)
-            paint.strokeWidth = size/50
+            paint.strokeWidth = size/20
             drawMinuteHand(canvas,paint)
-            paint.strokeWidth = size/35
+            paint.strokeWidth = size/10
             drawHourHand(canvas,paint)
             canvas.restore()
         }
@@ -55,7 +55,7 @@ class ClockTapView(ctx:Context):View(ctx) {
         fun update() {
             state.update({
                 hDeg+=30
-                if(hDeg > 360f) {
+                if(hDeg >= 360f) {
                     hDeg = 0f
                 }
             })
@@ -115,6 +115,7 @@ class ClockTapView(ctx:Context):View(ctx) {
                 val h = canvas.height.toFloat()
                 animator = ClockTapAnimator(TapClock(w,h),view)
                 paint.color = Color.parseColor("#3949AB")
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()

@@ -118,9 +118,10 @@ class MainActivity : AppCompatActivity() {
        // TouchDownFillScreenView.create(this)
         //DoubleArrowTapMoverView.create(this)
         //DirectionPinView.create(this)
-        DirectionColoredArrowView.create(this,{i ->
-            Toast.makeText(this,"selected $i",Toast.LENGTH_SHORT).show()
-        })
+//        DirectionColoredArrowView.create(this,{i ->
+//            Toast.makeText(this,"selected $i",Toast.LENGTH_SHORT).show()
+//        })
+        ClockTapView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
