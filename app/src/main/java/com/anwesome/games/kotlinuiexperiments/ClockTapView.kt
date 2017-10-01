@@ -22,7 +22,7 @@ class ClockTapView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class TapClock(var w:Float,var h:Float,var size:Float = 2*Math.min(w,h)/5,var hDeg:Float = 0f) {
+    data class TapClock(var w:Float,var h:Float,var size:Float = 2*Math.min(w,h)/5,var hDeg:Float = 0f,var state:TapClockState = TapClockState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
@@ -37,22 +37,23 @@ class ClockTapView(ctx:Context):View(ctx) {
         }
         private fun drawMinuteHand(canvas: Canvas,paint: Paint) {
             canvas.save()
-            canvas.rotate(360f)
+            canvas.rotate(360f*state.scale)
             canvas.drawLine(0f,0f,0f,-2*size/3,paint)
             canvas.restore()
         }
         private fun drawHourHand(canvas: Canvas,paint:Paint) {
             canvas.save()
-            canvas.rotate(hDeg+5f)
+            canvas.rotate(hDeg+5f*state.scale)
+            canvas.drawLine(0f,0f,0f,-2*size/5,paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update{hDeg+=5}
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2-size && x<=w/2+size && y>=h/2-size && y<=h/2+size
     }
     data class TapClockState(var scale:Float = 0f,var dir:Float = 0f) {
@@ -60,7 +61,7 @@ class ClockTapView(ctx:Context):View(ctx) {
             scale += dir*0.1f
             if(scale > 1) {
                 dir = 0f
-                scale = 1f
+                scale = 0f
                 onstop()
             }
         }
