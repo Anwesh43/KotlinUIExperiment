@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
@@ -15,6 +16,7 @@ class ClockTapView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ClockTapRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -46,12 +48,17 @@ class ClockTapView(ctx:Context):View(ctx) {
         }
         private fun drawHourHand(canvas: Canvas,paint:Paint) {
             canvas.save()
-            canvas.rotate(hDeg+5f*state.scale)
+            canvas.rotate(hDeg+30f*state.scale)
             canvas.drawLine(0f,0f,0f,-2*size/5,paint)
             canvas.restore()
         }
         fun update() {
-            state.update{hDeg+=5}
+            state.update({
+                hDeg+=30
+                if(hDeg > 360f) {
+                    hDeg = 0f
+                }
+            })
         }
         fun startUpdating() {
             state.startUpdating()
@@ -107,6 +114,7 @@ class ClockTapView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = ClockTapAnimator(TapClock(w,h),view)
+                paint.color = Color.parseColor("#3949AB")
             }
             animator?.draw(canvas,paint)
             animator?.update()
