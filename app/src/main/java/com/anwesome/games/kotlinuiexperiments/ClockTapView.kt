@@ -55,4 +55,18 @@ class ClockTapView(ctx:Context):View(ctx) {
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2-size && x<=w/2+size && y>=h/2-size && y<=h/2+size
     }
+    data class TapClockState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update(onstop:()->Unit) {
+            scale += dir*0.1f
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+                onstop()
+            }
+        }
+        fun startUpdating() {
+            dir = 1f
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
