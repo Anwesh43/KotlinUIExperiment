@@ -70,4 +70,31 @@ class ClockTapView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class ClockTapAnimator(var tapClock:TapClock,var view:ClockTapView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                tapClock.update()
+                if(tapClock.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            tapClock.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && tapClock.handleTap(x,y)) {
+                tapClock.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
