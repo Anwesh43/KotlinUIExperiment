@@ -74,4 +74,29 @@ class PieColorBarView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    class PieColorBarAnimator(var pieColorBar:PieColorBar,var view:PieColorBarView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                pieColorBar.update()
+                if(pieColorBar.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            pieColorBar.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && pieColorBar.handleTap(x,y)) {
+                animated = true
+            }
+        }
+    }
 }
