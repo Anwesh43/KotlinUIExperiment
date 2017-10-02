@@ -28,7 +28,7 @@ class PieColorBarView(ctx:Context):View(ctx) {
             canvas.drawRect(RectF(0f,0f,w*scale,h),paint)
         }
     }
-    data class PieColorBar(var w:Float,var h:Float) {
+    data class PieColorBar(var w:Float,var h:Float,var state:PieColorBarState = PieColorBarState()) {
         var colors:Array<String> = arrayOf("#f44336","#2196F3","#E64A19","#0097A7","#AD1457")
         var colorBars:LinkedList<ColorBar> = LinkedList<ColorBar>()
         init {
@@ -47,16 +47,23 @@ class PieColorBarView(ctx:Context):View(ctx) {
             paint.strokeWidth = Math.min(w,h)/40
             canvas.drawCircle(0f,0f,h/12,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f,true,paint)
+            canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*state.scale,true,paint)
             canvas.restore()
+            var i = 0
             colorBars.forEach { colorBar ->
-                colorBar.draw(canvas,paint,0f)
+                var scale = state.scale
+                if(i%2 == 0) {
+                    scale = 1-state.scale
+                }
+                colorBar.draw(canvas,paint,scale)
+                i++
             }
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
+        fun handleTap(x:Float,y:Float):Boolean = x>=w/2-h/12 && x<=w/2+h/12 && y>=h/2-h/12 && y<=h/2+h/12
     }
     data class PieColorBarState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
