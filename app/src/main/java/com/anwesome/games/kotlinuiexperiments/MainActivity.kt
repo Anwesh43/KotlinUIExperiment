@@ -122,14 +122,15 @@ class MainActivity : AppCompatActivity() {
 //        DirectionColoredArrowView.create(this,{i ->
 //            Toast.makeText(this,"selected $i",Toast.LENGTH_SHORT).show()
 //        })
-        val textView = TextView(this)
-        textView.textSize = 30f
-        var view = ClockTapView.create(this,{i -> textView.text = "${i}'O clock"})
-        view.x = 200f
-        view.y = 400f
-        textView.x = 230f
-        textView.y = 150f
-        addContentView(textView,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
+//        val textView = TextView(this)
+//        textView.textSize = 30f
+//        var view = ClockTapView.create(this,{i -> textView.text = "${i}'O clock"})
+//        view.x = 200f
+//        view.y = 400f
+//        textView.x = 230f
+//        textView.y = 150f
+//        addContentView(textView,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
+        PieColorBarView.create(this)
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
