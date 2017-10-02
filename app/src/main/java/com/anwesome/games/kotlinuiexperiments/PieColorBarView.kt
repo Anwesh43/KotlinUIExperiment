@@ -14,6 +14,7 @@ import java.util.*
 class PieColorBarView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = PieColorBarRenderer(this)
+    var clickListener:PieColorBarClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -88,6 +89,7 @@ class PieColorBarView(ctx:Context):View(ctx) {
                 pieColorBar.update()
                 if(pieColorBar.stopped()) {
                     animated = false
+                    view.clickListener?.listener?.invoke()
                 }
                 try {
                     Thread.sleep(50)
@@ -125,10 +127,14 @@ class PieColorBarView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(actvity:Activity) {
+        fun create(actvity:Activity,vararg  listeners:()->Unit) {
             val view = PieColorBarView(actvity)
+            if(listeners.size == 1) {
+                view.clickListener = PieColorBarClickListener(listeners[0])
+            }
             val size = DimensionsUtil.getDimension(actvity)
             actvity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
+    data class PieColorBarClickListener(var listener:()->Unit)
 }
