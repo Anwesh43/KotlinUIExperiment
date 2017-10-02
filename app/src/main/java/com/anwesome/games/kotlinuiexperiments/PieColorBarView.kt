@@ -21,7 +21,7 @@ class PieColorBarView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                renderer.handleTap(x,y)
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -29,7 +29,10 @@ class PieColorBarView(ctx:Context):View(ctx) {
     data class ColorBar(var y:Float,var w:Float,var h:Float,var color:Int) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             paint.color = color
+            canvas.save()
+            canvas.translate(0f,y)
             canvas.drawRect(RectF(0f,0f,w*scale,h),paint)
+            canvas.restore()
         }
     }
     data class PieColorBar(var w:Float,var h:Float,var state:PieColorBarState = PieColorBarState()) {
@@ -39,7 +42,7 @@ class PieColorBarView(ctx:Context):View(ctx) {
             var y = h/5
             var yGap = 0.8f*h/colors.size
             colors.forEach { color ->
-                colorBars.push(ColorBar(y,w,h,Color.parseColor(color)))
+                colorBars.push(ColorBar(y,w,yGap,Color.parseColor(color)))
                 y += yGap
             }
         }
@@ -67,10 +70,11 @@ class PieColorBarView(ctx:Context):View(ctx) {
             state.update()
         }
         fun stopped():Boolean = state.stopped()
-        fun handleTap(x:Float,y:Float):Boolean = x>=w/2-h/12 && x<=w/2+h/12 && y>=h/2-h/12 && y<=h/2+h/12
+        fun handleTap(x:Float,y:Float):Boolean = x>=w/2-h/12 && x<=w/2+h/12 && y>=h/10-h/12 && y<=h/10+h/12
     }
     data class PieColorBarState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
             deg += 4.5f
             if(deg > 180) {
                 deg = 0f
@@ -100,6 +104,7 @@ class PieColorBarView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float) {
             if(!animated && pieColorBar.handleTap(x,y)) {
                 animated = true
+                view.postInvalidate()
             }
         }
     }
