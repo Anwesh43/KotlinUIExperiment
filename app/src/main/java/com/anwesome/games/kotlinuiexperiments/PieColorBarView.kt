@@ -99,4 +99,20 @@ class PieColorBarView(ctx:Context):View(ctx) {
             }
         }
     }
+    class PieColorBarRenderer(var view:PieColorBarView,var time:Int = 0) {
+        var animator:PieColorBarAnimator?=null
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = PieColorBarAnimator(PieColorBar(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
