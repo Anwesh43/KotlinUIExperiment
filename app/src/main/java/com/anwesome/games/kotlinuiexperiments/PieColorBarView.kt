@@ -1,9 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.graphics.*
 import android.view.MotionEvent
+import android.view.ViewGroup
 import java.util.*
 
 /**
@@ -115,6 +117,13 @@ class PieColorBarView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(actvity:Activity) {
+            val view = PieColorBarView(actvity)
+            val size = DimensionsUtil.getDimension(actvity)
+            actvity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
