@@ -56,9 +56,15 @@ class PieColorBarView(ctx:Context):View(ctx) {
         fun update() {
 
         }
-        fun startUpdating() {
-
-        }
         fun stopped():Boolean = false
+    }
+    data class PieColorBarState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            deg += 4.5f
+            if(deg > 180) {
+                deg = 0f
+            }
+        }
+        fun stopped():Boolean = deg == 0f
     }
 }
