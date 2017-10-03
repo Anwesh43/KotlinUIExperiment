@@ -24,7 +24,7 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class RectBarExpander(var x:Float,var h:Float,var size:Float,var y:Float = h-size){
+    data class RectBarExpander(var x:Float,var h:Float,var size:Float,var y:Float = h-size,var state:RectBarExpanderState = RectBarExpanderState()){
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#F57F17")
             canvas.save()
@@ -32,20 +32,22 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
             paint.strokeWidth = h/50
             paint.style = Paint.Style.FILL
             canvas.drawCircle(0f,0f,size,paint)
-            canvas.save()
-            canvas.rotate(90f)
-            canvas.drawLine(-size/2,0f,size/2,0f,paint)
-            canvas.restore()
+            for(i in 0..1) {
+                canvas.save()
+                canvas.rotate(90f*(1-2*i)*state.scale)
+                canvas.drawLine(-size/2,0f,size/2,0f,paint)
+                canvas.restore()
+            }
             canvas.restore()
             canvas.drawRect(RectF(x-size,y,x+size,h),paint)
-            y = size+(h-2*size)*(1)
+            y = size+(h-2*size)*(1-state.scale)
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size
     }
