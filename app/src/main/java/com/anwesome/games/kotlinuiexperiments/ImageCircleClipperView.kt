@@ -71,4 +71,14 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             canvas.drawRect(RectF(x,y,x+1,y+1),paint)
         }
     }
+    data class ImageClipperState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+            deg += 4.5f
+            if(deg > 180) {
+                deg = 0f
+            }
+        }
+        fun stopped():Boolean = deg == 0f
+    }
 }
