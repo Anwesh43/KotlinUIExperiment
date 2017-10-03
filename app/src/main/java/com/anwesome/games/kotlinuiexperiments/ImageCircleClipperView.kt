@@ -39,7 +39,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
 //                pixel.draw(canvas,paint)
 //            }
             canvas.save()
-            canvas.clipPath(rectPath)
+            //canvas.clipPath(rectPath)
             canvas.drawBitmap(bitmap,0f,0f,paint)
             canvas.restore()
             canvas.save()
@@ -63,11 +63,11 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
                         rectPath.addRect(pixel.rect,Path.Direction.CW)
                     }
                     else {
-                        circlePath.addRect(pixel.rect,Path.Direction.CW)
                         circlePixels.add(pixel)
                     }
                 }
             }
+            circlePath.addCircle(cx,cy,size/2,Path.Direction.CW)
         }
         private fun getDistance(x:Float,y:Float):Float {
             return Math.sqrt(Math.pow((cx-x).toDouble(),2.0)+Math.pow((cy-y).toDouble(),2.0)).toFloat()
@@ -87,7 +87,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     data class ImageClipperState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
             scale = Math.sin(deg*Math.PI/180).toFloat()
-            deg += 18f
+            deg += 4.5f
             if(deg > 180) {
                 deg = 0f
             }
