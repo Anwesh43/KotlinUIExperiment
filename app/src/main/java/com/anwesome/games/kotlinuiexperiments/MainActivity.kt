@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 //        addContentView(textView,ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT))
         //PieColorBarView.create(this,{Toast.makeText(this,"Clicked",Toast.LENGTH_SHORT).show()})
        // RectBarExpanderView.create(this)
-        ImageCircleClipperView.create(this,bitmap)
+        ImageCircleClipperView.create(this,bitmap,{Toast.makeText(this,"Clicked",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
