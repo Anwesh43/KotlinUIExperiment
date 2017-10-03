@@ -21,7 +21,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                renderer.handleTap(x,y)
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -29,21 +29,26 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     data class ImageCircleClipper(var bitmap:Bitmap,var size:Float,var cx:Float = bitmap.width.toFloat()/2,var cy:Float = bitmap.height.toFloat()/2,var state:ImageClipperState = ImageClipperState()) {
         var rectPixels:LinkedList<Pixel> = LinkedList()
         var circlePixels:LinkedList<Pixel> = LinkedList()
+        var rectPath = Path()
+        var circlePath = Path()
         fun draw(canvas:Canvas,paint:Paint) {
             if(rectPixels.size == 0) {
                 separatePixels()
             }
-            rectPixels.forEach { pixel ->
-                pixel.draw(canvas,paint)
-            }
+//            rectPixels.forEach { pixel ->
+//                pixel.draw(canvas,paint)
+//            }
+            canvas.save()
+            canvas.clipPath(rectPath)
+            canvas.drawBitmap(bitmap,0f,0f,paint)
+            canvas.restore()
             canvas.save()
             canvas.translate(cx,cy)
             canvas.rotate(180f*state.scale)
             canvas.save()
             canvas.translate(-cx,-cy)
-            circlePixels.forEach { pixel ->
-                pixel.draw(canvas,paint)
-            }
+            canvas.clipPath(circlePath)
+            canvas.drawBitmap(bitmap,0f,0f,paint)
             canvas.restore()
             canvas.restore()
         }
@@ -55,8 +60,10 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
                     var distance = getDistance(i.toFloat(),j.toFloat())
                     if(distance>size/2) {
                         rectPixels.add(pixel)
+                        rectPath.addRect(pixel.rect,Path.Direction.CW)
                     }
                     else {
+                        circlePath.addRect(pixel.rect,Path.Direction.CW)
                         circlePixels.add(pixel)
                     }
                 }
@@ -71,7 +78,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=cx-size/2 && x<=cx+size/2 && y>=cy-size/2 && y<=cy+size/2
     }
-    data class Pixel(var x:Float,var y:Float,var color:Int) {
+    data class Pixel(var x:Float,var y:Float,var color:Int,var rect:RectF = RectF(x,y,x+1,y+1)) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = color
             canvas.drawRect(RectF(x,y,x+1,y+1),paint)
@@ -80,7 +87,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     data class ImageClipperState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
             scale = Math.sin(deg*Math.PI/180).toFloat()
-            deg += 4.5f
+            deg += 18f
             if(deg > 180) {
                 deg = 0f
             }
@@ -135,7 +142,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         fun create(activity:Activity,bitmap: Bitmap) {
             val view = ImageCircleClipperView(activity,bitmap)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x/3,size.x/3))
         }
     }
 }
