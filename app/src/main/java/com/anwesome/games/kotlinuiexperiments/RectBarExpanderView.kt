@@ -30,21 +30,25 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
     }
     data class RectBarExpander(var x:Float,var h:Float,var size:Float,var y:Float = h-size,var state:RectBarExpanderState = RectBarExpanderState()){
         fun draw(canvas:Canvas,paint:Paint) {
+            y = size+(h-2*size)*(1-state.scale)
+            paint.strokeCap = Paint.Cap.ROUND
             paint.color = Color.parseColor("#F57F17")
             canvas.save()
             canvas.translate(x,y)
             paint.strokeWidth = h/50
             paint.style = Paint.Style.FILL
             canvas.drawCircle(0f,0f,size,paint)
+            paint.color = Color.WHITE
             for(i in 0..1) {
                 canvas.save()
-                canvas.rotate(90f*(1-2*i)*state.scale)
+                canvas.rotate(90f*(i)*(1-state.scale))
                 canvas.drawLine(-size/2,0f,size/2,0f,paint)
                 canvas.restore()
             }
             canvas.restore()
-            canvas.drawRect(RectF(x-size,y,x+size,h),paint)
-            y = size+(h-2*size)*(1-state.scale)
+            paint.color = Color.parseColor("#F57F17")
+            canvas.drawRect(RectF(x-size,y+size,x+size,h),paint)
+
         }
         fun update() {
             state.update()
@@ -68,7 +72,7 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
             }
         }
         fun startUpdating() {
-            this.scale = 1-2*this.dir
+            this.dir = 1-2*this.scale
         }
         fun stopped():Boolean = dir == 0f
     }
