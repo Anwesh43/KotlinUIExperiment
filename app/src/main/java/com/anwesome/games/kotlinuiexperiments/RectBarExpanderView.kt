@@ -95,4 +95,20 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
             }
         }
     }
+    class RectBarExpanderRenderer(var view:RectBarExpanderView,var time:Int = 0) {
+        var animator:RectBarExpanderAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = RectBarExpanderAnimator(RectBarExpander(w/2,h,w/20),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
