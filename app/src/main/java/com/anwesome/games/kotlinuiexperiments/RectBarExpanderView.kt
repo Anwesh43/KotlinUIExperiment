@@ -68,4 +68,31 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class RectBarExpanderAnimator(var expander:RectBarExpander,var view:RectBarExpanderView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                expander.update()
+                if(expander.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            expander.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && expander.handleTap(x,y)) {
+                animated = true
+                expander.startUpdating()
+                view.postInvalidate()
+            }
+        }
+    }
 }
