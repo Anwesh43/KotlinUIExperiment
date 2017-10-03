@@ -142,7 +142,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         fun create(activity:Activity,bitmap: Bitmap) {
             val view = ImageCircleClipperView(activity,bitmap)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x/3,size.x/3))
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
