@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.MotionEvent
@@ -7,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 03/10/17.
@@ -111,6 +113,13 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = RectBarExpanderView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
