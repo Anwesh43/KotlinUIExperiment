@@ -14,6 +14,7 @@ import java.util.*
 class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ImageCircleClipperRenderer(this)
+    var clickListener:ImageClipperOnClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -33,7 +34,8 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         var circlePath = Path()
         fun draw(canvas:Canvas,paint:Paint) {
             if(rectPixels.size == 0) {
-                separatePixels()
+                //separatePixels()
+                circlePath.addCircle(cx,cy,size/2,Path.Direction.CW)
             }
 //            rectPixels.forEach { pixel ->
 //                pixel.draw(canvas,paint)
@@ -53,21 +55,20 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             canvas.restore()
         }
         private fun separatePixels() {
-//            for(i in 0..bitmap.width-1) {
-//                for(j in 0..bitmap.height-1) {
-//                    val color = bitmap.getPixel(i,j)
-//                    val pixel = Pixel(i.toFloat(),j.toFloat(),color)
-//                    var distance = getDistance(i.toFloat(),j.toFloat())
-//                    if(distance>size/2) {
-//                        rectPixels.add(pixel)
-//                        rectPath.addRect(pixel.rect,Path.Direction.CW)
-//                    }
-//                    else {
-//                        circlePixels.add(pixel)
-//                    }
-//                }
-//            }
-            circlePath.addCircle(cx,cy,size/2,Path.Direction.CW)
+            for(i in 0..bitmap.width-1) {
+                for(j in 0..bitmap.height-1) {
+                    val color = bitmap.getPixel(i,j)
+                    val pixel = Pixel(i.toFloat(),j.toFloat(),color)
+                    var distance = getDistance(i.toFloat(),j.toFloat())
+                    if(distance>size/2) {
+                        rectPixels.add(pixel)
+                        rectPath.addRect(pixel.rect,Path.Direction.CW)
+                    }
+                    else {
+                        circlePixels.add(pixel)
+                    }
+                }
+            }
         }
         private fun getDistance(x:Float,y:Float):Float {
             return Math.sqrt(Math.pow((cx-x).toDouble(),2.0)+Math.pow((cy-y).toDouble(),2.0)).toFloat()
@@ -100,6 +101,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
                 clipper.update()
                 if(clipper.stopped()) {
                     animated = false
+                    view?.clickListener?.onClick?.invoke()
                 }
                 try {
                     Thread.sleep(50)
@@ -139,10 +141,14 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity,bitmap: Bitmap) {
+        fun create(activity:Activity,bitmap: Bitmap,vararg listeners:()->Unit) {
             val view = ImageCircleClipperView(activity,bitmap)
             val size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 1) {
+                view.clickListener = ImageClipperOnClickListener(listeners[0])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class ImageClipperOnClickListener(var onClick:()->Unit)
 }
