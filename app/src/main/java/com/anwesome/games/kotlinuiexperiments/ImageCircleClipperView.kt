@@ -86,4 +86,30 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    class ImageCircleClipperAnimator(var clipper:ImageCircleClipper,var view:ImageCircleClipperView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                clipper.update()
+                if(clipper.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            clipper.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && clipper.handleTap(x,y)) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
