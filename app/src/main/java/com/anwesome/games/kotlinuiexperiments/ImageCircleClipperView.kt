@@ -1,10 +1,7 @@
 package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import java.util.*
@@ -14,13 +11,15 @@ import java.util.*
  */
 class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = ImageCircleClipperRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(x,y)
             }
         }
         return true
