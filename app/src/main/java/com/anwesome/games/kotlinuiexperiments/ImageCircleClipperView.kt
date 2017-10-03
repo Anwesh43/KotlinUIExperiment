@@ -53,20 +53,20 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             canvas.restore()
         }
         private fun separatePixels() {
-            for(i in 0..bitmap.width-1) {
-                for(j in 0..bitmap.height-1) {
-                    val color = bitmap.getPixel(i,j)
-                    val pixel = Pixel(i.toFloat(),j.toFloat(),color)
-                    var distance = getDistance(i.toFloat(),j.toFloat())
-                    if(distance>size/2) {
-                        rectPixels.add(pixel)
-                        rectPath.addRect(pixel.rect,Path.Direction.CW)
-                    }
-                    else {
-                        circlePixels.add(pixel)
-                    }
-                }
-            }
+//            for(i in 0..bitmap.width-1) {
+//                for(j in 0..bitmap.height-1) {
+//                    val color = bitmap.getPixel(i,j)
+//                    val pixel = Pixel(i.toFloat(),j.toFloat(),color)
+//                    var distance = getDistance(i.toFloat(),j.toFloat())
+//                    if(distance>size/2) {
+//                        rectPixels.add(pixel)
+//                        rectPath.addRect(pixel.rect,Path.Direction.CW)
+//                    }
+//                    else {
+//                        circlePixels.add(pixel)
+//                    }
+//                }
+//            }
             circlePath.addCircle(cx,cy,size/2,Path.Direction.CW)
         }
         private fun getDistance(x:Float,y:Float):Float {
