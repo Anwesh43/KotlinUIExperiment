@@ -25,7 +25,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         }
         return true
     }
-    data class ImageClipperView(var bitmap:Bitmap,var size:Float,var cx:Float = bitmap.width.toFloat()/2,var cy:Float = bitmap.height.toFloat()/2) {
+    data class ImageCircleClipper(var bitmap:Bitmap,var size:Float,var cx:Float = bitmap.width.toFloat()/2,var cy:Float = bitmap.height.toFloat()/2,var state:ImageClipperState = ImageClipperState()) {
         var rectPixels:LinkedList<Pixel> = LinkedList()
         var circlePixels:LinkedList<Pixel> = LinkedList()
         fun draw(canvas:Canvas,paint:Paint) {
@@ -37,7 +37,7 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             }
             canvas.save()
             canvas.translate(cx,cy)
-            canvas.rotate(180f)
+            canvas.rotate(180f*state.scale)
             canvas.save()
             canvas.translate(-cx,-cy)
             circlePixels.forEach { pixel ->
@@ -64,6 +64,11 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
         private fun getDistance(x:Float,y:Float):Float {
             return Math.sqrt(Math.pow((cx-x).toDouble(),2.0)+Math.pow((cy-y).toDouble(),2.0)).toFloat()
         }
+        fun update() {
+            state.update()
+        }
+        fun stopped():Boolean = state.stopped()
+        fun handleTap(x:Float,y:Float):Boolean = x>=cx-size/2 && x<=cx+size/2 && y>=cy-size/2 && y<=cy+size/2
     }
     data class Pixel(var x:Float,var y:Float,var color:Int) {
         fun draw(canvas:Canvas,paint:Paint) {
