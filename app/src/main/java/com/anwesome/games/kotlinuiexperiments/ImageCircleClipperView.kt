@@ -112,4 +112,22 @@ class ImageCircleClipperView(ctx:Context,var bitmap:Bitmap):View(ctx) {
             }
         }
     }
+    class ImageCircleClipperRenderer(var view:ImageCircleClipperView,var time:Int = 0) {
+        var animator:ImageCircleClipperAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width
+                val h = canvas.height
+                val bitmap = Bitmap.createScaledBitmap(view.bitmap,w,h,true)
+                val size = Math.min(w,h).toFloat()/2
+                animator = ImageCircleClipperAnimator(ImageCircleClipper(bitmap,size),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
