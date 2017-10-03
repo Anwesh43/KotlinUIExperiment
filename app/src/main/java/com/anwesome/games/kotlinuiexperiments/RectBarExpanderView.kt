@@ -49,5 +49,21 @@ class RectBarExpanderView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size
     }
-
+    data class RectBarExpanderState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            this.scale += dir*0.1f
+            if(this.scale > 1) {
+                this.scale = 1f
+                this.dir = 0f
+            }
+            if(this.scale < 0) {
+                this.scale = 0f
+                this.dir = 0f
+            }
+        }
+        fun startUpdating() {
+            this.scale = 1-2*this.dir
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
