@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 05/10/17.
@@ -24,11 +26,42 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ColorPageContainer(var w:Float,var h:Float) {
-
+    data class ColorPageContainer(var w:Float,var h:Float,var colors:Array<Int>,var colorPages:LinkedList<ColorPage> = LinkedList())  {
+        init {
+            var x = 0f
+            colors.forEach { color ->
+                colorPages.add(ColorPage(x,w,h,color))
+                x += w
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            colorPages.forEach { colorPage ->
+                colorPage.draw(canvas,paint)
+            }
+        }
     }
-    data class IndicatorContainer(var x:Float,var y:Float,var size:Float,var n:Int,var i:Int = 0) {
-
+    data class IndicatorContainer(var x:Float,var y:Float,var size:Float,var n:Int,var i:Int = 0,var currIndex:Int = 0,var prevIndex:Int = -1,var indicators:ConcurrentLinkedQueue<Indicator> = ConcurrentLinkedQueue()) {
+        init {
+            var curr_x = x - (n/2)*(2*size)
+            for(i in 0..n-1) {
+                indicators.add(Indicator(curr_x,y,size))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            var i = 0
+            indicators.forEach { indicator ->
+                if(i == currIndex) {
+                    indicator.draw(canvas,paint,scale)
+                    return
+                }
+                if(i == prevIndex) {
+                    indicator.draw(canvas,paint,1-scale)
+                    return
+                }
+                indicator.draw(canvas,paint,0f)
+                i++
+            }
+        }
     }
     data class ColorPage(var x:Float,var w:Float,var h:Float,var color:Int) {
         fun draw(canvas:Canvas,paint:Paint) {
