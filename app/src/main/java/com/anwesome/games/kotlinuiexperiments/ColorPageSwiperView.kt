@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 05/10/17.
  */
-class ColorPageSwiperView(ctx:Context):View(ctx) {
+class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -152,6 +152,22 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
         }
         fun handleSwipe(dir:Int) {
             cpi.startUpdating(dir)
+        }
+    }
+    class ColorPageSwiperRenderer(var view:ColorPageSwiperView,var time:Int = 0) {
+        var animator:ColorPageSwiperAnimator?=null
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ColorPageSwiperAnimator(ColorPageIndicatorContainer(w,h,view.colors),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleSwipe(dir:Int) {
+            animator?.handleSwipe(dir)
         }
     }
 }
