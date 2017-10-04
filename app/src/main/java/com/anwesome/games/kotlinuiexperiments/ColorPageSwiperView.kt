@@ -16,16 +16,13 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = ColorPageSwiperRenderer(this)
+    val gestureDetector = GestureDetector(ctx,ColorPageSwiper(renderer))
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
-        when(event.action) {
-            MotionEvent.ACTION_DOWN -> {
-
-            }
-        }
-        return true
+        return gestureDetector.onTouchEvent(event)
     }
     data class ColorPageContainer(var w:Float,var h:Float,var colors:Array<Int>,var colorPages:LinkedList<ColorPage> = LinkedList())  {
         init {
