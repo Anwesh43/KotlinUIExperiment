@@ -107,4 +107,15 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class CPIScreen(var w:Float,var maxX:Float,var x:Float = 0f,var nextX:Float = 0f) {
+        fun draw(canvas:Canvas,drawCb:()->Unit,scale:Float) {
+            canvas.save()
+            canvas.translate(x+nextX*scale,0f)
+            drawCb()
+            canvas.restore()
+        }
+        fun startUpdating(dir:Float) {
+            nextX = w*dir
+        }
+    }
 }
