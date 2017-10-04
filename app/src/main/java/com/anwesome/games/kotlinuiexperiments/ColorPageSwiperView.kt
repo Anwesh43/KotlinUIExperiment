@@ -94,4 +94,17 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = false
     }
+    data class CPIState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1f
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
