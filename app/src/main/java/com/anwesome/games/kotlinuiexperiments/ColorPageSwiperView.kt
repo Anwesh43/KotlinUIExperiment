@@ -45,6 +45,7 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
             var curr_x = x - (n/2)*(2*size)
             for(i in 0..n-1) {
                 indicators.add(Indicator(curr_x,y,size))
+                curr_x += 2*size
             }
         }
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
@@ -77,5 +78,20 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
             paint.color = Color.WHITE
             canvas.drawCircle(x,y,size/2+size/2*scale,paint)
         }
+    }
+    data class ColorPageIndicatorContainer(var w:Float,var h:Float,var colors:Array<Int>) {
+        var colorPageContainer = ColorPageContainer(w,h,colors)
+        var indicatorContainer = IndicatorContainer(w/2,h*0.8f,w/40,colors.size)
+        fun draw(canvas:Canvas,paint:Paint) {
+            colorPageContainer.draw(canvas,paint)
+            indicatorContainer.draw(canvas,paint,0f)
+        }
+        fun update() {
+
+        }
+        fun startUpdating(dir:Int) {
+
+        }
+        fun stopped():Boolean = false
     }
 }
