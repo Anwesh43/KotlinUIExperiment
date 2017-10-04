@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import java.util.*
@@ -168,6 +169,17 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
         }
         fun handleSwipe(dir:Int) {
             animator?.handleSwipe(dir)
+        }
+    }
+    class ColorPageSwiper(var renderer:ColorPageSwiperRenderer):GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(event:MotionEvent):Boolean = true
+        override fun onSingleTapUp(event:MotionEvent):Boolean = true
+        override fun onFling(e1:MotionEvent,e2:MotionEvent,velx:Float,vely:Float):Boolean {
+            if(Math.abs(velx) > Math.abs(vely)) {
+                val dir = velx/Math.abs(velx)
+                renderer.handleSwipe(dir.toInt())
+            }
+            return true
         }
     }
 }
