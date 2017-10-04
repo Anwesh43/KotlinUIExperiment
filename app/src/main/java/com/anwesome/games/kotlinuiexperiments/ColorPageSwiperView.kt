@@ -20,6 +20,7 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ColorPageSwiperRenderer(this)
     val gestureDetector = GestureDetector(ctx,ColorPageSwiper(renderer))
+    var pageChangeListener:OnPageChangeListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
     }
@@ -153,6 +154,7 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
                 cpi.update()
                 if(cpi.stopped()) {
                     animated = false
+                    view.pageChangeListener?.changeListener?.invoke(cpi.indicatorContainer.currIndex)
                 }
                 try {
                     Thread.sleep(50)
@@ -201,10 +203,14 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity,colors:Array<Int>) {
+        fun create(activity:Activity,colors:Array<Int>,vararg listeners:(Int)->Unit) {
             val view = ColorPageSwiperView(activity,colors)
             val size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 1) {
+                view.pageChangeListener = OnPageChangeListener(listeners[0])
+            }
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y))
         }
     }
+    data class OnPageChangeListener(var changeListener:(Int)->Unit)
 }
