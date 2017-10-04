@@ -131,4 +131,27 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
             nextX = w*dir
         }
     }
+    class ColorPageSwiperAnimator(var cpi:ColorPageIndicatorContainer,var view:ColorPageSwiperView,var animated:Boolean = false) {
+        fun draw(canvas: Canvas,paint:Paint) {
+            cpi.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                cpi.update()
+                if(cpi.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleSwipe(dir:Int) {
+            cpi.startUpdating(dir)
+        }
+    }
 }
