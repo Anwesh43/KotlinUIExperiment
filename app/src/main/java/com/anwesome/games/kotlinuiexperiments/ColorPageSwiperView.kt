@@ -48,6 +48,13 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
                 curr_x += 2*size
             }
         }
+        fun shouldAnimate(dir:Int):Boolean {
+            return (dir > 0 && currIndex < n-1) || (dir < 0 && currIndex > 0)
+        }
+        fun startUpdating(dir:Int) {
+            prevIndex = currIndex
+            currIndex += dir
+        }
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             var i = 0
             indicators.forEach { indicator ->
@@ -82,17 +89,23 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
     data class ColorPageIndicatorContainer(var w:Float,var h:Float,var colors:Array<Int>) {
         var colorPageContainer = ColorPageContainer(w,h,colors)
         var indicatorContainer = IndicatorContainer(w/2,h*0.8f,w/40,colors.size)
+        var screen = CPIScreen(w)
+        var state = CPIState()
         fun draw(canvas:Canvas,paint:Paint) {
             colorPageContainer.draw(canvas,paint)
-            indicatorContainer.draw(canvas,paint,0f)
+            indicatorContainer.draw(canvas,paint,state.scale)
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating(dir:Int) {
-
+            if(indicatorContainer.shouldAnimate(dir)) {
+                screen.startUpdating(dir)
+                indicatorContainer.startUpdating(dir)
+                state.startUpdating()
+            }
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
     data class CPIState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
@@ -107,14 +120,14 @@ class ColorPageSwiperView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    data class CPIScreen(var w:Float,var maxX:Float,var x:Float = 0f,var nextX:Float = 0f) {
+    data class CPIScreen(var w:Float,var x:Float = 0f,var nextX:Float = 0f) {
         fun draw(canvas:Canvas,drawCb:()->Unit,scale:Float) {
             canvas.save()
             canvas.translate(x+nextX*scale,0f)
             drawCb()
             canvas.restore()
         }
-        fun startUpdating(dir:Float) {
+        fun startUpdating(dir:Int) {
             nextX = w*dir
         }
     }
