@@ -40,7 +40,7 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
             }
         }
     }
-    data class IndicatorContainer(var x:Float,var y:Float,var size:Float,var n:Int,var i:Int = 0,var currIndex:Int = 0,var prevIndex:Int = -1,var indicators:ConcurrentLinkedQueue<Indicator> = ConcurrentLinkedQueue()) {
+    data class IndicatorContainer(var x:Float,var y:Float,var size:Float,var n:Int,var i:Int = 0,var currIndex:Int = -1,var prevIndex:Int = 0,var indicators:ConcurrentLinkedQueue<Indicator> = ConcurrentLinkedQueue()) {
         init {
             var curr_x = x - (n/2)*(2*size)
             for(i in 0..n-1) {
@@ -49,24 +49,28 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
             }
         }
         fun shouldAnimate(dir:Int):Boolean {
-            return (dir > 0 && currIndex < n-1) || (dir < 0 && currIndex > 0)
+            return (dir < 0 && prevIndex < n-1) || (dir > 0 && prevIndex > 0)
         }
         fun startUpdating(dir:Int) {
+
+            currIndex = prevIndex- dir
+        }
+        fun onStop() {
             prevIndex = currIndex
-            currIndex += dir
         }
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             var i = 0
             indicators.forEach { indicator ->
-                if(i == currIndex) {
-                    indicator.draw(canvas,paint,scale)
-                    return
-                }
                 if(i == prevIndex) {
                     indicator.draw(canvas,paint,1-scale)
-                    return
+
                 }
-                indicator.draw(canvas,paint,0f)
+                else if(i == currIndex) {
+                    indicator.draw(canvas,paint,scale)
+                }
+                else {
+                    indicator.draw(canvas, paint, 0f)
+                }
                 i++
             }
         }
@@ -92,11 +96,14 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
         var screen = CPIScreen(w)
         var state = CPIState()
         fun draw(canvas:Canvas,paint:Paint) {
-            colorPageContainer.draw(canvas,paint)
+            screen.draw(canvas,{colorPageContainer.draw(canvas,paint)},state.scale)
             indicatorContainer.draw(canvas,paint,state.scale)
         }
         fun update() {
-            state.update()
+            state.update({
+                indicatorContainer.onStop()
+                screen.onStop()
+            })
         }
         fun startUpdating(dir:Int) {
             if(indicatorContainer.shouldAnimate(dir)) {
@@ -108,14 +115,16 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
         fun stopped():Boolean = state.stopped()
     }
     data class CPIState(var scale:Float = 0f,var dir:Float = 0f) {
-        fun update() {
+        fun update(stopCb:()->Unit) {
             scale += dir*0.1f
             if(scale > 1) {
-                scale = 0f
                 dir = 0f
+                scale = 0f
+                stopCb()
             }
         }
         fun startUpdating() {
+            scale = 0f
             dir = 1f
         }
         fun stopped():Boolean = dir == 0f
@@ -126,6 +135,10 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
             canvas.translate(x+nextX*scale,0f)
             drawCb()
             canvas.restore()
+        }
+        fun onStop() {
+            x += nextX
+            nextX = 0f
         }
         fun startUpdating(dir:Int) {
             nextX = w*dir
@@ -151,7 +164,13 @@ class ColorPageSwiperView(ctx:Context,var colors:Array<Int>):View(ctx) {
             }
         }
         fun handleSwipe(dir:Int) {
-            cpi.startUpdating(dir)
+            if(!animated) {
+                cpi.startUpdating(dir)
+                if(cpi.state.dir == 1f) {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
         }
     }
     class ColorPageSwiperRenderer(var view:ColorPageSwiperView,var time:Int = 0) {
