@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 06/10/17.
@@ -62,5 +63,37 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class MultiLineCircleContainer(var w:Float,var h:Float) {
+        var lineCircles:ConcurrentLinkedQueue<LineCircle> = ConcurrentLinkedQueue()
+        var tappedCircles:ConcurrentLinkedQueue<LineCircle> = ConcurrentLinkedQueue()
+        init {
+            val n = 4
+            val gap = w/(2*n+1)
+            var x = 3*gap/2
+            for(i in 0..n-1) {
+                lineCircles.add(LineCircle(x,h/2,2*h/5,h/5))
+                x+=2*gap
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            lineCircles.forEach { lineCircle ->
+                lineCircle.draw(canvas,paint)
+            }
+        }
+        fun update(stopCb:()->Unit) {
+            tappedCircles.forEach { tappedCircle ->
+                tappedCircle.update()
+                if(tappedCircle.stopped()) {
+                    tappedCircles.remove(tappedCircle)
+                    if(tappedCircles.size == 0) {
+                        stopCb()
+                    }
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
     }
 }
