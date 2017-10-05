@@ -2,6 +2,7 @@ package com.anwesome.games.kotlinuiexperiments
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -13,13 +14,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class MultiLineCircleView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = MultiCircleLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(x,y)
             }
         }
         return true
@@ -105,44 +108,45 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
     }
     class MultiLineCircleAnimator(var multiCircleLine:MultiLineCircleContainer,var view:MultiLineCircleView) {
         var animated = false
-        fun draw(canvas:Canvas,paint:Paint) {
-            multiCircleLine.draw(canvas,paint)
+        fun draw(canvas: Canvas, paint: Paint) {
+            multiCircleLine.draw(canvas, paint)
         }
+
         fun update() {
-            if(animated) {
+            if (animated) {
                 multiCircleLine.update { animated = false }
                 try {
                     Thread.sleep(50)
                     view.invalidate()
-                }
-                catch(ex:Exception) {
+                } catch(ex: Exception) {
 
                 }
             }
         }
-        fun handleTap(x:Float,y:Float) {
-            if(!animated) {
-                multiCircleLine.handleTap(x,y,{
+
+        fun handleTap(x: Float, y: Float) {
+            if (!animated) {
+                multiCircleLine.handleTap(x, y, {
                     animated = true
                     view.postInvalidate()
                 })
             }
         }
-        class MultiCircleLineRenderer(var view:MultiLineCircleView,var time:Int = 0) {
-            var animator:MultiLineCircleAnimator? = null
-            fun render(canvas:Canvas,paint:Paint) {
-                if(time == 0) {
-                    val w = canvas.width.toFloat()
-                    val h = canvas.height.toFloat()
-                    animator = MultiLineCircleAnimator(MultiLineCircleContainer(w,h),view)
-                }
-                animator?.draw(canvas,paint)
-                animator?.update()
-                time++
+    }
+    class MultiCircleLineRenderer(var view:MultiLineCircleView,var time:Int = 0) {
+        var animator:MultiLineCircleAnimator? = null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = MultiLineCircleAnimator(MultiLineCircleContainer(w,h),view)
             }
-            fun handleTap(x:Float,y:Float) {
-                animator?.handleTap(x,y)
-            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
