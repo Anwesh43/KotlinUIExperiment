@@ -24,7 +24,7 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                renderer.handleTap(x,y)
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -35,11 +35,12 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,rSize/2,paint)
+            paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-rSize/2,-rSize/2,rSize/2,rSize/2),0f,360f*state.scale,true,paint)
             for(i in 0..1) {
                 canvas.save()
-                canvas.scale(1f,1-2*state.scale)
-                canvas.drawLine(0f,0f,0f,(hSize/2-rSize/2)*state.scale,paint)
+                canvas.scale(1f,1-2f*i)
+                canvas.drawLine(0f,rSize/2,0f,rSize/2+(hSize)*state.scale,paint)
                 canvas.restore()
             }
             canvas.restore()
@@ -51,7 +52,7 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
             state.startUpdating()
         }
         fun stopped():Boolean = state.stopped()
-        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-rSize/2 && x<=this.x+rSize/2 && y>=this.y-rSize/2 && y<=this.y+rSize/2
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-rSize/2 && x<=this.x+rSize/2 && y>=this.y-rSize/2 && y<=this.y+rSize/2 && this.state.dir == 0f
     }
     data class LineCircleState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
@@ -78,7 +79,7 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
             val gap = w/(2*n+1)
             var x = 3*gap/2
             for(i in 0..n-1) {
-                lineCircles.add(LineCircle(x,h/2,2*h/5,h/5))
+                lineCircles.add(LineCircle(x,h/2,2*h/5,gap))
                 x+=2*gap
             }
         }
@@ -100,10 +101,11 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float,startCb:()->Unit) {
             lineCircles.forEach { lineCircle ->
-                if(lineCircle.stopped()) {
+                if(lineCircle.handleTap(x,y)) {
                     lineCircle.startUpdating()
                     tappedCircles.add(lineCircle)
                     startCb()
+                    return
                 }
             }
         }
