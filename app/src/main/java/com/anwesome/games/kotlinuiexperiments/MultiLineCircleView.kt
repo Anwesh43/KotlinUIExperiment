@@ -128,5 +128,21 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
                 })
             }
         }
+        class MultiCircleLineRenderer(var view:MultiLineCircleView,var time:Int = 0) {
+            var animator:MultiLineCircleAnimator? = null
+            fun render(canvas:Canvas,paint:Paint) {
+                if(time == 0) {
+                    val w = canvas.width.toFloat()
+                    val h = canvas.height.toFloat()
+                    animator = MultiLineCircleAnimator(MultiLineCircleContainer(w,h),view)
+                }
+                animator?.draw(canvas,paint)
+                animator?.update()
+                time++
+            }
+            fun handleTap(x:Float,y:Float) {
+                animator?.handleTap(x,y)
+            }
+        }
     }
 }
