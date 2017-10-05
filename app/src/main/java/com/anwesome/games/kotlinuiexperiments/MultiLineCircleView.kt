@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 06/10/17.
  */
-class MultiLineCircleView(ctx:Context):View(ctx) {
+class MultiLineCircleView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = MultiCircleLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
@@ -71,11 +71,10 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    class MultiLineCircleContainer(var w:Float,var h:Float) {
+    class MultiLineCircleContainer(var w:Float,var h:Float,var n:Int) {
         var lineCircles:ConcurrentLinkedQueue<LineCircle> = ConcurrentLinkedQueue()
         var tappedCircles:ConcurrentLinkedQueue<LineCircle> = ConcurrentLinkedQueue()
         init {
-            val n = 4
             val gap = w/(2*n+1)
             var x = 3*gap/2
             for(i in 0..n-1) {
@@ -129,12 +128,10 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
         }
 
         fun handleTap(x: Float, y: Float) {
-            if (!animated) {
-                multiCircleLine.handleTap(x, y, {
-                    animated = true
-                    view.postInvalidate()
-                })
-            }
+            multiCircleLine.handleTap(x, y, {
+                animated = true
+                view.postInvalidate()
+            })
         }
     }
     class MultiCircleLineRenderer(var view:MultiLineCircleView,var time:Int = 0) {
@@ -143,7 +140,7 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = MultiLineCircleAnimator(MultiLineCircleContainer(w,h),view)
+                animator = MultiLineCircleAnimator(MultiLineCircleContainer(w,h,view.n),view)
                 paint.strokeWidth = Math.min(w,h)/50
                 paint.color = Color.parseColor("#e53935")
             }
