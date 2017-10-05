@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -140,6 +142,8 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = MultiLineCircleAnimator(MultiLineCircleContainer(w,h),view)
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.color = Color.parseColor("#e53935")
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -147,6 +151,13 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object{
+        fun create(activity:Activity) {
+            val view = MultiLineCircleView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
