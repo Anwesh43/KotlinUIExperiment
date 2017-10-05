@@ -46,4 +46,21 @@ class MultiLineCircleView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = false
     }
+    data class LineCircleState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
