@@ -36,7 +36,7 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
                 val path = Path()
                 path.moveTo(-w/3,-h/3)
                 path.lineTo(0f,-h/3+h/3*state.scale)
-                path.lineTo(w/3,h/3)
+                path.lineTo(w/3,-h/3)
                 canvas.drawPath(path,paint)
 
                 canvas.restore()
@@ -98,6 +98,7 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
                 val h = canvas.height.toFloat()
                 animator = FillDownTriangleAnimator(FillDownFourTriangle(w,h),view)
                 paint.color = Color.parseColor("#0D47A1")
+                paint.strokeWidth = Math.min(w,h)/50
             }
             animator?.draw(canvas,paint)
             animator?.update()
