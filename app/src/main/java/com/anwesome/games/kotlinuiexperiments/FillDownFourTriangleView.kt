@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
 
@@ -21,5 +22,29 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    data class FillDownFourTriangle(var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            for(i in 0..3) {
+                canvas.save()
+                canvas.rotate(90f*i)
+                val path = Path()
+                path.moveTo(-w/3,-h/3)
+                path.lineTo(0f,-h/3+h/3)
+                path.lineTo(w/3,h/3)
+                canvas.drawPath(path,paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun stopped():Boolean = false
+        fun startUpdating() {
+
+        }
     }
 }
