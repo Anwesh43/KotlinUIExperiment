@@ -1,9 +1,11 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by anweshmishra on 07/10/17.
@@ -95,6 +97,7 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = FillDownTriangleAnimator(FillDownFourTriangle(w,h),view)
+                paint.color = Color.parseColor("#0D47A1")
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -102,6 +105,13 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = FillDownFourTriangleView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
