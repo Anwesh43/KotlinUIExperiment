@@ -13,6 +13,7 @@ import android.view.ViewGroup
 class FillDownFourTriangleView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = FillDownFourTriangleRenderer(this)
+    var clickListener:FDTClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -70,6 +71,7 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
                 fillDownFourTriangle.update()
                 if(fillDownFourTriangle.stopped()) {
                     animated = false
+                    view.clickListener?.onClickListener?.invoke()
                 }
                 try {
                     Thread.sleep(50)
@@ -109,10 +111,14 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             val view = FillDownFourTriangleView(activity)
+            if(listeners.size == 1) {
+                view.clickListener = FDTClickListener(listeners[0])
+            }
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class FDTClickListener(var onClickListener:()->Unit)
 }
