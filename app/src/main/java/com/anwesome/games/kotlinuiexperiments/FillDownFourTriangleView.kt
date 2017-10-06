@@ -80,13 +80,29 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
-
+            fillDownFourTriangle.draw(canvas,paint)
         }
         fun handleTap(x:Float,y:Float) {
             if(!animated && fillDownFourTriangle.handleTap(x,y)) {
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    class FillDownFourTriangleRenderer(var view:FillDownFourTriangleView,var time:Int = 0) {
+        var animator:FillDownTriangleAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = FillDownTriangleAnimator(FillDownFourTriangle(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
