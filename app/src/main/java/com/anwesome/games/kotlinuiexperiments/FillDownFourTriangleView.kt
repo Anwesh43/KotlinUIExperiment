@@ -62,4 +62,31 @@ class FillDownFourTriangleView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    class FillDownTriangleAnimator(var fillDownFourTriangle:FillDownFourTriangle,var view:FillDownFourTriangleView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                fillDownFourTriangle.update()
+                if(fillDownFourTriangle.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.postInvalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated && fillDownFourTriangle.handleTap(x,y)) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
