@@ -123,6 +123,22 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             }
         }
     }
+    class DIARenderer(var view:DirectionIndicatingArcView,var time:Int = 0) {
+        var animator:DirectionIndicatingArcAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = DirectionIndicatingArcAnimator(DirectionIndicatingArcContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
 fun Canvas.drawRotatingTriangle(x:Float,y:Float,deg:Float,size:Float,paint:Paint) {
     this.save()
