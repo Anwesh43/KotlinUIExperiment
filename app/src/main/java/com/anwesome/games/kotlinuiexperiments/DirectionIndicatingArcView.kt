@@ -32,7 +32,7 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
-    data class DirectionIndicatingArcContainer(var w:Float,var h:Float,var arcs:ConcurrentLinkedQueue<DirectionIndicatingArc> = ConcurrentLinkedQueue()) {
+    data class DirectionIndicatingArcContainer(var w:Float,var h:Float,var arcs:ConcurrentLinkedQueue<DirectionIndicatingArc> = ConcurrentLinkedQueue(),var state:DIAState = DIAState()) {
         var prev:DirectionIndicatingArc?=null
         var curr:DirectionIndicatingArc?=null
         var gapDeg = 0f
@@ -49,18 +49,29 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            canvas.drawRotatingTriangle(0f,0f,(prev?.deg?:0f)+gapDeg*state.scale,Math.min(w,h)/10,paint)
             arcs.forEach { arc ->
                 arc.draw(canvas,paint)
             }
+            canvas.restore()
         }
-        fun update() {
+        fun update(stopcb:()->Unit) {
+            curr?.scale = state.scale
+            prev?.scale = state.scale
+            state.update()
+            if(state.stopped()) {
+                prev = curr
+                stopcb()
+            }
         }
-        fun stopped():Boolean = true
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             arcs.forEach { arc ->
                 if(arc.handleTap(x,y) && arc != prev) {
                     gapDeg = arc.deg - (prev?.deg?:0f)
                     curr = arc
+                    state.startUpdating()
                     startcb()
                 }
             }
@@ -83,4 +94,15 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+}
+fun Canvas.drawRotatingTriangle(x:Float,y:Float,deg:Float,size:Float,paint:Paint) {
+    this.save()
+    this.translate(x,y)
+    this.rotate(deg)
+    val path = Path()
+    path.moveTo(-size/2,-size/2)
+    path.lineTo(-size/2,size/2)
+    path.lineTo(size/2,0f)
+    this.drawPath(path,paint)
+    this.restore()
 }
