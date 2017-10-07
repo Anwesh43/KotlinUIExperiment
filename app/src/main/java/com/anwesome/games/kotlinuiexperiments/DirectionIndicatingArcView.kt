@@ -68,11 +68,12 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             arcs.forEach { arc ->
-                if(arc.handleTap(x,y) && arc != prev) {
+                if(arc.handleTap(x-w/2,y-h/2) && arc != prev) {
                     gapDeg = arc.deg - (prev?.deg?:0f)
                     curr = arc
                     state.startUpdating()
                     startcb()
+                    return
                 }
             }
         }
@@ -93,6 +94,34 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class DirectionIndicatingArcAnimator(var container:DirectionIndicatingArcContainer,var view:DirectionIndicatingArcView) {
+        var animated:Boolean = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                container.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                container.handleTap(x,y,{
+                    animated = true
+                    view.postInvalidate()
+                })
+            }
+        }
     }
 }
 fun Canvas.drawRotatingTriangle(x:Float,y:Float,deg:Float,size:Float,paint:Paint) {
