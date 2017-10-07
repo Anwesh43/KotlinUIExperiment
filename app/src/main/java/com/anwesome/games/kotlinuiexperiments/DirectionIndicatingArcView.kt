@@ -52,6 +52,8 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            curr?.scale = state.scale
+            prev?.scale = 1-state.scale
             canvas.save()
             canvas.translate(w/2,h/2)
             canvas.drawRotatingTriangle(0f,0f,(prev?.deg?:0f)+gapDeg*state.scale,Math.min(w,h)/10,paint)
@@ -61,11 +63,10 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(stopcb:()->Unit) {
-            curr?.scale = state.scale
-            prev?.scale = state.scale
             state.update()
             if(state.stopped()) {
                 prev = curr
+                gapDeg = 0f
                 stopcb()
             }
         }
