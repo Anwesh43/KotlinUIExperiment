@@ -9,13 +9,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class DirectionIndicatingArcView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DIARenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -129,6 +131,8 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.color = Color.parseColor("#FF6F00")
                 animator = DirectionIndicatingArcAnimator(DirectionIndicatingArcContainer(w,h),view)
             }
             animator?.draw(canvas,paint)
