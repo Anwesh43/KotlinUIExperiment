@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.content.Context
 import android.view.*
 import android.graphics.*
@@ -141,6 +142,13 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object{
+        fun create(activity:Activity) {
+            val view = DirectionIndicatingArcView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
