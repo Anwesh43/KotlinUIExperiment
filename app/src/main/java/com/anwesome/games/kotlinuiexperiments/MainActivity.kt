@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         //ColorPageSwiperView.create(this,arrayOf(Color.parseColor("#00BCD4"),Color.parseColor("#F4511E"),Color.parseColor("#f44336"),Color.parseColor("#303F9F"),Color.parseColor("#00838F"),Color.parseColor("#6A1B9A")),{index->Toast.makeText(this,"Now in page number ${index}",Toast.LENGTH_SHORT).show()})
         //MultiLineCircleView.create(this)
        // FillDownFourTriangleView.create(this,{Toast.makeText(this,"Clicked",Toast.LENGTH_SHORT).show()})
-        DirectionIndicatingArcView.create(this,{i -> Toast.makeText(this,"Selected ${i} arc",Toast.LENGTH_SHORT)})
+        DirectionIndicatingArcView.create(this,{i -> Toast.makeText(this,"Selected ${i} arc",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

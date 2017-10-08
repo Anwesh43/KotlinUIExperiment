@@ -112,6 +112,8 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
             if(animated) {
                 container.update({
                     animated = false
+                    val deg = (container.prev?.deg?.toInt()?:0)
+                    view.arrowSelectionListener?.listener?.invoke(deg/90)
                 })
                 try {
                     Thread.sleep(50)
@@ -127,9 +129,7 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
                 container.handleTap(x,y,{
                     animated = true
                     view.postInvalidate()
-                    val deg = (container.curr?.deg?.toInt()?:0)
-                    view.arrowSelectionListener?.listener?.invoke(deg/90)}
-                )
+                })
             }
         }
     }
