@@ -65,8 +65,11 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
         fun update(stopcb:()->Unit) {
             state.update()
             if(state.stopped()) {
+                prev?.scale = 0f
                 prev = curr
+                state.scale = 0f
                 gapDeg = 0f
+                curr = null
                 stopcb()
             }
         }
