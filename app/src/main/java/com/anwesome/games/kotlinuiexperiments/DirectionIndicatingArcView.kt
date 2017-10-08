@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class DirectionIndicatingArcView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = DIARenderer(this)
+    var arrowSelectionListener:DirectionArrowOnSelectionListener? = null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -126,7 +127,9 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
                 container.handleTap(x,y,{
                     animated = true
                     view.postInvalidate()
-                })
+                    val deg = (container.curr?.deg?.toInt()?:0)
+                    view.arrowSelectionListener?.listener?.invoke(deg/90)}
+                )
             }
         }
     }
@@ -149,12 +152,16 @@ class DirectionIndicatingArcView(ctx:Context):View(ctx) {
         }
     }
     companion object{
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             val view = DirectionIndicatingArcView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
+            if(listeners.size == 1) {
+                view.arrowSelectionListener = DirectionArrowOnSelectionListener(listeners[0])
+            }
         }
     }
+    data class DirectionArrowOnSelectionListener(var listener:(Int)->Unit)
 }
 fun Canvas.drawRotatingTriangle(x:Float,y:Float,deg:Float,size:Float,paint:Paint) {
     this.save()
