@@ -66,6 +66,34 @@ class PointedArrowView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    class PointedArrowAnimator(var pointedArrow:PointedArrow,var view:PointedArrowView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            pointedArrow.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                pointedArrow.update()
+                if(pointedArrow.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                pointedArrow.startUpdating()
+                view.postInvalidate()
+            }
+        }
+    }
 }
 fun Canvas.drawDirectedLine(size:Float,deg:Float,paint:Paint) {
     this.save()
