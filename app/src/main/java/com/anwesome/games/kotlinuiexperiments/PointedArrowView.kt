@@ -94,6 +94,22 @@ class PointedArrowView(ctx:Context):View(ctx) {
             }
         }
     }
+    class PointedArrowRenderer(var view:PointedArrowView,var time:Int = 0) {
+        var animator:PointedArrowAnimator?=null
+        fun handleTap() {
+            animator?.handleTap()
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = PointedArrowAnimator(PointedArrow(w/2,h/2,Math.min(w,h)/3),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+    }
 }
 fun Canvas.drawDirectedLine(size:Float,deg:Float,paint:Paint) {
     this.save()
