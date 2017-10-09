@@ -107,6 +107,9 @@ class PointedArrowView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = PointedArrowAnimator(PointedArrow(w/2,h/2,Math.min(w,h)/3),view)
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.color = Color.parseColor("#673AB7")
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
