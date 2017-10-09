@@ -27,8 +27,13 @@ class PointedArrowView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             val j = state.j
+            val color = Color.parseColor("#673AB7")
+            paint.color = color
             for(i in 0..j) {
                 canvas.drawDirectedLine(size/2,i*90f,paint)
+            }
+            if(state.dir != 0) {
+                paint.color = Color.argb(125, Color.red(color), Color.green(color), Color.blue(color))
             }
             canvas.drawDirectedLine(size/2,j*90f+90f*state.scale,paint)
             canvas.restore()
@@ -109,7 +114,6 @@ class PointedArrowView(ctx:Context):View(ctx) {
                 val h = canvas.height.toFloat()
                 animator = PointedArrowAnimator(PointedArrow(w/2,h/2,2*Math.min(w,h)/3),view)
                 paint.strokeWidth = Math.min(w,h)/50
-                paint.color = Color.parseColor("#673AB7")
                 paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
