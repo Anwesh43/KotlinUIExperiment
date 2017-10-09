@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.*
@@ -7,14 +8,16 @@ import android.view.*
  * Created by anweshmishra on 10/10/17.
  */
 class PointedArrowView(ctx:Context):View(ctx) {
+    val renderer = PointedArrowRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -108,6 +111,13 @@ class PointedArrowView(ctx:Context):View(ctx) {
             animator?.draw(canvas,paint)
             animator?.update()
             time++
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = PointedArrowView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
