@@ -19,23 +19,23 @@ class PointedArrowView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class PointedArrow(var x:Float,var y:Float,var size:Float) {
+    data class PointedArrow(var x:Float,var y:Float,var size:Float,var state:PointedArrowState = PointedArrowState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            val j = Math.floor(3.0).toInt()
-            for(i in 0..3) {
+            val j = state.j
+            for(i in 0..j) {
                 canvas.drawDirectedLine(size/2,i*90f,paint)
             }
-            canvas.drawDirectedLine(size/2,j*90f+90f,paint)
+            canvas.drawDirectedLine(size/2,j*90f+90f*state.scale,paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class PointedArrowState(var scale:Float = 0f,var dir:Int = 0,var currDir:Int = 1,var j:Int = 0) {
@@ -45,9 +45,10 @@ class PointedArrowView(ctx:Context):View(ctx) {
                 dir = 0
                 scale = 0f
                 j++
-                if(j == 4) {
+                if(j == 3) {
                     currDir = -1
                     scale = 1f
+                    j--
                 }
             }
             else if(scale < 0 && currDir < 0) {
@@ -60,7 +61,7 @@ class PointedArrowView(ctx:Context):View(ctx) {
                 }
             }
         }
-        fun startUpdaing() {
+        fun startUpdating() {
             dir = currDir
         }
         fun stopped():Boolean = dir == 0
