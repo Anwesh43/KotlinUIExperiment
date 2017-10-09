@@ -38,6 +38,33 @@ class PointedArrowView(ctx:Context):View(ctx) {
 
         }
     }
+    data class PointedArrowState(var scale:Float = 0f,var dir:Int = 0,var currDir:Int = 1,var j:Int = 0) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1 && currDir > 0) {
+                dir = 0
+                scale = 0f
+                j++
+                if(j == 4) {
+                    currDir = -1
+                    scale = 1f
+                }
+            }
+            else if(scale < 0 && currDir < 0) {
+                dir = 0
+                scale = 1f
+                j--
+                if(j == 0) {
+                    currDir = 1
+                    scale = 0f
+                }
+            }
+        }
+        fun startUpdaing() {
+            dir = currDir
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
 fun Canvas.drawDirectedLine(size:Float,deg:Float,paint:Paint) {
     this.save()
