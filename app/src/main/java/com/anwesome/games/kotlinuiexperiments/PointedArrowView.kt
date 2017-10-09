@@ -58,9 +58,10 @@ class PointedArrowView(ctx:Context):View(ctx) {
                 dir = 0
                 scale = 1f
                 j--
-                if(j == 0) {
+                if(j == -1) {
                     currDir = 1
                     scale = 0f
+                    j++
                 }
             }
         }
@@ -106,7 +107,7 @@ class PointedArrowView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = PointedArrowAnimator(PointedArrow(w/2,h/2,Math.min(w,h)/3),view)
+                animator = PointedArrowAnimator(PointedArrow(w/2,h/2,2*Math.min(w,h)/3),view)
                 paint.strokeWidth = Math.min(w,h)/50
                 paint.color = Color.parseColor("#673AB7")
                 paint.strokeCap = Paint.Cap.ROUND
@@ -127,9 +128,9 @@ class PointedArrowView(ctx:Context):View(ctx) {
 fun Canvas.drawDirectedLine(size:Float,deg:Float,paint:Paint) {
     this.save()
     this.rotate(deg)
-    this.drawLine(size,-size/2,size,-size/2,paint)
+    this.drawLine(size,-size,size,size,paint)
     val path = Path()
-    path.addDownTriangle(size,size/2,size/10)
+    path.addDownTriangle(size,size,size/4)
     this.drawPath(path,paint)
     this.restore()
 }
