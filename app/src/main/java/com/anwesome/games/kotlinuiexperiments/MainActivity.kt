@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         //MultiLineCircleView.create(this)
        // FillDownFourTriangleView.create(this,{Toast.makeText(this,"Clicked",Toast.LENGTH_SHORT).show()})
         //DirectionIndicatingArcView.create(this,{i -> Toast.makeText(this,"Selected ${i} arc",Toast.LENGTH_SHORT).show()})
-        PointedArrowView.create(this)
+        PointedArrowView.create(this,{i->Toast.makeText(this,"${i} selected",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
