@@ -10,6 +10,7 @@ import android.view.*
 class PointedArrowView(ctx:Context):View(ctx) {
     val renderer = PointedArrowRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var pointedArrowClickListener:PointedArrowClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -85,6 +86,7 @@ class PointedArrowView(ctx:Context):View(ctx) {
                 pointedArrow.update()
                 if(pointedArrow.stopped()) {
                     animated = false
+                    view.pointedArrowClickListener?.listener?.invoke(pointedArrow.state.j)
                 }
                 try {
                     Thread.sleep(75)
@@ -122,12 +124,16 @@ class PointedArrowView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listener:(Int)->Unit) {
             val view = PointedArrowView(activity)
             val size = DimensionsUtil.getDimension(activity)
+            if(listener.size == 1) {
+                view.pointedArrowClickListener = PointedArrowClickListener(listener[0])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+    data class PointedArrowClickListener(var listener:(Int)->Unit)
 }
 fun Canvas.drawDirectedLine(size:Float,deg:Float,paint:Paint) {
     this.save()
