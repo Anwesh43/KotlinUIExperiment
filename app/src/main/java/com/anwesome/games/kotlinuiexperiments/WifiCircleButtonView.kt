@@ -19,7 +19,7 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class WifiCircleButton(var x:Float,var y:Float,var r:Float) {
+    data class WifiCircleButton(var x:Float,var y:Float,var r:Float,var state:WifiCircleState = WifiCircleState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -30,7 +30,7 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                     val newR = r/j
                     for(k in 0..1) {
                         canvas.save()
-                        canvas.rotate(-45+45f*(1-2*k))
+                        canvas.rotate(-45+45f*(1-2*k)*state.scale)
                         canvas.drawPointArc(0f,0f,newR,0,90,paint)
                         canvas.restore()
                     }
@@ -40,12 +40,12 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
     data class WifiCircleState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
