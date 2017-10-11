@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.*
+import android.widget.Toast
+
 /**
  * Created by anweshmishra on 11/10/17.
  */
@@ -11,6 +13,7 @@ val colors = arrayOf(Color.parseColor("#1565C0"),Color.parseColor("#f44336"))
 class WifiCircleButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = WifiCirlceButtonRenderer(this)
+    var listener:WCBOnCollapseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -78,6 +81,10 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                 wifiCircleButton.update()
                 if(wifiCircleButton.stopped()) {
                     animated = false
+                    when(wifiCircleButton.state.scale) {
+                        0f -> view.listener?.collapseListener?.invoke()
+                        1f -> view.listener?.expandListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(40)
@@ -115,12 +122,16 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             val view = WifiCircleButtonView(activity)
+            if(listeners.size == 2) {
+                view.listener = WCBOnCollapseListener(listeners[0],listeners[1])
+            }
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class WCBOnCollapseListener(var collapseListener:()->Unit,var expandListener:()->Unit)
 }
 fun Canvas.drawPointArc(x:Float,y:Float,r:Float,start:Int,end:Int,paint:Paint) {
     val path = Path()
