@@ -7,6 +7,7 @@ import android.view.*
 /**
  * Created by anweshmishra on 11/10/17.
  */
+val colors = arrayOf(Color.parseColor("#1565C0"),Color.parseColor("#f44336"))
 class WifiCircleButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = WifiCirlceButtonRenderer(this)
@@ -32,6 +33,7 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                 for(j in 1..4) {
                     val newR = r/j
                     for(k in 0..1) {
+                        paint.color = colors[k]
                         canvas.save()
                         canvas.rotate(-45+45f*(1-2*k)*state.scale)
                         canvas.drawPointArc(0f,0f,newR,0,90,paint)
@@ -78,7 +80,7 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                     animated = false
                 }
                 try {
-                    Thread.sleep(75)
+                    Thread.sleep(40)
                     view.invalidate()
                 }
                 catch(ex:Exception) {
@@ -103,7 +105,6 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                 animator = WifiCircleAnimator(WifiCircleButton(w/2,h/2,Math.min(w,h)/3),view)
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = Math.min(w,h)/60
-                paint.color = Color.parseColor("#f44336")
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -129,7 +130,7 @@ fun Canvas.drawPointArc(x:Float,y:Float,r:Float,start:Int,end:Int,paint:Paint) {
 fun Path.moveInCircle(cx:Float,cy:Float,r:Float,start:Int,end:Int) {
     for(i in start..end) {
         val x = cx+r*Math.cos(i*Math.PI/180).toFloat()
-        val y = cx+r*Math.sin(i*Math.PI/180).toFloat()
+        val y = cy+r*Math.sin(i*Math.PI/180).toFloat()
         if(i == start) {
             this.moveTo(x,y)
         }
