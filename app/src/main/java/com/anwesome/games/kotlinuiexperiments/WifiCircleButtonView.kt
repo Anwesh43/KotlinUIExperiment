@@ -64,6 +64,33 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class WifiCircleAnimator(var wifiCircleButton:WifiCircleButton,var view:WifiCircleButtonView,var animated:Boolean = false) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            wifiCircleButton.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                wifiCircleButton.update()
+                if(wifiCircleButton.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                wifiCircleButton.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
 fun Canvas.drawPointArc(x:Float,y:Float,r:Float,start:Int,end:Int,paint:Paint) {
     val path = Path()
