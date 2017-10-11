@@ -101,6 +101,9 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = WifiCircleAnimator(WifiCircleButton(w/2,h/2,Math.min(w,h)/3),view)
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = Math.min(w,h)/60
+                paint.color = Color.parseColor("#f44336")
             }
             animator?.draw(canvas,paint)
             animator?.update()
