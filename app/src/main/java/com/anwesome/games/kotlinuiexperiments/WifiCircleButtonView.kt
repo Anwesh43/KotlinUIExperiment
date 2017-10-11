@@ -38,7 +38,7 @@ class WifiCircleButtonView(ctx:Context):View(ctx) {
                     for(k in 0..1) {
                         paint.color = colors[k]
                         canvas.save()
-                        canvas.rotate(-45+45f*(1-2*k)*state.scale)
+                        canvas.rotate(-45+45f*(1-2*k)*(2*(j%2)-1)*state.scale)
                         canvas.drawPointArc(0f,0f,newR,0,90,paint)
                         canvas.restore()
                     }
