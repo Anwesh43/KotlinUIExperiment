@@ -40,6 +40,23 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class DTTState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(scale > 1) {
+                scale = 1f
+                dir = 0f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            this.dir = 1f-2*this.scale
+        }
+        fun stopped() = dir == 0f
+    }
 }
 fun Path.addHorizontalTriangle(size:Float) {
     this.moveTo(-size/2,0f)
