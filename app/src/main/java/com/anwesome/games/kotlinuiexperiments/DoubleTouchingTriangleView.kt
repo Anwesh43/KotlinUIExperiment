@@ -120,6 +120,7 @@ fun Path.addHorizontalTriangle(size:Float) {
 }
 fun Canvas.drawRotatedHorizontalTriangle(x:Float,y:Float,deg:Float,size:Float,paint:Paint) {
     this.save()
+    this.translate(x,y)
     this.rotate(deg)
     val path = Path()
     path.addHorizontalTriangle(size)
