@@ -57,6 +57,34 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
         }
         fun stopped() = dir == 0f
     }
+    class DTTAnimator(var dtt:DoubleTouchingTriangle,var view:DoubleTouchingTriangleView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                dtt.update()
+                if(dtt.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                dtt.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            dtt.draw(canvas,paint)
+        }
+    }
 }
 fun Path.addHorizontalTriangle(size:Float) {
     this.moveTo(-size/2,0f)
