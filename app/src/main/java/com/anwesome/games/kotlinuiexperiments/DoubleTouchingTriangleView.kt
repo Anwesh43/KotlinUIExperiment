@@ -85,6 +85,22 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
             dtt.draw(canvas,paint)
         }
     }
+    class DTTRenderer(var view:DoubleTouchingTriangleView,var time:Int = 0) {
+        var animator:DTTAnimator ?= null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = DTTAnimator(DoubleTouchingTriangle(w/2,h/2,Math.min(w,h)/3),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
 fun Path.addHorizontalTriangle(size:Float) {
     this.moveTo(-size/2,0f)
