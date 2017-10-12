@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
         //DirectionIndicatingArcView.create(this,{i -> Toast.makeText(this,"Selected ${i} arc",Toast.LENGTH_SHORT).show()})
         //PointedArrowView.create(this,{i->Toast.makeText(this,"${i} selected",Toast.LENGTH_SHORT).show()})
         //WifiCircleButtonView.create(this,{Toast.makeText(this,"collapsed",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"expanded",Toast.LENGTH_SHORT).show()})
-        DoubleTouchingTriangleView.create(this)
+        DoubleTouchingTriangleView.create(this,{Toast.makeText(this,"opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"closed",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {
