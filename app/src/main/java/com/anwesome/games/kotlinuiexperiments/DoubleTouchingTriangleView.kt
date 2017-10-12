@@ -9,6 +9,7 @@ import android.view.*
  */
 class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var clickListener:DoubleTouchingTriangleClickListener?=null
     val renderer = DTTRenderer(this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
@@ -67,6 +68,14 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
                 dtt.update()
                 if(dtt.stopped()) {
                     animated = false
+                    when(dtt.state.scale) {
+                        0f -> {
+                            view.clickListener?.closeListener?.invoke()
+                        }
+                        1f -> {
+                            view.clickListener?.openListener?.invoke()
+                        }
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -106,12 +115,16 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:()->Unit) {
             val view = DoubleTouchingTriangleView(activity)
             val size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.clickListener = DoubleTouchingTriangleClickListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class DoubleTouchingTriangleClickListener(var openListener:()->Unit,var closeListener:()->Unit)
 }
 fun Path.addHorizontalTriangle(size:Float) {
     this.moveTo(-size/2,0f)
