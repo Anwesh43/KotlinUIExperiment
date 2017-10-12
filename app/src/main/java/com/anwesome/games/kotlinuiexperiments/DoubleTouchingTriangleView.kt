@@ -19,7 +19,7 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class DoubleTouchingTriangle(var x:Float,var y:Float,var size:Float) {
+    data class DoubleTouchingTriangle(var x:Float,var y:Float,var size:Float,var state:DTTState = DTTState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -27,18 +27,18 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
                 canvas.save()
                 canvas.scale(1f-2*i,1f)
                 canvas.save()
-                canvas.drawRotatedHorizontalTriangle(size/2,0f,180f,size,paint)
+                canvas.drawRotatedHorizontalTriangle(size/2,0f,180f*state.scale,size,paint)
                 canvas.restore()
             }
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class DTTState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
