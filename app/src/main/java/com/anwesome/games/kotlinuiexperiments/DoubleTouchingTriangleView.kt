@@ -8,13 +8,15 @@ import android.view.*
  */
 class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DTTRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -92,6 +94,7 @@ class DoubleTouchingTriangleView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = DTTAnimator(DoubleTouchingTriangle(w/2,h/2,Math.min(w,h)/3),view)
+                paint.color = Color.parseColor("#00838F")
             }
             animator?.draw(canvas,paint)
             animator?.update()
