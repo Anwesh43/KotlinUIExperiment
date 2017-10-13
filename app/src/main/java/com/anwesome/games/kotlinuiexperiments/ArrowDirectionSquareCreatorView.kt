@@ -94,4 +94,20 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
             }
         }
     }
+    class ArrowDirectionSquareRenderer(var time:Int = 0,var view:ArrowDirectionSquareCreatorView) {
+        var animator:ArrowDirectionSqaureAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ArrowDirectionSqaureAnimator(ArrowDirectionSquareCreator(w/2,h/2,Math.min(w,h)/2),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.startUpdating()
+        }
+    }
 }
