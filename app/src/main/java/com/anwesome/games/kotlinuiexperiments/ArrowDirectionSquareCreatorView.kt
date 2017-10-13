@@ -108,6 +108,7 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
                 animator = ArrowDirectionSqaureAnimator(ArrowDirectionSquareCreator(w/2,h/2,Math.min(w,h)/2),view)
                 paint.color = Color.parseColor("#76FF03")
                 paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
