@@ -3,6 +3,7 @@ import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
+import android.widget.Toast
 
 /**
  * Created by anweshmishra on 13/10/17.
@@ -10,6 +11,7 @@ import android.graphics.*
 class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ArrowDirectionSquareRenderer(view=this)
+    var movementListener:ArrowDirecMovementListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -78,6 +80,14 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
                 creator.update()
                 if(creator.stopped()) {
                     animated = false
+                    when(creator.state.currDir) {
+                        1 -> {
+                            view.movementListener?.onpositivemove?.invoke(creator.state.j)
+                        }
+                        -1 -> {
+                            view.movementListener?.onnegativemove?.invoke(creator.state.j)
+                        }
+                    }
                 }
                 try {
                     Thread.sleep(75)
@@ -119,10 +129,14 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
         }
     }
     companion object{
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             val view = ArrowDirectionSquareCreatorView(activity)
             val size = DimensionsUtil.getDimension(activity)
+            if(listeners.size == 2) {
+                view.movementListener = ArrowDirecMovementListener(listeners[0],listeners[1])
+            }
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
+    data class ArrowDirecMovementListener(var onpositivemove:(Int)->Unit,var onnegativemove:(Int)->Unit)
 }
