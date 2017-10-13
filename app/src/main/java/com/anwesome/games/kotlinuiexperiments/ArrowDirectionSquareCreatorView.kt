@@ -112,12 +112,12 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
         fun handleTap() {
             animator?.startUpdating()
         }
-        companion object{
-            fun create(activity:Activity) {
-                val view = ArrowDirectionSquareCreatorView(activity)
-                val size = DimensionsUtil.getDimension(activity)
-                activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
-            }
+    }
+    companion object{
+        fun create(activity:Activity) {
+            val view = ArrowDirectionSquareCreatorView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
