@@ -17,29 +17,53 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ArrowDirectionSquareCreator(var x:Float,var y:Float,var size:Float) {
+    data class ArrowDirectionSquareCreator(var x:Float,var y:Float,var size:Float,var state:ArrowDirectionSquareCreatorState = ArrowDirectionSquareCreatorState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            for(i in 0..4) {
+            for(i in 0..state.j-1) {
                 canvas.save()
-                canvas.rotate(-90f*i)
+                canvas.rotate(-90f*i*state.scales[i])
                 canvas.drawLine(-size/2,-size/2,size/2,-size/2,paint)
                 canvas.restore()
             }
             canvas.save()
-            canvas.rotate(90f+90f)
-            canvas.drawLine(-size/2,-size/2,-size/2+size,-size/2,paint)
+            canvas.rotate(90f*state.j)
+            canvas.drawLine(-size/2,-size/2,-size/2+size*state.scales[state.j],-size/2,paint)
             canvas.drawRotatedHorizontalTriangle(-size/2,-size/2+size,0f,size/25,paint)
             canvas.restore()
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
+    }
+    data class ArrowDirectionSquareCreatorState(var dir:Float=0f,var j:Int = 0,var currDir:Int = 1) {
+        var scales:Array<Float> = arrayOf(0f,0f,0f,0f)
+        fun update() {
+            scales[j] += dir*0.1f
+            if(scales[j]>1) {
+                scales[j] = 1f
+                dir = 0f
+                j+=currDir
+            }
+            if(scales[j] < 0f) {
+                scales[j] = 0f
+                dir = 0f
+                j+=currDir
+            }
+            if(dir == 0f && (j==-1 || j == 4)) {
+                currDir *= -1
+                j+=currDir
+            }
+        }
+        fun startUpdating() {
+            dir = currDir.toFloat()
+        }
+        fun stopped():Boolean = dir == 0f
     }
 }
