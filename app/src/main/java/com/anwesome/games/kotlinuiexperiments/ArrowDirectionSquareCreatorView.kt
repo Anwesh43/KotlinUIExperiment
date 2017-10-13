@@ -26,14 +26,14 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
             canvas.translate(x,y)
             for(i in 0..state.j-1) {
                 canvas.save()
-                canvas.rotate(-90f*i*state.scales[i])
+                canvas.rotate(90f*i*state.scales[i])
                 canvas.drawLine(-size/2,-size/2,size/2,-size/2,paint)
                 canvas.restore()
             }
             canvas.save()
             canvas.rotate(90f*state.j)
             canvas.drawLine(-size/2,-size/2,-size/2+size*state.scales[state.j],-size/2,paint)
-            canvas.drawRotatedHorizontalTriangle(-size/2,-size/2+size,0f,size/25,paint)
+            canvas.drawRotatedHorizontalTriangle(-size/2+size*state.scales[state.j],-size/2,90f+90*state.currDir,size/5,paint)
             canvas.restore()
             canvas.restore()
         }
@@ -52,16 +52,18 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
             if(scales[j]>1) {
                 scales[j] = 1f
                 dir = 0f
-                j+=currDir
             }
             if(scales[j] < 0f) {
                 scales[j] = 0f
                 dir = 0f
-                j+=currDir
             }
-            if(dir == 0f && (j==-1 || j == 4)) {
-                currDir *= -1
-                j+=currDir
+            if(dir == 0f) {
+                if((j==0 && currDir == -1) || (j == 3 && currDir == 1)) {
+                    currDir *= -1
+                }
+                else {
+                    j += currDir
+                }
             }
         }
         fun startUpdating() {
@@ -104,6 +106,8 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = ArrowDirectionSqaureAnimator(ArrowDirectionSquareCreator(w/2,h/2,Math.min(w,h)/2),view)
+                paint.color = Color.parseColor("#76FF03")
+                paint.strokeWidth = Math.min(w,h)/50
             }
             animator?.draw(canvas,paint)
             animator?.update()
