@@ -66,4 +66,32 @@ class ArrowDirectionSquareCreatorView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class ArrowDirectionSqaureAnimator(var creator:ArrowDirectionSquareCreator,var view:ArrowDirectionSquareCreatorView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                creator.update()
+                if(creator.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(75)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            creator.draw(canvas,paint)
+        }
+        fun startUpdating() {
+            if(!animated) {
+                creator.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
