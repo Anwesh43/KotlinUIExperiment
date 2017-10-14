@@ -58,4 +58,25 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
             return true
         }
     }
+    data class CenterToBallState(var dir:Float = 0f,var j:Int = 0) {
+        var scales:Array<Float> = arrayOf(0f,0f,0f)
+        fun update() {
+            if(j < scales.size) {
+                scales[j]+=dir*0.1f
+                if(scales[j] > 1) {
+                    if(j != 1) {
+                        dir = 0f
+                    }
+                    scales[j] = 1f
+                    j++
+                }
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            if(dir == 0f) {
+                dir = 1f
+            }
+        }
+    }
 }
