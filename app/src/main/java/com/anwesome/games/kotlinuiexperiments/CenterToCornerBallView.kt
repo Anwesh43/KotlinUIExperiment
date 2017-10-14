@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -164,6 +165,13 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             controller?.handleTap(x,y)
+        }
+    }
+    companion object{
+        fun create(activity:Activity) {
+            val view = CenterToCornerBallView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.setContentView(view)
         }
     }
 }
