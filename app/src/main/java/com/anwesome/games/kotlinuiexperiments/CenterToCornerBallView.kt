@@ -147,4 +147,21 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
             }
         }
     }
+    class CCBRenderer(var view:CenterToCornerBallView) {
+        var time:Int = 0
+        var controller:CCBController ?= null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                controller = CCBController(w,h,view)
+            }
+            controller?.draw(canvas,paint)
+            controller?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            controller?.handleTap(x,y)
+        }
+    }
 }
