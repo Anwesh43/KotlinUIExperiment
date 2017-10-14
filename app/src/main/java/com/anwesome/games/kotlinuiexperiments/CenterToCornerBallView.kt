@@ -2,6 +2,9 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 14/10/17.
  */
@@ -18,7 +21,7 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class CornerBall(var i:Float,var w:Float,var h:Float,var x:Float = 0f,var y:Float = 0f,var r:Float = Math.min(w,h)/20) {
+    data class CornerBall(var i:Int,var w:Float,var h:Float,var r:Float,var x:Float = 0f,var y:Float = 0f) {
         init {
             x = (i%2)*(w-2*r)+r
             y = (i/2)*(h-2*r)+r
@@ -49,8 +52,11 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
             y+=wy*state.scales[1]
         }
         fun setDiff(x:Float,y:Float) {
-            wx = x
-            wy = y
+            if(state.j == 1 && state.dir == 0f) {
+                wx = x
+                wy = y
+                state.startUpdating()
+            }
         }
         fun startUpdating() {
             state.startUpdating()
@@ -77,6 +83,67 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
         fun startUpdating() {
             if(dir == 0f) {
                 dir = 1f
+            }
+        }
+    }
+    class CCBController(var w:Float,var h:Float,var view:CenterToCornerBallView,var r:Float = Math.min(w,h)/20) {
+        var cornerBalls:LinkedList<CornerBall> = LinkedList()
+        var centerBall = CenterBall(r)
+        var animated = false
+        var ballsInMotion:ConcurrentLinkedQueue<CenterBall> = ConcurrentLinkedQueue()
+        init {
+            for(i in 0..3) {
+                cornerBalls.add(CornerBall(i,w,h,r))
+            }
+            animated = true
+            centerBall.startUpdating()
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            ballsInMotion.forEach { ballInMotion ->
+                ballInMotion.draw(canvas,paint)
+            }
+            centerBall.draw(canvas,paint)
+            canvas.restore()
+            cornerBalls.forEach { cornerBall ->
+                cornerBall.draw(canvas,paint)
+            }
+        }
+        fun update() {
+            if(animated) {
+                centerBall.update()
+                ballsInMotion.forEach { ballInMotion ->
+                    ballInMotion.update()
+                    if(ballInMotion.stopped()) {
+                        ballsInMotion.remove(ballInMotion)
+                    }
+                }
+                if(ballsInMotion.size == 0 && centerBall.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            cornerBalls.forEach { cornerBall ->
+                if(cornerBall.handleTap(x,y) && centerBall.state.dir == 0f && centerBall.state.j == 1) {
+                    centerBall.setDiff(cornerBall.x-w/2,cornerBall.y-h/2)
+                    ballsInMotion.add(centerBall)
+                    centerBall = CenterBall(r)
+                    centerBall.startUpdating()
+                    if(ballsInMotion.size == 1) {
+                        animated = true
+                        view.postInvalidate()
+                    }
+                    return
+                }
             }
         }
     }
