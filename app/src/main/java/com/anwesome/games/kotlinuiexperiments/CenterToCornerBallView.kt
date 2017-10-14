@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class CenterToCornerBallView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CCBRenderer(this)
+    var cornerBallSelectionListener:CornerBallSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -142,6 +143,7 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
                     ballsInMotion.add(centerBall)
                     centerBall = CenterBall(r)
                     centerBall.startUpdating()
+                    view.cornerBallSelectionListener?.selectionListener?.invoke(cornerBall.i)
                     if(ballsInMotion.size == 1) {
                         animated = true
                         view.postInvalidate()
@@ -169,10 +171,14 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
         }
     }
     companion object{
-        fun create(activity:Activity) {
+        fun create(activity:Activity,vararg listeners:(Int)->Unit) {
             val view = CenterToCornerBallView(activity)
+            if(listeners.size == 1) {
+                view.cornerBallSelectionListener = CornerBallSelectionListener(listeners[0])
+            }
             val size = DimensionsUtil.getDimension(activity)
             activity.setContentView(view)
         }
     }
+    data class CornerBallSelectionListener(var selectionListener:(Int)->Unit)
 }
