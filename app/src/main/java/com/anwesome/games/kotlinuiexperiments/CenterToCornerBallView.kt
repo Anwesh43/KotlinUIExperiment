@@ -26,8 +26,8 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
     }
     data class CornerBall(var i:Int,var w:Float,var h:Float,var r:Float,var x:Float = 0f,var y:Float = 0f) {
         init {
-            x = (i%2)*(w-2*r)+r
-            y = (i/2)*(h-2*r)+r
+            x = (i%2)*(w-4*r)+2*r
+            y = (i/2)*(h-4*r)+2*r
         }
         fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeWidth = r/10
@@ -51,8 +51,9 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(){
-            x+=wx*state.scales[1]
-            y+=wy*state.scales[1]
+            x=wx*state.scales[1]
+            y=wy*state.scales[1]
+            state.update()
         }
         fun setDiff(x:Float,y:Float) {
             if(state.j == 1 && state.dir == 0f) {
@@ -118,7 +119,7 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
                 centerBall.update()
                 ballsInMotion.forEach { ballInMotion ->
                     ballInMotion.update()
-                    if(ballInMotion.stopped()) {
+                    if(ballInMotion.reachedFinalState()) {
                         ballsInMotion.remove(ballInMotion)
                     }
                 }
