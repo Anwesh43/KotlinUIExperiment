@@ -34,29 +34,29 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class CenterBall(var r:Float,var x:Float=0f,var y:Float=0f,var wx:Float = 0f,var wy:Float = 0f) {
+        var state:CenterToBallState = CenterToBallState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.style = Paint.Style.FILL
             paint.color = Color.parseColor("#1A237E")
             canvas.save()
             canvas.translate(x,y)
-            canvas.scale(1f,1f)
-            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
+            canvas.scale(state.scales[0],state.scales[0])
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*(1-state.scales[2]),true,paint)
             canvas.restore()
         }
         fun update(){
-            x+=wx
-            y+=wy
+            x+=wx*state.scales[1]
+            y+=wy*state.scales[1]
         }
         fun setDiff(x:Float,y:Float) {
             wx = x
             wy = y
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean {
-            return true
-        }
+        fun stopped():Boolean = state.stopped()
+        fun reachedFinalState():Boolean = state.reachedFinalState()
     }
     data class CenterToBallState(var dir:Float = 0f,var j:Int = 0) {
         var scales:Array<Float> = arrayOf(0f,0f,0f)
@@ -72,6 +72,7 @@ class CenterToCornerBallView(ctx:Context):View(ctx) {
                 }
             }
         }
+        fun reachedFinalState():Boolean = dir == 0f && j == scales.size
         fun stopped():Boolean = dir == 0f
         fun startUpdating() {
             if(dir == 0f) {
