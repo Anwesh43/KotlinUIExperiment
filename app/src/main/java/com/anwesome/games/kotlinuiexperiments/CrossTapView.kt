@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 15/10/17.
  */
@@ -71,16 +73,32 @@ class CrossTapView(context:Context):SurfaceView(context) {
             }
         }
     }
-    class CrossTapRenderer(var w:Float,var h:Float){
+    class CrossTapRenderer(var w:Float,var h:Float,var size:Float = Math.min(w,h)/15){
         var paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        var crossTaps:ConcurrentLinkedQueue<CrossTapCircle> = ConcurrentLinkedQueue()
+        var updatingTaps:ConcurrentLinkedQueue<CrossTapCircle> = ConcurrentLinkedQueue()
         fun draw(canvas:Canvas) {
-
+            crossTaps.forEach { crossTapCircle ->
+                crossTapCircle.draw(canvas,paint)
+            }
         }
         fun update() {
-
+            updatingTaps.forEach { crossTapCircle ->
+                crossTapCircle.update()
+                if(crossTapCircle.stopped()) {
+                    updatingTaps.remove(crossTapCircle)
+                }
+            }
+        }
+        fun create(x:Float,y:Float) {
+            crossTaps.add(CrossTapCircle(x,y,size))
         }
         fun handleTap(x:Float,y:Float) {
-
+            crossTaps.forEach { crossTap ->
+                if(crossTap.handleTap(x,y)) {
+                    updatingTaps.add(crossTap)
+                }
+            }
         }
     }
     data class CrossTapCircle(var x:Float,var y:Float,var size:Float,var state:CrossTapState = CrossTapState()) {
@@ -101,6 +119,7 @@ class CrossTapView(context:Context):SurfaceView(context) {
         fun startUpdating() {
             state.startUpdating()
         }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size && x<=this.x+size && y>=this.y-size && y<=this.y+size
         fun stopped():Boolean = state.stopped()
     }
     data class CrossTapState(var dir:Float = 0f,var j:Int = 0) {
