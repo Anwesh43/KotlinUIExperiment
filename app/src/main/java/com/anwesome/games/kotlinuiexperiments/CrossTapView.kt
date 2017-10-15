@@ -3,6 +3,7 @@ import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -67,7 +68,7 @@ class CrossTapView(context:Context):SurfaceView(context) {
             }
         }
     }
-    class CrossTapRenderer(var w:Float,var h:Float,var size:Float = Math.min(w,h)/15){
+    class CrossTapRenderer(var w:Float,var h:Float){
         var paint = Paint(Paint.ANTI_ALIAS_FLAG)
         var crossTaps:ConcurrentLinkedQueue<CrossTapCircle> = ConcurrentLinkedQueue()
         var updatingTaps:ConcurrentLinkedQueue<CrossTapCircle> = ConcurrentLinkedQueue()
@@ -84,27 +85,30 @@ class CrossTapView(context:Context):SurfaceView(context) {
                 }
             }
         }
-        fun create(x:Float,y:Float) {
+        fun create(x:Float,y:Float,size:Float) {
             crossTaps.add(CrossTapCircle(x,y,size))
         }
         fun handleTap(x:Float,y:Float) {
             crossTaps.forEach { crossTap ->
-                crossTap.startUpdating()
                 if(crossTap.handleTap(x,y)) {
+                    crossTap.startUpdating()
                     updatingTaps.add(crossTap)
+                    return
                 }
-                return
+
             }
         }
     }
     data class CrossTapCircle(var x:Float,var y:Float,var size:Float,var state:CrossTapState = CrossTapState()) {
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.strokeWidth = size/10
+            paint.color = Color.parseColor("#0097A7")
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
-            canvas.drawArc(RectF(-size/2,-size/2,size/2,size/2),0f,360f*state.scales[0],false,paint)
+            canvas.drawArc(RectF(-size/2,-size/2,size/2,size/2),0f,360f*state.scales[2],false,paint)
             canvas.save()
-            canvas.rotate(45f*state.scales[2])
+            canvas.rotate(45f*state.scales[0])
             canvas.drawCross(0f,0f,2*size/3*state.scales[1],paint)
             canvas.restore()
             canvas.restore()
@@ -119,12 +123,12 @@ class CrossTapView(context:Context):SurfaceView(context) {
         fun stopped():Boolean = state.stopped()
     }
     data class CrossTapState(var dir:Float = 0f,var j:Int = 0) {
-        var scales:Array<Float> = arrayOf(0f,0f,0f)
+        var scales:Array<Float> = arrayOf(1f,1f,1f)
         fun update() {
             if(j < scales.size) {
-                scales[j] += dir*0.1f
-                if(scales[j] > 1) {
-                    scales[j] = 1f
+                scales[j] -= dir*0.2f
+                if(scales[j] < 0) {
+                    scales[j] = 0f
                     j++
                     if(j == scales.size) {
                         dir = 0f
@@ -141,16 +145,25 @@ class CrossTapView(context:Context):SurfaceView(context) {
     }
     class UiController(var holder:SurfaceHolder) {
         var renderer:CrossTapRenderer?=null
-        var time = 0
+        var time = 1
         fun render() {
             if(holder.surface.isValid) {
                 val canvas = holder.lockCanvas()
-                if(time == 0) {
-                    renderer = CrossTapRenderer(canvas.width.toFloat(),canvas.height.toFloat())
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                if(time == 1) {
+                    renderer = CrossTapRenderer(w,h)
                 }
                 canvas.drawColor(Color.parseColor("#212121"))
                 renderer?.draw(canvas)
                 renderer?.update()
+                if(time % 20 == 0) {
+                    val random = Random()
+                    val size = Math.min(w,h)/10
+                    val x = size+random.nextInt((w-size).toInt()).toFloat()
+                    val y = size+random.nextInt((h-size).toInt()).toFloat()
+                    renderer?.create(x,y,size)
+                }
                 holder.unlockCanvasAndPost(canvas)
                 time++
             }
