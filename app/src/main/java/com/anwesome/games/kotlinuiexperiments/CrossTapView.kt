@@ -7,11 +7,29 @@ import android.graphics.*
  */
 
 class CrossTapView(context:Context):SurfaceView(context) {
+    var runner = UIRunner(view=this)
+    var thread = Thread(runner)
+    init {
+        thread.start()
+    }
     fun pause() {
+        runner.pause({
+            while(true) {
+                try {
+                    thread.join()
+                    break
+                }
+                catch(ex:Exception) {
 
+                }
+            }
+        })
     }
     fun resume() {
-
+        runner.resume({
+            thread = Thread(runner)
+            thread.start()
+        })
     }
     fun render() {
         if(holder.surface.isValid) {
@@ -28,7 +46,7 @@ class CrossTapView(context:Context):SurfaceView(context) {
         }
         return true
     }
-    class GameRunner(var animated:Boolean = true,var view:CrossTapView):Runnable {
+    class UIRunner(var animated:Boolean = true,var view:CrossTapView):Runnable {
         override fun run() {
             while(animated) {
                 view.render()
@@ -40,11 +58,17 @@ class CrossTapView(context:Context):SurfaceView(context) {
                 }
             }
         }
-        fun pause() {
-            animated = false
+        fun pause(cb:()->Unit) {
+            if(animated) {
+                animated = false
+                cb()
+            }
         }
-        fun resume() {
-            animated = true
+        fun resume(cb:()->Unit) {
+            if(!animated) {
+                animated = true
+                cb()
+            }
         }
     }
 }
