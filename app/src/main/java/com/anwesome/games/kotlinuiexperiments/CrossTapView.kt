@@ -83,25 +83,25 @@ class CrossTapView(context:Context):SurfaceView(context) {
 
         }
     }
-    data class CrossTapCircle(var x:Float,var y:Float,var size:Float) {
+    data class CrossTapCircle(var x:Float,var y:Float,var size:Float,var state:CrossTapState = CrossTapState()) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0f,0f,size/2,paint)
+            canvas.drawArc(RectF(-size/2,-size/2,size/2,size/2),0f,360f*state.scales[0],false,paint)
             canvas.save()
-            canvas.rotate(45f)
-            canvas.drawCross(0f,0f,2*size/3,paint)
+            canvas.rotate(45f*state.scales[2])
+            canvas.drawCross(0f,0f,2*size/3*state.scales[1],paint)
             canvas.restore()
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class CrossTapState(var dir:Float = 0f,var j:Int = 0) {
         var scales:Array<Float> = arrayOf(0f,0f,0f)
