@@ -13,7 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
-
+    var crossTapView = CrossTapView(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        var view:CircleCreatorView = CircleCreatorView(this)
@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         //WifiCircleButtonView.create(this,{Toast.makeText(this,"collapsed",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"expanded",Toast.LENGTH_SHORT).show()})
         //DoubleTouchingTriangleView.create(this,{Toast.makeText(this,"opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"closed",Toast.LENGTH_SHORT).show()})
         //ArrowDirectionSquareCreatorView.create(this,{i->Toast.makeText(this,"${i+1} line is moving forward",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"${i+1} line is moving backward",Toast.LENGTH_SHORT).show()})
-        CenterToCornerBallView.create(this,{i->Toast.makeText(this,"Selected ${i}",Toast.LENGTH_SHORT).show()})
+        //CenterToCornerBallView.create(this,{i->Toast.makeText(this,"Selected ${i}",Toast.LENGTH_SHORT).show()})
     }
 }
 //data class CompletionListener(var activity: MainActivity):CircleCreatorView.OnCompletionListener {

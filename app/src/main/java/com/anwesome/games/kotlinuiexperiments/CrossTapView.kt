@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -160,6 +161,13 @@ class CrossTapView(context:Context):SurfaceView(context) {
                     renderer?.handleTap(event.x,event.y)
                 }
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity):CrossTapView {
+            val view = CrossTapView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
