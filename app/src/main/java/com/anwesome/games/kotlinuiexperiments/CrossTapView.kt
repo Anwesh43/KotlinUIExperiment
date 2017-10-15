@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class CrossTapView(context:Context):SurfaceView(context) {
     var runner = UIRunner(view=this)
     var thread = Thread(runner)
+    var controller = UiController(holder)
     init {
         thread.start()
     }
@@ -34,18 +35,10 @@ class CrossTapView(context:Context):SurfaceView(context) {
         })
     }
     fun render() {
-        if(holder.surface.isValid) {
-            val canvas = holder.lockCanvas()
-            canvas.drawColor(Color.parseColor("#212121"))
-            holder.unlockCanvasAndPost(canvas)
-        }
+        controller.render()
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
-        when(event.action) {
-            MotionEvent.ACTION_DOWN -> {
-
-            }
-        }
+        controller.handleTap(event)
         return true
     }
     class UIRunner(var animated:Boolean = true,var view:CrossTapView):Runnable {
@@ -95,9 +88,11 @@ class CrossTapView(context:Context):SurfaceView(context) {
         }
         fun handleTap(x:Float,y:Float) {
             crossTaps.forEach { crossTap ->
+                crossTap.startUpdating()
                 if(crossTap.handleTap(x,y)) {
                     updatingTaps.add(crossTap)
                 }
+                return
             }
         }
     }
@@ -140,6 +135,30 @@ class CrossTapView(context:Context):SurfaceView(context) {
         fun startUpdating() {
             if(dir == 0f) {
                 dir = 1f
+            }
+        }
+    }
+    class UiController(var holder:SurfaceHolder) {
+        var renderer:CrossTapRenderer?=null
+        var time = 0
+        fun render() {
+            if(holder.surface.isValid) {
+                val canvas = holder.lockCanvas()
+                if(time == 0) {
+                    renderer = CrossTapRenderer(canvas.width.toFloat(),canvas.height.toFloat())
+                }
+                canvas.drawColor(Color.parseColor("#212121"))
+                renderer?.draw(canvas)
+                renderer?.update()
+                holder.unlockCanvasAndPost(canvas)
+                time++
+            }
+        }
+        fun handleTap(event:MotionEvent) {
+            when(event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    renderer?.handleTap(event.x,event.y)
+                }
             }
         }
     }
