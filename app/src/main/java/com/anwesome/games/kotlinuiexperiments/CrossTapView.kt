@@ -83,4 +83,35 @@ class CrossTapView(context:Context):SurfaceView(context) {
 
         }
     }
+    data class CrossTapCircle(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,size/2,paint)
+            canvas.save()
+            canvas.rotate(45f)
+            canvas.drawCross(0f,0f,2*size/3,paint)
+            canvas.restore()
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+    }
+}
+fun Canvas.drawCross(x:Float,y:Float,size:Float,paint:Paint) {
+    this.save()
+    this.translate(x,y)
+    for(i in 0..1) {
+        this.save()
+        this.rotate(90f*i)
+        this.drawLine(0f,-size/2,0f,size/2,paint)
+        this.restore()
+    }
+    this.restore()
 }
