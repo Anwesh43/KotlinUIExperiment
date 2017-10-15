@@ -103,6 +103,27 @@ class CrossTapView(context:Context):SurfaceView(context) {
         }
         fun stopped():Boolean = true
     }
+    data class CrossTapState(var dir:Float = 0f,var j:Int = 0) {
+        var scales:Array<Float> = arrayOf(0f,0f,0f)
+        fun update() {
+            if(j < scales.size) {
+                scales[j] += dir*0.1f
+                if(scales[j] > 1) {
+                    scales[j] = 1f
+                    j++
+                    if(j == scales.size) {
+                        dir = 0f
+                    }
+                }
+            }
+        }
+        fun stopped():Boolean = dir == 0f && j == scales.size
+        fun startUpdating() {
+            if(dir == 0f) {
+                dir = 1f
+            }
+        }
+    }
 }
 fun Canvas.drawCross(x:Float,y:Float,size:Float,paint:Paint) {
     this.save()
