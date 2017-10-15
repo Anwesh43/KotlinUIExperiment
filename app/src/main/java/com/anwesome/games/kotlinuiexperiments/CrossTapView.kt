@@ -71,4 +71,16 @@ class CrossTapView(context:Context):SurfaceView(context) {
             }
         }
     }
+    class CrossTapRenderer(var w:Float,var h:Float){
+        var paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        fun draw(canvas:Canvas) {
+
+        }
+        fun update() {
+
+        }
+        fun handleTap(x:Float,y:Float) {
+
+        }
+    }
 }
