@@ -102,6 +102,31 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class ColorScreenAnimator(var container:ColorBarScreenContainer,var view:ColorBarButtonView,var animated:Boolean = false) {
+        fun draw(canvas: Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                container.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
+        }
+    }
 }
 fun Canvas.drawColorScaledCircle(x:Float,y:Float,r:Float,scale:Float,color:Int,paint:Paint) {
     this.save()
