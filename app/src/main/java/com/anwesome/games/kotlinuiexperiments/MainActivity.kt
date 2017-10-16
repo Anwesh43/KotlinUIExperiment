@@ -142,8 +142,9 @@ class MainActivity : AppCompatActivity() {
         //DoubleTouchingTriangleView.create(this,{Toast.makeText(this,"opened",Toast.LENGTH_SHORT).show()},{Toast.makeText(this,"closed",Toast.LENGTH_SHORT).show()})
         //ArrowDirectionSquareCreatorView.create(this,{i->Toast.makeText(this,"${i+1} line is moving forward",Toast.LENGTH_SHORT).show()},{i->Toast.makeText(this,"${i+1} line is moving backward",Toast.LENGTH_SHORT).show()})
         //CenterToCornerBallView.create(this,{i->Toast.makeText(this,"Selected ${i}",Toast.LENGTH_SHORT).show()})
-        //crossTapView = CrossTapView.create(this)
+        //crossTapView = CrossTapView.crColoeate(this)
         ColorBarButtonView.create(this)
+        ColorBarButtonView.addSelectionListener({i -> Toast.makeText(this,"$i expanded",Toast.LENGTH_SHORT).show()},{i -> Toast.makeText(this,"$i collapsed",Toast.LENGTH_SHORT).show()})
     }
     override fun onPause() {
         super.onPause()
