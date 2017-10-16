@@ -27,9 +27,9 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         return true
     }
     data class ColorScreen(var i:Int,var w:Float,var h:Float,var color:Int,var state:ColorBarState = ColorBarState()) {
-        var colorCircleButton = ColorCircleButton(w/2-h/10+i*h/10,h/20,h/20,color)
+        var colorCircleButton = ColorCircleButton(w/2-h/10+i*h/10,h/20,h/25,color)
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = color
+            paint.color = Color.argb(255-51*i,Color.red(color),Color.green(color),Color.blue(color))
             canvas.save()
             canvas.translate(0f,h/10)
             canvas.drawRect(RectF(0f,0f,w,(9*h/10)*state.scale),paint)
