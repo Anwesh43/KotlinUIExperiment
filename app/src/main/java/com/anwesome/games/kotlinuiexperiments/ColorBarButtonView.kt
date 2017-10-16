@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -143,6 +144,12 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             colorScreenAnimator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = ColorBarButtonView(activity)
+            activity.setContentView(view)
         }
     }
 }
