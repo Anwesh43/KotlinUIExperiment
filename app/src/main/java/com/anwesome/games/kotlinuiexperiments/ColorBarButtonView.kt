@@ -63,9 +63,16 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    class ColorBarScreenContainer {
+    data class ColorBarScreenContainer(var w:Float,var h:Float) {
         var screens:ConcurrentLinkedQueue<ColorScreen> = ConcurrentLinkedQueue()
         var updatingScreens:ConcurrentLinkedQueue<ColorScreen> = ConcurrentLinkedQueue()
+        init {
+            var i = 0
+            colors.forEach { color ->
+                screens.add(ColorScreen(i,w,h,color))
+                i++
+            }
+        }
         fun update(stopcb:()->Unit) {
             updatingScreens.forEach { screen ->
                 screen.update()
