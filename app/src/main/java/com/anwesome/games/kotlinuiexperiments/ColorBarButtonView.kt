@@ -32,7 +32,7 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
             canvas.translate(0f,h/10)
             canvas.drawRect(RectF(0f,0f,w,(9*h/10)*state.scale),paint)
             canvas.restore()
-            colorCircleButton.draw(canvas,paint,0f)
+            colorCircleButton.draw(canvas,paint,state.scale)
         }
         fun update() {
             state.update()
@@ -80,8 +80,8 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
             updatingScreens.forEach { screen ->
                 screen.update()
                 if(screen.stopped()) {
-                    screens.remove(screen)
-                    if(screens.size == 0) {
+                    updatingScreens.remove(screen)
+                    if(updatingScreens.size == 0) {
                         stopcb()
                     }
                 }
@@ -97,7 +97,7 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
                 if(screen.handleTap(x,y)) {
                     screen.startUpdating()
                     updatingScreens.add(screen)
-                    if(screens.size == 1) {
+                    if(updatingScreens.size == 1) {
                         startcb()
                     }
                     return
