@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.*
 import android.graphics.*
 import android.view.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 16/10/17.
  */
@@ -36,11 +38,13 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         fun startUpdating() {
             state.startUpdating()
         }
+        fun handleTap(x:Float,y:Float):Boolean = colorCircleButton.handleTap(x,y)
     }
     data class ColorCircleButton(var x:Float,var y:Float,var r:Float,var color:Int) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.drawColorScaledCircle(x,y,r,scale,color,paint)
         }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class ColorBarState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
@@ -58,6 +62,38 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class ColorBarScreenContainer {
+        var screens:ConcurrentLinkedQueue<ColorScreen> = ConcurrentLinkedQueue()
+        var updatingScreens:ConcurrentLinkedQueue<ColorScreen> = ConcurrentLinkedQueue()
+        fun update(stopcb:()->Unit) {
+            updatingScreens.forEach { screen ->
+                screen.update()
+                if(screen.stopped()) {
+                    screens.remove(screen)
+                    if(screens.size == 0) {
+                        stopcb()
+                    }
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            screens.forEach { screen ->
+                screen.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            screens.forEach { screen ->
+                if(screen.handleTap(x,y)) {
+                    screen.startUpdating()
+                    updatingScreens.add(screen)
+                    if(screens.size == 1) {
+                        startcb()
+                    }
+                    return
+                }
+            }
+        }
     }
 }
 fun Canvas.drawColorScaledCircle(x:Float,y:Float,r:Float,scale:Float,color:Int,paint:Paint) {
