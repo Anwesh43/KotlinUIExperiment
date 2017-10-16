@@ -68,7 +68,7 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         var updatingScreens:ConcurrentLinkedQueue<ColorScreen> = ConcurrentLinkedQueue()
         init {
             var i = 0
-            colors.forEach { color ->
+            barColors.forEach { color ->
                 screens.add(ColorScreen(i,w,h,color))
                 i++
             }
@@ -125,6 +125,22 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             })
+        }
+    }
+    class ColorBarRenderer(var view:ColorBarButtonView,var time:Int = 0) {
+        var colorScreenAnimator:ColorScreenAnimator?=null
+        fun render(canvas: Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                colorScreenAnimator = ColorScreenAnimator(ColorBarScreenContainer(w,h),view)
+            }
+            colorScreenAnimator?.draw(canvas,paint)
+            colorScreenAnimator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            colorScreenAnimator?.handleTap(x,y)
         }
     }
 }
