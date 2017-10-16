@@ -18,4 +18,20 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class ColorScreen(var w:Float,var h:Float,var color:Int) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = color
+            canvas.save()
+            canvas.translate(0f,h/10)
+            canvas.drawRect(RectF(0f,0f,w,9*h/10),paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun stopped():Boolean = false
+        fun startUpdating() {
+
+        }
+    }
 }
