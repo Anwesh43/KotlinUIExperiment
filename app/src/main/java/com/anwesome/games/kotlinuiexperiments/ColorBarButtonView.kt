@@ -9,7 +9,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 16/10/17.
  */
 val barColors:Array<Int> = arrayOf(Color.parseColor("#f44336"),Color.parseColor("#673AB7"),Color.parseColor("#00695C"))
+
 class ColorBarButtonView(ctx:Context):View(ctx) {
+    var selectionListener:ColorBarButtonView.ColorBarSelectionListener?=null
     val renderer = ColorBarRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
@@ -76,11 +78,15 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
                 i++
             }
         }
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:()->Unit,listener:ColorBarSelectionListener?) {
             updatingScreens.forEach { screen ->
                 screen.update()
                 if(screen.stopped()) {
                     updatingScreens.remove(screen)
+                    when(screen.state.scale) {
+                        0f -> listener?.collapseListener?.invoke(screen.i)
+                        1f -> listener?.expandListener?.invoke(screen.i)
+                    }
                     if(updatingScreens.size == 0) {
                         stopcb()
                     }
@@ -113,7 +119,7 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
             if(animated) {
                 container.update({
                     animated = false
-                })
+                },view.selectionListener)
                 try {
                     Thread.sleep(50)
                     view.invalidate()
@@ -147,11 +153,18 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:ColorBarButtonView?=null
         fun create(activity:Activity) {
-            val view = ColorBarButtonView(activity)
+            view = ColorBarButtonView(activity)
             activity.setContentView(view)
         }
+        fun addSelectionListener(vararg listeners:(Int)->Unit) {
+            if(listeners.size == 2) {
+                view?.selectionListener = ColorBarSelectionListener(listeners[0],listeners[1])
+            }
+        }
     }
+    data class ColorBarSelectionListener(var expandListener:(Int)->Unit,var collapseListener:(Int)->Unit)
 }
 fun Canvas.drawColorScaledCircle(x:Float,y:Float,r:Float,scale:Float,color:Int,paint:Paint) {
     this.save()
