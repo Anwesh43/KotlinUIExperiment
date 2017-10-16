@@ -19,22 +19,22 @@ class ColorBarButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ColorScreen(var i:Int,var w:Float,var h:Float,var color:Int) {
+    data class ColorScreen(var i:Int,var w:Float,var h:Float,var color:Int,var state:ColorBarState = ColorBarState()) {
         var colorCircleButton = ColorCircleButton(w/2-h/10+i*h/10,h/20,h/20,color)
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = color
             canvas.save()
             canvas.translate(0f,h/10)
-            canvas.drawRect(RectF(0f,0f,w,9*h/10),paint)
+            canvas.drawRect(RectF(0f,0f,w,(9*h/10)*state.scale),paint)
             canvas.restore()
             colorCircleButton.draw(canvas,paint,0f)
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class ColorCircleButton(var x:Float,var y:Float,var r:Float,var color:Int) {
