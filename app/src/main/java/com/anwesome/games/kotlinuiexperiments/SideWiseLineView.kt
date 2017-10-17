@@ -114,4 +114,30 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             }
         }
     }
+    class SideWiseLineAnimator(var container:SideWiseLineContainer,var view:SideWiseLineView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                container.update{
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
+        }
+    }
 }
