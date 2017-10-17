@@ -31,9 +31,9 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,cy)
             canvas.rotate(45f*state.scale)
-            paint.color = Color.GRAY
+            paint.color = Color.parseColor("#FAFAFA")
             canvas.drawCircle(0f,0f,cr,paint)
-            paint.color = Color.parseColor("#E65100")
+            paint.color = Color.parseColor("#f44336")
             for(j in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*j)
