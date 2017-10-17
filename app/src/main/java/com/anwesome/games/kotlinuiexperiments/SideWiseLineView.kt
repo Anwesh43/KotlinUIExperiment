@@ -140,4 +140,20 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             })
         }
     }
+    class SideWiseLineRenderer(var view:SideWiseLineView,var time:Int = 0) {
+        var animator:SideWiseLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = SideWiseLineAnimator(SideWiseLineContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
