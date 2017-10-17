@@ -12,7 +12,7 @@ class SideWiseLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SideWiseLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
-        canvas.drawColor(Color.parseColor("#212121"))
+        canvas.drawColor(Color.parseColor("#ffebee"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
