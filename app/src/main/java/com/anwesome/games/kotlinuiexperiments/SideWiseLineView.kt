@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.graphics.*
 import android.view.*
 import android.content.Context
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 17/10/17.
  */
@@ -72,5 +74,44 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    data class SideWiseLineContainer(var w:Float,var h:Float) {
+        var lines:ConcurrentLinkedQueue<SideWiseLine> = ConcurrentLinkedQueue()
+        var tappedLines:ConcurrentLinkedQueue<SideWiseLine> = ConcurrentLinkedQueue()
+        init {
+            for(i in 0..1) {
+                tappedLines.add(SideWiseLine(i,w,h))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            lines.forEach{ line ->
+                line.draw(canvas,paint)
+            }
+        }
+        fun update(stopcb:()->Unit) {
+            tappedLines.forEach { line ->
+                line.update({
+                    tappedLines.remove(line)
+                    if(tappedLines.size == 0) {
+                        stopcb()
+                    }
+                })
+            }
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            lines.forEach { line ->
+                var tapped = false
+                line.handleTap(x,y,{
+                    tappedLines.add(line)
+                    tapped = true
+                    if(tappedLines.size == 1) {
+                        startcb()
+                    }
+                })
+                if(tapped) {
+                    return
+                }
+            }
+        }
     }
 }
