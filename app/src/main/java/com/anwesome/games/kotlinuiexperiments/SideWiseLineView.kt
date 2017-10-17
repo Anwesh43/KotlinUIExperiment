@@ -31,19 +31,20 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,cy)
             canvas.rotate(45f*state.scale)
-            paint.color = Color.parseColor("#FAFAFA")
+            paint.color = Color.parseColor("#3F51B5")
             canvas.drawCircle(0f,0f,cr,paint)
-            paint.color = Color.parseColor("#f44336")
+            paint.color = Color.parseColor("#FAFAFA")
             for(j in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*j)
-                canvas.drawLine(0f,-(cr*2)/3,0f,(cr*2)/3,paint)
+                canvas.drawLine(0f,-(cr)/2,0f,(cr)/2,paint)
                 canvas.restore()
             }
             canvas.restore()
             canvas.save()
             canvas.translate(x,h/10)
             var y = 0f
+            paint.color = Color.parseColor("#673AB7")
             for(j in 0..9) {
                 canvas.drawLine(0f,y,diffX*state.scale,y,paint)
                 y+=(0.9f*h)/10
