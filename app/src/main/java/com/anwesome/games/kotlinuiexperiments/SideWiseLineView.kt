@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class SideWiseLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = SideWiseLineRenderer(this)
+    var sideWiseExpandListener:OnSideWiseLineExpandListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#ffebee"))
         renderer.render(canvas,paint)
@@ -166,9 +167,16 @@ class SideWiseLineView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:SideWiseLineView?=null
         fun create(activity:Activity) {
-            val view = SideWiseLineView(activity)
+            view = SideWiseLineView(activity)
             activity.setContentView(view)
         }
+        fun addListener(vararg listeners:(Int)->Unit) {
+            if(listeners.size == 2) {
+                view?.sideWiseExpandListener = OnSideWiseLineExpandListener(listeners[0],listeners[1])
+            }
+        }
     }
+    data class OnSideWiseLineExpandListener(var expandListener:(Int)->Unit,var collapseListener:(Int)->Unit)
 }
