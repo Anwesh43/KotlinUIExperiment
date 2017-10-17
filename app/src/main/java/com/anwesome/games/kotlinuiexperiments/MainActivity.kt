@@ -146,10 +146,18 @@ class MainActivity : AppCompatActivity() {
 //        ColorBarButtonView.create(this)
 //        ColorBarButtonView.addSelectionListener({i -> Toast.makeText(this,"$i expanded",Toast.LENGTH_SHORT).show()},{i -> Toast.makeText(this,"$i collapsed",Toast.LENGTH_SHORT).show()})
          SideWiseLineView.create(this)
+         SideWiseLineView.addListener({i->
+             createToast("$i expanded")
+         },{i ->
+             createToast("$i collapsed")
+         })
     }
     override fun onPause() {
         super.onPause()
         //crossTapView?.pause()
+    }
+    fun createToast(text:String) {
+        Toast.makeText(this,text,Toast.LENGTH_SHORT).show()
     }
     override fun onResume(){
         super.onResume()
