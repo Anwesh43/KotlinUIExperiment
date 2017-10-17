@@ -31,7 +31,9 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,cy)
             canvas.rotate(45f*state.scale)
+            paint.color = Color.GRAY
             canvas.drawCircle(0f,0f,cr,paint)
+            paint.color = Color.parseColor("#E65100")
             for(j in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*j)
@@ -55,7 +57,7 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float,startCb:()->Unit) {
-            if(x>=cx-cr && x<=cx+cr && y>=cy-cr && y<=cy+cr) {
+            if(x>=cx-2*cr*(i%2) && x<=cx+2*cr*((i+1)%2) && y>=cy-cr && y<=cy+cr && state.dir == 0f) {
                 state.startUpdating()
                 startCb()
             }
@@ -80,12 +82,12 @@ class SideWiseLineView(ctx:Context):View(ctx) {
     }
     data class SideWiseLineContainer(var w:Float,var h:Float) {
         var lines:ConcurrentLinkedQueue<SideWiseLine> = ConcurrentLinkedQueue()
-        var tappedLines:ConcurrentLinkedQueue<SideWiseLine> = ConcurrentLinkedQueue()
         init {
             for(i in 0..1) {
-                tappedLines.add(SideWiseLine(i,w,h))
+                lines.add(SideWiseLine(i,w,h))
             }
         }
+        var tappedLines:ConcurrentLinkedQueue<SideWiseLine> = ConcurrentLinkedQueue()
         fun draw(canvas:Canvas,paint:Paint) {
             lines.forEach{ line ->
                 line.draw(canvas,paint)
@@ -102,8 +104,11 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            var tapped = false
             lines.forEach { line ->
-                var tapped = false
+                if(tapped) {
+                    return
+                }
                 line.handleTap(x,y,{
                     tappedLines.add(line)
                     tapped = true
@@ -111,9 +116,7 @@ class SideWiseLineView(ctx:Context):View(ctx) {
                         startcb()
                     }
                 })
-                if(tapped) {
-                    return
-                }
+
             }
         }
     }
@@ -150,8 +153,8 @@ class SideWiseLineView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = SideWiseLineAnimator(SideWiseLineContainer(w,h),view)
-                paint.color = Color.parseColor("#E65100")
                 paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
