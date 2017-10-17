@@ -31,10 +31,10 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,cy)
             canvas.rotate(45f*state.scale)
+            canvas.drawCircle(0f,0f,cr,paint)
             for(j in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*j)
-                paint.strokeWidth = cr/10
                 canvas.drawLine(0f,-(cr*2)/3,0f,(cr*2)/3,paint)
                 canvas.restore()
             }
@@ -150,6 +150,8 @@ class SideWiseLineView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = SideWiseLineAnimator(SideWiseLineContainer(w,h),view)
+                paint.color = Color.parseColor("#E65100")
+                paint.strokeWidth = Math.min(w,h)/50
             }
             animator?.draw(canvas,paint)
             animator?.update()
