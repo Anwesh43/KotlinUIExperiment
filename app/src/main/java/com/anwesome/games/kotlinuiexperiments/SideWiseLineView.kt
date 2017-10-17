@@ -95,12 +95,16 @@ class SideWiseLineView(ctx:Context):View(ctx) {
                 line.draw(canvas,paint)
             }
         }
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:()->Unit,listener:OnSideWiseLineExpandListener?) {
             tappedLines.forEach { line ->
                 line.update({
                     tappedLines.remove(line)
                     if(tappedLines.size == 0) {
                         stopcb()
+                    }
+                    when(line.state.scale) {
+                        0f -> listener?.collapseListener?.invoke(line.i)
+                        1f -> listener?.expandListener?.invoke(line.i)
                     }
                 })
             }
@@ -126,9 +130,9 @@ class SideWiseLineView(ctx:Context):View(ctx) {
         var animated:Boolean = false
         fun update() {
             if(animated) {
-                container.update{
+                container.update({
                     animated = false
-                }
+                },view.sideWiseExpandListener)
                 try {
                     Thread.sleep(50)
                     view.invalidate()
