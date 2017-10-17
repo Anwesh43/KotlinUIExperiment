@@ -51,4 +51,21 @@ class SideWiseLineView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class SideWiseLineState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update(){
+            scale += 0.1f*dir
+            if(scale > 1 ){
+                scale = 1f
+                dir = 0f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
