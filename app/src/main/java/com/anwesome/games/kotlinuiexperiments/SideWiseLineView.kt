@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.graphics.*
 import android.view.*
 import android.content.Context
@@ -156,6 +157,12 @@ class SideWiseLineView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = SideWiseLineView(activity)
+            activity.setContentView(view)
         }
     }
 }
