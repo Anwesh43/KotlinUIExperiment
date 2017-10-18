@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class LinkedBallButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var renderer = LinkedBallButtonRenderer(this)
+    var selectionListener:LinkedBallButtonSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -81,8 +82,8 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
                 holder = UpdatingBallButtonHolder(ballButtons)
             }
         }
-        fun update(stopcb:()->Unit) {
-            holder?.update()
+        fun update(stopcb:()->Unit,listener:LinkedBallButtonSelectionListener?) {
+            holder?.update(listener)
             if(holder?.stopped()?:false) {
                 stopcb()
             }
@@ -122,9 +123,13 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             till = j
 
         }
-        fun update() {
+        fun update(listener:LinkedBallButtonSelectionListener?) {
             updatingBalls[curr].update()
             if(updatingBalls[curr].stopped()) {
+                when(dir) {
+                    0 -> listener?.collapseListener?.invoke(curr)
+                    1 -> listener?.expandListener?.invoke(curr)
+                }
                 if(curr == till) {
                     prevDir = dir
                     dir = 0
@@ -141,9 +146,9 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         var animated = false
         fun update() {
             if(animated) {
-                linkedBallButton.update {
+                linkedBallButton.update({
                     animated = false
-                }
+                },view.selectionListener)
                 try {
                     Thread.sleep(50)
                     view.invalidate()
@@ -180,10 +185,15 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:LinkedBallButtonView?=null
         fun create(activity:Activity) {
-            val view = LinkedBallButtonView(activity)
+            view = LinkedBallButtonView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y/8))
         }
+        fun addSelectionListener(vararg listeners:(Int)->Unit) {
+            view?.selectionListener = LinkedBallButtonSelectionListener(listeners[0],listeners[1])
+        }
     }
+    data class LinkedBallButtonSelectionListener(var expandListener:(Int)->Unit,var collapseListener:(Int)->Unit)
 }
