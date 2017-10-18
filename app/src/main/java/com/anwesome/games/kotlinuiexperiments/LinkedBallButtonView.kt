@@ -130,4 +130,30 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    class LinkedBallButtonAnimator(var linkedBallButton:LinkedBallButton,var view:LinkedBallButtonView) {
+        var animated = false
+        fun update() {
+            linkedBallButton.update {
+                animated = false
+            }
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            linkedBallButton.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            linkedBallButton.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
+        }
+    }
 }
