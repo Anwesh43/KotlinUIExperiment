@@ -20,6 +20,7 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         return true
     }
     data class BallButton(var x:Float,var y:Float,var r:Float,var size:Float) {
+        var state:BallButtonState = BallButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeWidth = r/10
             canvas.save()
@@ -27,17 +28,17 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
-            canvas.drawLine(r,0f,size,0f,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
+            canvas.drawLine(r,0f,r+size*state.scale,0f,paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y -r && y<=this.y+r
     }
     data class BallButtonState(var scale:Float = 0f,var dir:Float = 0f) {
