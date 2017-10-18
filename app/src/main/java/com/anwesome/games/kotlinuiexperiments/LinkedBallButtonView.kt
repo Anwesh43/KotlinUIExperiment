@@ -28,6 +28,7 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
     data class BallButton(var x:Float,var y:Float,var r:Float,var size:Float) {
         var state:BallButtonState = BallButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#f44336")
             paint.strokeWidth = r/10
             canvas.save()
             canvas.translate(x,y)
@@ -71,7 +72,7 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             val n = 6
             if(w>h) {
                 val r = h / 4
-                val size = (w - n * r) / n
+                val size = (w - n * 2*r) / n
                 var x = r
                 for (i in 1..n) {
                     ballButtons.add(BallButton(x,h/2,r,size))
@@ -114,20 +115,23 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         }
         fun startUpdating(j:Int) {
             dir = 1 - 2* updatingBalls[j].state.scale.toInt()
-            updatingBalls[curr].startUpdating()
             if(prevDir == dir) {
                 curr += dir
             }
+            updatingBalls[curr].startUpdating()
+            till = j
+
         }
         fun update() {
             updatingBalls[curr].update()
             if(updatingBalls[curr].stopped()) {
                 if(curr == till) {
+                    prevDir = dir
                     dir = 0
                 }
                 else {
                     curr += dir
-                    updatingBalls[curr].stopped()
+                    updatingBalls[curr].startUpdating()
                 }
             }
         }
@@ -136,10 +140,10 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
     class LinkedBallButtonAnimator(var linkedBallButton:LinkedBallButton,var view:LinkedBallButtonView) {
         var animated = false
         fun update() {
-            linkedBallButton.update {
-                animated = false
-            }
             if(animated) {
+                linkedBallButton.update {
+                    animated = false
+                }
                 try {
                     Thread.sleep(50)
                     view.invalidate()
@@ -179,7 +183,7 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         fun create(activity:Activity) {
             val view = LinkedBallButtonView(activity)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.y/8))
         }
     }
 }
