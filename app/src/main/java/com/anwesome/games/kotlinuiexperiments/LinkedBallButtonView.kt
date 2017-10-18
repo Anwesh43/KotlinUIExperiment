@@ -127,7 +127,7 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             updatingBalls[curr].update()
             if(updatingBalls[curr].stopped()) {
                 when(dir) {
-                    0 -> listener?.collapseListener?.invoke(curr)
+                    -1 -> listener?.collapseListener?.invoke(curr)
                     1 -> listener?.expandListener?.invoke(curr)
                 }
                 if(curr == till) {
