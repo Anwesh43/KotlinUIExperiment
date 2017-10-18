@@ -63,7 +63,6 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
     }
     data class LinkedBallButton(var w:Float,var h:Float) {
         var ballButtons:ConcurrentLinkedQueue<BallButton> = ConcurrentLinkedQueue()
-        var updatingBalls:LinkedList<BallButton> = LinkedList()
         init {
             val n = 6
             if(w>h) {
@@ -77,12 +76,6 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             }
         }
         fun update(stopcb:()->Unit) {
-            updatingBalls.forEach { ball ->
-                ball.update()
-                if(ball.stopped()) {
-                    updatingBalls.remove(ball)
-                }
-            }
         }
         fun draw(canvas:Canvas,paint:Paint) {
             ballButtons.forEach{ ballButton ->
@@ -90,12 +83,44 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            var j = 0
             ballButtons.forEach { ballButton ->
                 if(ballButton.handleTap(x,y)) {
-                    updatingBalls.add(ballButton)
-                    startcb()
+
+                }
+                j++
+            }
+        }
+    }
+    data class UpdatingBallButtonHolder(var ballButtons:ConcurrentLinkedQueue<BallButton>,var curr:Int=0,var till:Int = 0) {
+        var updatingBalls:LinkedList<BallButton> = LinkedList()
+        var prevDir = 0
+        var dir:Int = 0
+        init {
+            ballButtons.forEach {
+                updatingBalls.add(it)
+            }
+
+        }
+        fun startUpdating(j:Int) {
+            dir = 1 - 2* updatingBalls[j].state.scale.toInt()
+            updatingBalls[curr].startUpdating()
+            if(prevDir == dir) {
+                curr += dir
+            }
+        }
+        fun update() {
+            updatingBalls[curr].update()
+            if(updatingBalls[curr].stopped()) {
+                if(curr == till) {
+                    dir = 0
+                }
+                else {
+                    curr += dir
+                    updatingBalls[curr].stopped()
                 }
             }
         }
+        fun stopped():Boolean = dir == 0
     }
 }
