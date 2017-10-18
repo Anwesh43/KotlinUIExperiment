@@ -156,4 +156,20 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             })
         }
     }
+    class LinkedBallButtonRenderer(var view:LinkedBallButtonView,var time:Int = 0) {
+        var linkedBallAnimator:LinkedBallButtonAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                var w = canvas.width.toFloat()
+                var h = canvas.height.toFloat()
+                linkedBallAnimator = LinkedBallButtonAnimator(LinkedBallButton(w,h),view)
+            }
+            linkedBallAnimator?.draw(canvas,paint)
+            linkedBallAnimator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            linkedBallAnimator?.handleTap(x,y)
+        }
+    }
 }
