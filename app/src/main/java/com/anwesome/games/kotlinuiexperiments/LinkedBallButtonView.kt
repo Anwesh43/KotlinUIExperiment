@@ -62,6 +62,7 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         }
     }
     data class LinkedBallButton(var w:Float,var h:Float) {
+        var holder:UpdatingBallButtonHolder?=null
         var ballButtons:ConcurrentLinkedQueue<BallButton> = ConcurrentLinkedQueue()
         init {
             val n = 6
@@ -73,9 +74,14 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
                     ballButtons.add(BallButton(x,h/2,r,size))
                     x += 2*r+size
                 }
+                holder = UpdatingBallButtonHolder(ballButtons)
             }
         }
         fun update(stopcb:()->Unit) {
+            holder?.update()
+            if(holder?.stopped()?:false) {
+                stopcb()
+            }
         }
         fun draw(canvas:Canvas,paint:Paint) {
             ballButtons.forEach{ ballButton ->
@@ -86,7 +92,8 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
             var j = 0
             ballButtons.forEach { ballButton ->
                 if(ballButton.handleTap(x,y)) {
-
+                    holder?.startUpdating(j)
+                    startcb()
                 }
                 j++
             }
