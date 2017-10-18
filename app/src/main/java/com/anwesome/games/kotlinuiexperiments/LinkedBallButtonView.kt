@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -172,6 +173,13 @@ class LinkedBallButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             linkedBallAnimator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = LinkedBallButtonView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
