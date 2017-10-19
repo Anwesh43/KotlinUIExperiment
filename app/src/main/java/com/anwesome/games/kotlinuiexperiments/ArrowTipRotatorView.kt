@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -111,6 +112,14 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object{
+        var view:ArrowTipRotatorView?=null
+        fun create(activity:Activity) {
+            view = ArrowTipRotatorView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
     }
 }
