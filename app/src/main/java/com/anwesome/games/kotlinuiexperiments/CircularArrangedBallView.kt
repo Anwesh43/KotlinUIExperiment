@@ -35,6 +35,7 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
             canvas.restore()
+            canvas.drawLine(0f,0f,x*state.scale,y*state.scale,paint)
         }
         fun update() {
             state.update()
