@@ -86,12 +86,28 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             arrowTipRotator.draw(canvas,paint)
         }
-        fun handleTap(x:Float,y:Float) {
+        fun handleTap() {
             if(!animated) {
                 arrowTipRotator.startUpdating()
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    class ArrowTipRenderer(var time:Int = 0,var view:ArrowTipRotatorView) {
+        var animator:ArrowTipRotatorAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ArrowTipRotatorAnimator(ArrowTipRotator(w/2,h/2,Math.min(w,h)/5),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
         }
     }
 }
