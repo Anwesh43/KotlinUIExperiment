@@ -9,14 +9,16 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 19/10/17.
  */
 class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
+    val renderer = CircularArrangedBallRenderer(view = this)
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean{
         when(event.action) {
             MotionEvent.ACTION_DOWN ->{
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
