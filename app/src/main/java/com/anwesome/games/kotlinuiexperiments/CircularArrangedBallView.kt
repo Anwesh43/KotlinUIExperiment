@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 19/10/17.
  */
-class CircularArrangedBallView(ctx:Context):View(ctx) {
+class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -125,6 +125,22 @@ class CircularArrangedBallView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             })
+        }
+    }
+    class CircularArrangedBallRenderer(var time:Int = 0,var view:CircularArrangedBallView) {
+        var animator:CircularArrangedBallAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = CircularArrangedBallAnimator(CircularArrangedBallContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
