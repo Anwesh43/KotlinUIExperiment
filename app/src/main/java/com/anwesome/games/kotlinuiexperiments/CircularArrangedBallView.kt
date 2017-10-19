@@ -19,4 +19,24 @@ class CircularArrangedBallView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class CircularArrangedBall(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = r/10
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = false
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
+    }
 }
