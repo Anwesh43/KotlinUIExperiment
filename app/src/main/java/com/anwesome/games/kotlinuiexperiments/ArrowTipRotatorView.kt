@@ -25,6 +25,7 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
         var state:ArrowTipRotatorState = ArrowTipRotatorState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeWidth = size/12
+            paint.strokeCap = Paint.Cap.ROUND
             paint.color = Color.parseColor("#FAFAFA")
             canvas.save()
             canvas.translate(x,y)

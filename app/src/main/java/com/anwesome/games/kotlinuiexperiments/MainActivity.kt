@@ -153,12 +153,13 @@ class MainActivity : AppCompatActivity() {
 //         })
 //        LinkedBallButtonView.create(this)
 //        LinkedBallButtonView.addSelectionListener({i->createToast("$i expanded")},{i->createToast("$i collapsed")})
-        CircularArrangedBallView.create(this)
-        CircularArrangedBallView.addSelectionListener({i->
-            createToast("$i collapsed")
-        },{i->
-            createToast("$i expanded")
-        })
+//        CircularArrangedBallView.create(this)
+//        CircularArrangedBallView.addSelectionListener({i->
+//            createToast("$i collapsed")
+//        },{i->
+//            createToast("$i expanded")
+//        })
+        ArrowTipRotatorView.create(this)
     }
     override fun onPause() {
         super.onPause()
