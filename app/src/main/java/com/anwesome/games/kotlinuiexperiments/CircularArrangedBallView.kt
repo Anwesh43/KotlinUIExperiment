@@ -51,7 +51,7 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
             scale += dir*0.1f
             if(scale > 1) {
                 dir = 0f
-                scale = 0f
+                scale = 1f
             }
             if(scale < 0) {
                 scale = 0f
@@ -73,7 +73,7 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
                 val r = Math.min(w,h)/5
                 val ballR = Math.min(w,h)/20
                 for (i in 1..n) {
-                    balls.add(CircularArrangedBall(r*Math.cos(currDeg*Math.PI/180).toInt(),r*Math.sin(currDeg*Math.PI/180).toInt(),ballR))
+                    balls.add(CircularArrangedBall((r*Math.cos(currDeg*Math.PI/180)).toFloat(),(r*Math.sin(currDeg*Math.PI/180)).toFloat(),ballR))
                     currDeg += deg
                 }
             }
@@ -90,16 +90,20 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#FF5722")
+            canvas.save()
+            canvas.translate(w/2,h/2)
             balls.forEach { ball ->
                 ball.draw(canvas,paint)
             }
+            canvas.restore()
         }
         fun handleTap(x:Float,y:Float,startCb:()->Unit) {
             balls.forEach{ ball ->
                 if(ball.handleTap(x-w/2,y-h/2)) {
                     ball.startUpdating()
                     updatingBalls.add(ball)
-                    if(updatingBalls.size == 0) {
+                    if(updatingBalls.size == 1) {
                         startCb()
                     }
                 }
