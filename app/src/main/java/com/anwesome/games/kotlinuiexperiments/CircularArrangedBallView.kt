@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
     val renderer = CircularArrangedBallRenderer(view = this)
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var listener:OnCircularArrangedSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -78,16 +79,22 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
                 }
             }
         }
-        fun update(stopCb:()->Unit) {
-            updatingBalls.forEach { ball ->
+        fun update(stopCb:()->Unit,view:CircularArrangedBallView) {
+            var i = 0
+            updatingBalls.forEach ({ ball ->
                 ball.update()
                 if(ball.stopped()) {
                     updatingBalls.remove(ball)
+                    when(ball.state.scale) {
+                        0f -> view.listener?.collapseListener?.invoke(i)
+                        1f -> view.listener?.expandListener?.invoke(i)
+                    }
                     if(updatingBalls.size == 0) {
                         stopCb()
                     }
                 }
-            }
+                i++
+            })
         }
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#FF5722")
@@ -116,7 +123,7 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
             if(animated) {
                 container.update({
                     animated = false
-                })
+                },view)
                 try {
                     Thread.sleep(50)
                     view.invalidate()
@@ -153,12 +160,19 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     companion object {
+        var view:CircularArrangedBallView?=null
         fun create(activity:Activity,vararg n:Int) {
-            val view = CircularArrangedBallView(activity)
+            view = CircularArrangedBallView(activity)
             if(n.size == 1) {
-                view.n = n[0]
+                view?.n = n[0]
             }
             activity.setContentView(view)
         }
+        fun addSelectionListener(vararg listeners:(Int)->Unit) {
+            if(listeners.size == 2) {
+                view?.listener = OnCircularArrangedSelectionListener(listeners[0],listeners[1])
+            }
+        }
     }
+    data class OnCircularArrangedSelectionListener(var collapseListener:(Int)->Unit,var expandListener:(Int)->Unit)
 }
