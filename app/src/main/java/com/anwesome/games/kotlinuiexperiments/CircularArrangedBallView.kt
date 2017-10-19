@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -95,6 +96,7 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
         fun handleTap(x:Float,y:Float,startCb:()->Unit) {
             balls.forEach{ ball ->
                 if(ball.handleTap(x-w/2,y-h/2)) {
+                    ball.startUpdating()
                     updatingBalls.add(ball)
                     if(updatingBalls.size == 0) {
                         startCb()
@@ -143,6 +145,15 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity,vararg n:Int) {
+            val view = CircularArrangedBallView(activity)
+            if(n.size == 1) {
+                view.n = n[0]
+            }
+            activity.setContentView(view)
         }
     }
 }
