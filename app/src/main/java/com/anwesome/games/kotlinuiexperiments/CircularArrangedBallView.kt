@@ -20,6 +20,7 @@ class CircularArrangedBallView(ctx:Context):View(ctx) {
         return true
     }
     data class CircularArrangedBall(var x:Float,var y:Float,var r:Float) {
+        var state = CircularArrangedBallState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -27,16 +28,16 @@ class CircularArrangedBallView(ctx:Context):View(ctx) {
             paint.strokeWidth = r/10
             canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,true,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,true,paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
     data class CircularArrangedBallState(var scale:Float = 0f,var dir:Float = 0f) {
