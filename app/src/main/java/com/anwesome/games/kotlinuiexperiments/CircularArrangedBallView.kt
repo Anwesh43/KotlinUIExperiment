@@ -25,7 +25,7 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         return true
     }
-    data class CircularArrangedBall(var x:Float,var y:Float,var r:Float) {
+    data class CircularArrangedBall(var i:Int,var x:Float,var y:Float,var r:Float) {
         var state = CircularArrangedBallState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
@@ -74,26 +74,24 @@ class CircularArrangedBallView(ctx:Context,var n:Int = 6):View(ctx) {
                 val r = Math.min(w,h)/5
                 val ballR = Math.min(w,h)/20
                 for (i in 1..n) {
-                    balls.add(CircularArrangedBall((r*Math.cos(currDeg*Math.PI/180)).toFloat(),(r*Math.sin(currDeg*Math.PI/180)).toFloat(),ballR))
+                    balls.add(CircularArrangedBall(i,(r*Math.cos(currDeg*Math.PI/180)).toFloat(),(r*Math.sin(currDeg*Math.PI/180)).toFloat(),ballR))
                     currDeg += deg
                 }
             }
         }
         fun update(stopCb:()->Unit,view:CircularArrangedBallView) {
-            var i = 0
             updatingBalls.forEach ({ ball ->
                 ball.update()
                 if(ball.stopped()) {
                     updatingBalls.remove(ball)
                     when(ball.state.scale) {
-                        0f -> view.listener?.collapseListener?.invoke(i)
-                        1f -> view.listener?.expandListener?.invoke(i)
+                        0f -> view.listener?.collapseListener?.invoke(ball.i)
+                        1f -> view.listener?.expandListener?.invoke(ball.i)
                     }
                     if(updatingBalls.size == 0) {
                         stopCb()
                     }
                 }
-                i++
             })
         }
         fun draw(canvas:Canvas,paint:Paint) {
