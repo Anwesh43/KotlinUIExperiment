@@ -66,4 +66,32 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class ArrowTipRotatorAnimator(var arrowTipRotator:ArrowTipRotator,var view:ArrowTipRotatorView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                arrowTipRotator.update()
+                if(arrowTipRotator.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            arrowTipRotator.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                arrowTipRotator.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
