@@ -9,6 +9,7 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ArrowTipRenderer(view=this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -23,6 +24,7 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
         var state:ArrowTipRotatorState = ArrowTipRotatorState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeWidth = size/12
+            paint.color = Color.parseColor("#FAFAFA")
             canvas.save()
             canvas.translate(x,y)
             for(j in 0..1) {
