@@ -160,6 +160,7 @@ class MainActivity : AppCompatActivity() {
 //            createToast("$i expanded")
 //        })
         ArrowTipRotatorView.create(this)
+        ArrowTipRotatorView.addListener({createToast("expanded")},{createToast("collapsed")})
     }
     override fun onPause() {
         super.onPause()
