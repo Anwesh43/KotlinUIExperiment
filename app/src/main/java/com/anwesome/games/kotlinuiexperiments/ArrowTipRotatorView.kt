@@ -9,6 +9,7 @@ import android.graphics.*
 class ArrowTipRotatorView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ArrowTipRenderer(view=this)
+    var selectionListener:OnArrowTipExpandCloseListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -78,6 +79,10 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
                 arrowTipRotator.update()
                 if(arrowTipRotator.stopped()) {
                     animated = false
+                    when(arrowTipRotator.state.scale) {
+                        0f -> view.selectionListener?.collapseListener?.invoke()
+                        1f -> view.selectionListener?.expandListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -122,5 +127,11 @@ class ArrowTipRotatorView(ctx:Context):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x/2,size.x/2))
         }
+        fun addListener(vararg listeners:()->Unit) {
+            if(listeners.size == 2) {
+                view?.selectionListener = OnArrowTipExpandCloseListener(listeners[0],listeners[1])
+            }
+        }
     }
+    data class OnArrowTipExpandCloseListener(var expandListener:()->Unit,var collapseListener:()->Unit)
 }
