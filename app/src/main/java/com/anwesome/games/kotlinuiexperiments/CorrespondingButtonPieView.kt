@@ -101,4 +101,32 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
             }
         }
     }
+    class CorrespondingButtonPieAnimator(var container:CorrespondingButtonPieContainer,var view:CorrespondingButtonPieView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update({
+                    animated = false
+                },view)
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                container.handleTap(x,y,{
+                    animated = true
+                    view.postInvalidate()
+                })
+            }
+        }
+    }
 }
