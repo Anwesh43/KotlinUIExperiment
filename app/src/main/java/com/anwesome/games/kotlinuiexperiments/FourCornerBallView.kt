@@ -8,6 +8,7 @@ import android.content.Context
  */
 class FourCornerBallView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onClickListener:OnFourCornerBallClickListener?=null
     val renderer = FourBallRenderer(view = this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
@@ -55,6 +56,7 @@ class FourCornerBallView(ctx:Context):View(ctx) {
             if(animated) {
                 fourCornerBall.update({
                     animated = false
+                    view.onClickListener?.listener?.invoke()
                 })
                 try {
                     Thread.sleep(50)
@@ -92,10 +94,17 @@ class FourCornerBallView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:FourCornerBallView?=null
         fun create(activity:Activity) {
-            val view = FourCornerBallView(activity)
+            view = FourCornerBallView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addListener(vararg listeners:()->Unit) {
+            if(listeners.size == 1) {
+                view?.onClickListener = OnFourCornerBallClickListener(listeners[0])
+            }
+        }
     }
+    data class OnFourCornerBallClickListener(var listener:()->Unit)
 }
