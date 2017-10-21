@@ -162,6 +162,9 @@ class MainActivity : AppCompatActivity() {
 //        ArrowTipRotatorView.create(this)
 //        ArrowTipRotatorView.addListener({createToast("expanded")},{createToast("collapsed")})
         FourCornerBallView.create(this)
+        FourCornerBallView.addListener({
+            createToast("clicked")
+        })
     }
     override fun onPause() {
         super.onPause()
