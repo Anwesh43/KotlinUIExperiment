@@ -26,12 +26,16 @@ class FourCornerBallView(ctx:Context):View(ctx) {
         val state = FourCornerBallState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#673AB7")
+            canvas.save()
+            canvas.translate(w/2,h/2)
             for(i in 0..3) {
                 canvas.save()
-                canvas.translate(w/2,h/2)
-                canvas.drawCircle(0f-((w/3)+(2*w/3)*(i%2)),0f-((w/3+(2*w/3)*(i/2))),Math.min(w,h)/10,paint)
+                canvas.rotate(90f*i+45f)
+                canvas.translate(0f,-0.4f*w*state.scale)
+                canvas.drawCircle(0f,0f,Math.min(w,h)/10,paint)
                 canvas.restore()
             }
+            canvas.restore()
         }
         fun update(stopcb:()->Unit) {
             state.update()
@@ -46,6 +50,7 @@ class FourCornerBallView(ctx:Context):View(ctx) {
             scale = Math.sin(deg*Math.PI/180).toFloat()
             if(deg > 180f) {
                 deg = 0f
+                scale = 0f
             }
         }
         fun stopped():Boolean = deg == 0f
