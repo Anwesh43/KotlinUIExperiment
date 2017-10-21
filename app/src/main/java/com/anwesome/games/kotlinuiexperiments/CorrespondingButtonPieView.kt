@@ -81,7 +81,7 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
                 gap = 360.0f/n
                 for (i in 0..n - 1) {
                     pies.add(CorrespondingButtonPie(i,x,h-2*xgap,xgap/2))
-                    x+= 2*gap
+                    x+= 2*xgap
                 }
             }
         }
@@ -94,14 +94,21 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
             updatingPies.forEach { pie->
                 pie.update()
                 if(pie.stopped()) {
-                    stopcb()
+                    updatingPies.remove(pie)
+                    if(updatingPies.size == 0) {
+                        stopcb()
+                    }
                 }
             }
         }
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             pies.forEach { pie ->
                 if(pie.handleTap(x,y)) {
-                    startcb()
+                    pie.startUpdating()
+                    updatingPies.add(pie)
+                    if(updatingPies.size == 1) {
+                        startcb()
+                    }
                 }
             }
         }
@@ -140,6 +147,7 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
+                paint.strokeWidth = Math.min(w,h)/50
                 animator = CorrespondingButtonPieAnimator(CorrespondingButtonPieContainer(w,h, pieButtonColors.size),view)
             }
             animator?.draw(canvas,paint)
