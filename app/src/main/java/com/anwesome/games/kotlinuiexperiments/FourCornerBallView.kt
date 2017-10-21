@@ -9,6 +9,7 @@ class FourCornerBallView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = FourBallRenderer(view = this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -22,6 +23,7 @@ class FourCornerBallView(ctx:Context):View(ctx) {
     data class FourCornerBall(var w:Float,var h:Float) {
         val state = FourCornerBallState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#673AB7")
             for(i in 0..3) {
                 canvas.save()
                 canvas.translate(w/2,h/2)
