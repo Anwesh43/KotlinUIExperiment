@@ -86,6 +86,9 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.style = Paint.Style.STROKE
+            paint.color = Color.parseColor("#795548")
+            canvas.drawCircle(w/2,h/2,Math.min(w,h)/4,paint)
             pies.forEach{ pie ->
                 pie.draw(canvas,paint,w/2,h/2,Math.min(w,h)/4,gap)
             }
@@ -133,12 +136,10 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
             container.draw(canvas,paint)
         }
         fun handleTap(x:Float,y:Float) {
-            if(!animated) {
-                container.handleTap(x,y,{
-                    animated = true
-                    view.postInvalidate()
-                })
-            }
+            container.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
         }
     }
     class CorrespondingButtonPieRenderer(var time:Int = 0,var view:CorrespondingButtonPieView) {
