@@ -18,4 +18,21 @@ class FourCornerBallView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class FourCornerBall(var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            for(i in 0..3) {
+                canvas.save()
+                canvas.translate(w/2,h/2)
+                canvas.drawCircle(0f-((w/3)+(2*w/3)*(i%2)),0f-((w/3+(2*w/3)*(i/2))),Math.min(w,h)/10,paint)
+                canvas.restore()
+            }
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+    }
 }
