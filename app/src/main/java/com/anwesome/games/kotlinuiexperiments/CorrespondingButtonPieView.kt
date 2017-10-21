@@ -9,10 +9,12 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 22/10/17.
  */
-class CorrespondingButtonPieView(ctx:Context,var n:Int = 6):View(ctx) {
+val pieButtonColors:Array<String> = arrayOf("#009688","#3F51B5","#FF5722","#d32f2f","#9C27B0","#00C853")
+class CorrespondingButtonPieView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer:CorrespondingButtonPieRenderer = CorrespondingButtonPieRenderer(view = this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -26,6 +28,7 @@ class CorrespondingButtonPieView(ctx:Context,var n:Int = 6):View(ctx) {
     data class CorrespondingButtonPie(var i:Int,var x:Float,var y:Float,var r:Float) {
         var state = CorrespondingButtonPieState()
         fun draw(canvas:Canvas,paint:Paint,px:Float,py:Float,pr:Float,gap:Float) {
+            paint.color = Color.parseColor(pieButtonColors[i])
             paint.style = Paint.Style.FILL
             canvas.save()
             canvas.translate(px,py)
@@ -137,7 +140,7 @@ class CorrespondingButtonPieView(ctx:Context,var n:Int = 6):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = CorrespondingButtonPieAnimator(CorrespondingButtonPieContainer(w,h,view.n),view)
+                animator = CorrespondingButtonPieAnimator(CorrespondingButtonPieContainer(w,h, pieButtonColors.size),view)
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -151,7 +154,7 @@ class CorrespondingButtonPieView(ctx:Context,var n:Int = 6):View(ctx) {
         fun create(activity:Activity) {
             val view = CorrespondingButtonPieView(activity)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
