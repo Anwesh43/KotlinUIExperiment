@@ -64,5 +64,11 @@ class FourCornerBallView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             fourCornerBall.draw(canvas,paint)
         }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
     }
 }
