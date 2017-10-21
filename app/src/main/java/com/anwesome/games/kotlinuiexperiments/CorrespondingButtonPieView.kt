@@ -3,6 +3,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.*
 import android.graphics.*
 import android.view.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 22/10/17.
  */
@@ -63,5 +65,40 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
             dir = 1-2*this.scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    data class CorrespondingButtonPieContainer(var w:Float,var h:Float,var n:Int,var gap:Float = 0f) {
+        var pies:ConcurrentLinkedQueue<CorrespondingButtonPie> = ConcurrentLinkedQueue()
+        var updatingPies:ConcurrentLinkedQueue<CorrespondingButtonPie> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                val xgap = w/(2*n+1)
+                var x = 3*xgap/2
+                gap = 360.0f/n
+                for (i in 0..n - 1) {
+                    pies.add(CorrespondingButtonPie(i,x,h-2*xgap,xgap/2))
+                    x+= 2*gap
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            pies.forEach{ pie ->
+                pie.draw(canvas,paint,w/2,h/2,Math.min(w,h)/4,gap)
+            }
+        }
+        fun update(stopcb:()->Unit,view:CorrespondingButtonPieView) {
+            updatingPies.forEach { pie->
+                pie.update()
+                if(pie.stopped()) {
+                    stopcb()
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            pies.forEach { pie ->
+                if(pie.handleTap(x,y)) {
+                    startcb()
+                }
+            }
+        }
     }
 }
