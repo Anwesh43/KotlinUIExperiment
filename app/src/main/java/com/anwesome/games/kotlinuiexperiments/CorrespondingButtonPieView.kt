@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 22/10/17.
  */
-class CorrespondingButtonPieView(ctx:Context):View(ctx) {
+class CorrespondingButtonPieView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -127,6 +127,22 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
                     view.postInvalidate()
                 })
             }
+        }
+    }
+    class CorrespondingButtonPieRenderer(var time:Int = 0,var view:CorrespondingButtonPieView) {
+        var animator:CorrespondingButtonPieAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = CorrespondingButtonPieAnimator(CorrespondingButtonPieContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
