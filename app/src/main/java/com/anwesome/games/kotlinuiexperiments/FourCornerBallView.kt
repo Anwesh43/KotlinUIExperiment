@@ -28,10 +28,12 @@ class FourCornerBallView(ctx:Context):View(ctx) {
                 canvas.restore()
             }
         }
-        fun update() {
+        fun update(stopcb:()->Unit) {
             state.update()
+            if(state.stopped()) {
+                stopcb()
+            }
         }
-        fun stopped():Boolean = state.stopped()
     }
     data class FourCornerBallState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
