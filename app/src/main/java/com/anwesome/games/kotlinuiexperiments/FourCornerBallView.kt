@@ -19,6 +19,7 @@ class FourCornerBallView(ctx:Context):View(ctx) {
         return true
     }
     data class FourCornerBall(var w:Float,var h:Float) {
+        val state = FourCornerBallState()
         fun draw(canvas:Canvas,paint:Paint) {
             for(i in 0..3) {
                 canvas.save()
@@ -28,11 +29,18 @@ class FourCornerBallView(ctx:Context):View(ctx) {
             }
         }
         fun update() {
-
+            state.update()
         }
-        fun startUpdating() {
-
+        fun stopped():Boolean = state.stopped()
+    }
+    data class FourCornerBallState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            deg += 4.5f
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+            if(deg > 180f) {
+                deg = 0f
+            }
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = deg == 0f
     }
 }
