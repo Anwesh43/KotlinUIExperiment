@@ -10,13 +10,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 class CorrespondingButtonPieView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer:CorrespondingButtonPieRenderer = CorrespondingButtonPieRenderer(view = this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
