@@ -45,4 +45,21 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r && x<=this.x+r && y>=this.y-r && y<=this.y+r
     }
+    data class CorrespondingButtonPieState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale+=0.1f*dir
+            if(scale > 1) {
+                dir = 0f
+                scale = 1f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
