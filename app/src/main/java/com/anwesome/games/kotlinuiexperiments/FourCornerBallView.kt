@@ -45,4 +45,24 @@ class FourCornerBallView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    class FourCornerBallAnimator(var fourCornerBall:FourCornerBall,var view:FourCornerBallView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                fourCornerBall.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            fourCornerBall.draw(canvas,paint)
+        }
+    }
 }
