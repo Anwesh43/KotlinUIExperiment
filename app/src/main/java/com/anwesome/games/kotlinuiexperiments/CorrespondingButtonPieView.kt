@@ -13,6 +13,7 @@ val pieButtonColors:Array<String> = arrayOf("#009688","#3F51B5","#FF5722","#d32f
 class CorrespondingButtonPieView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer:CorrespondingButtonPieRenderer = CorrespondingButtonPieRenderer(view = this)
+    var selectionListener:OnCorrespondingButtonSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -98,6 +99,10 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
                 pie.update()
                 if(pie.stopped()) {
                     updatingPies.remove(pie)
+                    when(pie.state.scale) {
+                        0f -> view.selectionListener?.collapseListener?.invoke(pie.i)
+                        1f -> view.selectionListener?.expandListener?.invoke(pie.i)
+                    }
                     if(updatingPies.size == 0) {
                         stopcb()
                     }
@@ -160,10 +165,15 @@ class CorrespondingButtonPieView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:CorrespondingButtonPieView?=null
         fun create(activity:Activity) {
-            val view = CorrespondingButtonPieView(activity)
+            view = CorrespondingButtonPieView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addSelectionListener(collapseListener:(Int)->Unit,expandListener:(Int)->Unit) {
+            view?.selectionListener = OnCorrespondingButtonSelectionListener(collapseListener,expandListener)
+        }
     }
+    data class OnCorrespondingButtonSelectionListener(var collapseListener:(Int)->Unit,var expandListener:(Int)->Unit)
 }
