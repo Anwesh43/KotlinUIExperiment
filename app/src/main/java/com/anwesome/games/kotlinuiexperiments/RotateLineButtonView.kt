@@ -20,7 +20,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-                renderer.handleTap(x,y)
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -32,6 +32,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
             canvas.save()
             canvas.scale(state.scale,state.scale)
             canvas.drawCircle(0f,0f,r,paint)
@@ -74,7 +75,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
         var updatingLines:ConcurrentLinkedQueue<RotateLineButton> = ConcurrentLinkedQueue()
         init {
             for(i in 0..1) {
-                rotatingLines.add(RotateLineButton(i,w/2-w/4+w/2*i,w/2,w/20,w/4))
+                rotatingLines.add(RotateLineButton(i,w/2-w/4+w/2*i,w/2,w/20,w/4-w/20))
             }
         }
         fun update(view:RotateLineButtonView,stopcb:()->Unit) {
@@ -96,6 +97,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             rotatingLines.forEach { rlb ->
                 if(rlb.handleTap(x,y)) {
+                    rlb.startUpdating()
                     updatingLines.add(rlb)
                     if(updatingLines.size == 1) {
                         startcb()

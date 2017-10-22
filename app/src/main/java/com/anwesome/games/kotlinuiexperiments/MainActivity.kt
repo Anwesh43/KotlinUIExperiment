@@ -165,8 +165,9 @@ class MainActivity : AppCompatActivity() {
 //        FourCornerBallView.addListener({
 //            createToast("clicked")
 //        })
-        CorrespondingButtonPieView.create(this)
-        CorrespondingButtonPieView.addSelectionListener({i->createToast("$i collapsed")},{i->createToast("$i expanded")})
+        //CorrespondingButtonPieView.create(this)
+        //CorrespondingButtonPieView.addSelectionListener({i->createToast("$i collapsed")},{i->createToast("$i expanded")})
+        RotateLineButtonView.create(this)
     }
     override fun onPause() {
         super.onPause()
