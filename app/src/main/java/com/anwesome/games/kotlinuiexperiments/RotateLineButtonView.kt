@@ -3,6 +3,8 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 23/10/17.
  */
+import android.app.ActionBar
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -142,6 +144,14 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        var view:RotateLineButtonView?=null
+        fun create(activity:Activity) {
+            view = RotateLineButtonView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
