@@ -96,8 +96,35 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
                     if(updatingLines.size == 1) {
                         startcb()
                     }
+                    return
                 }
             }
+        }
+    }
+    class RLBAnimator(var container:RotateLineButtonContainer,var view:RotateLineButtonView) {
+        var animated = true
+        fun update() {
+            if(animated) {
+                container.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
         }
     }
 }
