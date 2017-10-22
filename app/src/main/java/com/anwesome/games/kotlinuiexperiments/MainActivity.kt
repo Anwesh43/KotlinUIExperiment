@@ -166,6 +166,7 @@ class MainActivity : AppCompatActivity() {
 //            createToast("clicked")
 //        })
         CorrespondingButtonPieView.create(this)
+        CorrespondingButtonPieView.addSelectionListener({createToast("collapsed")},{createToast("expanded")})
     }
     override fun onPause() {
         super.onPause()
