@@ -127,4 +127,20 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
             })
         }
     }
+    class RLBRenderer(var view:RotateLineButtonView,var time:Int = 0) {
+        var animator:RLBAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = RLBAnimator(RotateLineButtonContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
