@@ -14,6 +14,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RLBRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -76,7 +77,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
                 rotatingLines.add(RotateLineButton(i,w/2-w/4+w/2*i,w/2,w/20,w/4))
             }
         }
-        fun update(stopcb:()->Unit) {
+        fun update(view:RotateLineButtonView,stopcb:()->Unit) {
             updatingLines.forEach { rlb ->
                 rlb.update()
                 if(rlb.stopped()) {
@@ -108,7 +109,7 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
         var animated = true
         fun update() {
             if(animated) {
-                container.update({
+                container.update(view,{
                     animated = false
                 })
                 try {
@@ -137,6 +138,9 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = RLBAnimator(RotateLineButtonContainer(w,h),view)
+                paint.color = Color.parseColor("#FF9800")
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
