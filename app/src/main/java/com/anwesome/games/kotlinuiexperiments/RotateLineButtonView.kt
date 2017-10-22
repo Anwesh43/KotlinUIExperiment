@@ -68,11 +68,36 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
     data class RotateLineButtonContainer(var w:Float,var h:Float) {
         var  rotatingLines:ConcurrentLinkedQueue<RotateLineButton> = ConcurrentLinkedQueue()
         var updatingLines:ConcurrentLinkedQueue<RotateLineButton> = ConcurrentLinkedQueue()
-        fun update() {
-
+        init {
+            for(i in 0..1) {
+                rotatingLines.add(RotateLineButton(i,w/2-w/4+w/2*i,w/2,w/20,w/4))
+            }
         }
-        fun handleTap(x:Float,y:Float) {
-
+        fun update(stopcb:()->Unit) {
+            updatingLines.forEach { rlb ->
+                rlb.update()
+                if(rlb.stopped()) {
+                    updatingLines.remove(rlb)
+                    if(updatingLines.size == 0) {
+                        stopcb()
+                    }
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            rotatingLines.forEach { rotatingLine ->
+                rotatingLine.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            rotatingLines.forEach { rlb ->
+                if(rlb.handleTap(x,y)) {
+                    updatingLines.add(rlb)
+                    if(updatingLines.size == 1) {
+                        startcb()
+                    }
+                }
+            }
         }
     }
 }
