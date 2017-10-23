@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class RotateLineButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RLBRenderer(this)
+    var clickListener:RotateLineButtonClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -83,6 +84,10 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
                 rlb.update()
                 if(rlb.stopped()) {
                     updatingLines.remove(rlb)
+                    when(rlb.state.scale) {
+                        0f -> view.clickListener?.openListener?.invoke()
+                        1f -> view.clickListener?.closeListener?.invoke()
+                    }
                     if(updatingLines.size == 0) {
                         stopcb()
                     }
@@ -159,5 +164,9 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addClickListener(openListener:()->Unit,closeListener:()->Unit) {
+            view?.clickListener = RotateLineButtonClickListener(openListener,closeListener)
+        }
     }
+    data class RotateLineButtonClickListener(var openListener:()->Unit,var closeListener:()->Unit)
 }
