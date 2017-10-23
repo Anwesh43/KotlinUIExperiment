@@ -85,8 +85,8 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
                 if(rlb.stopped()) {
                     updatingLines.remove(rlb)
                     when(rlb.state.scale) {
-                        0f -> view.clickListener?.openListener?.invoke()
-                        1f -> view.clickListener?.closeListener?.invoke()
+                        0f -> view.clickListener?.openListener?.invoke(rlb.i)
+                        1f -> view.clickListener?.closeListener?.invoke(rlb.i)
                     }
                     if(updatingLines.size == 0) {
                         stopcb()
@@ -164,9 +164,9 @@ class RotateLineButtonView(ctx:Context):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
-        fun addClickListener(openListener:()->Unit,closeListener:()->Unit) {
+        fun addClickListener(openListener:(Int)->Unit,closeListener:(Int)->Unit) {
             view?.clickListener = RotateLineButtonClickListener(openListener,closeListener)
         }
     }
-    data class RotateLineButtonClickListener(var openListener:()->Unit,var closeListener:()->Unit)
+    data class RotateLineButtonClickListener(var openListener:(Int)->Unit,var closeListener:(Int)->Unit)
 }
