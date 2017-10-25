@@ -71,7 +71,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
         var updatingEdges:ConcurrentLinkedQueue<RectEdge> = ConcurrentLinkedQueue()
         init {
             for(i in 0..3) {
-                rectEdges.add(RectEdge(i,Math.min(w,h)/4))
+                rectEdges.add(RectEdge(i,Math.min(w,h)/6))
             }
         }
         fun update(stopcb:()->Unit) {
@@ -155,7 +155,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
         fun create(activity:Activity) {
             view = RectEdgeView(activity)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
         }
     }
 }
