@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 25/10/17.
  */
@@ -59,6 +61,39 @@ class RectEdgeView(ctx:Context):View(ctx) {
         fun stopped():Boolean = dir == 0f
         fun startUpdating() {
             dir = 1-2*scale
+        }
+    }
+    data class RectEdgeContainer(var w:Float,var h:Float) {
+        var rectEdges:ConcurrentLinkedQueue<RectEdge> = ConcurrentLinkedQueue()
+        var updatingEdges:ConcurrentLinkedQueue<RectEdge> = ConcurrentLinkedQueue()
+        fun update(stopcb:()->Unit) {
+            updatingEdges.forEach { updatingEdge ->
+                updatingEdge.update()
+                if(updatingEdge.stopped()) {
+                    updatingEdges.remove(updatingEdge)
+                    if(updatingEdges.size == 0) {
+                        stopcb()
+                    }
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            rectEdges.forEach { rectEdge ->
+                rectEdge.draw(canvas,paint)
+            }
+            canvas.restore()
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            rectEdges.forEach { rectEdge ->
+                if(rectEdge.handleTap(x-w/2,y-h/2)) {
+                    updatingEdges.add(rectEdge)
+                    if(updatingEdges.size == 1) {
+                        startcb()
+                    }
+                }
+            }
         }
     }
 }
