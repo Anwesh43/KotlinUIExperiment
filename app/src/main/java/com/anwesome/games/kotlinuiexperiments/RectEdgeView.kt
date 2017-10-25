@@ -29,14 +29,14 @@ class RectEdgeView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0f,0f,r/10,paint)
+            canvas.drawCircle(0f,0f,r/5,paint)
             paint.style = Paint.Style.FILL
             canvas.save()
-            canvas.drawCircle(0f,0f,(r/10)*state.scale,paint)
+            canvas.drawCircle(0f,0f,(r/5)*state.scale,paint)
             canvas.restore()
             canvas.save()
             canvas.rotate(90f*i+90*state.scale)
-            canvas.drawLine(0f,0f,0f,r/Math.sqrt(2.0).toFloat(),paint)
+            canvas.drawLine(0f,0f,0f,r*Math.sqrt(2.0).toFloat(),paint)
             canvas.restore()
             canvas.restore()
         }
@@ -47,7 +47,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
             state.startUpdating()
         }
         fun stopped():Boolean = state.stopped()
-        fun handleTap(x:Float,y:Float):Boolean = x >= this.x - r/10 && x<=this.x+r/10 && y>=this.y-r/10 && y<=this.y+r/10
+        fun handleTap(x:Float,y:Float):Boolean = x >= this.x - r/5 && x<=this.x+r/5 && y>=this.y-r/5 && y<=this.y+r/5
     }
     data class RectEdgeState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
@@ -96,6 +96,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             rectEdges.forEach { rectEdge ->
                 if(rectEdge.handleTap(x-w/2,y-h/2)) {
+                    rectEdge.startUpdating()
                     updatingEdges.add(rectEdge)
                     if(updatingEdges.size == 1) {
                         startcb()
