@@ -18,4 +18,29 @@ class RectEdgeView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class RectEdge(var i:Int,var r:Float,var x:Float = r*Math.cos(i*Math.PI/2+Math.PI/4).toFloat() ,var y:Float = r*Math.sin(i*Math.PI/2+Math.PI/4).toFloat()) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r/10,paint)
+            paint.style = Paint.Style.FILL
+            canvas.save()
+            canvas.drawCircle(0f,0f,r/10,paint)
+            canvas.restore()
+            canvas.save()
+            canvas.rotate(90f*i+90)
+            canvas.drawLine(0f,0f,0f,r/Math.sqrt(2.0).toFloat(),paint)
+            canvas.restore()
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating(){
+
+        }
+        fun stopped():Boolean = true
+        fun handleTap(x:Float,y:Float):Boolean = x >= this.x - r/10 && x<=this.x+r/10 && y>=this.y-r/10 && y<=this.y+r/10
+    }
 }
