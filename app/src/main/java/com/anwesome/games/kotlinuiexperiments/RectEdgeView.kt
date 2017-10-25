@@ -12,6 +12,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RectEdgeRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -70,7 +71,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
         var updatingEdges:ConcurrentLinkedQueue<RectEdge> = ConcurrentLinkedQueue()
         init {
             for(i in 0..3) {
-                rectEdges.add(RectEdge(i,Math.min(w,h)/3))
+                rectEdges.add(RectEdge(i,Math.min(w,h)/4))
             }
         }
         fun update(stopcb:()->Unit) {
@@ -138,6 +139,7 @@ class RectEdgeView(ctx:Context):View(ctx) {
                 animator = RectEdgeAnimator(RectEdgeContainer(w,h),view)
                 paint.strokeWidth = Math.min(w,h)/50
                 paint.strokeCap = Paint.Cap.ROUND
+                paint.color = Color.parseColor("#FBC02D")
             }
             animator?.draw(canvas,paint)
             animator?.update()
