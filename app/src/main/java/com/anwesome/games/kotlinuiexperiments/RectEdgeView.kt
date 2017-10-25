@@ -66,6 +66,11 @@ class RectEdgeView(ctx:Context):View(ctx) {
     data class RectEdgeContainer(var w:Float,var h:Float) {
         var rectEdges:ConcurrentLinkedQueue<RectEdge> = ConcurrentLinkedQueue()
         var updatingEdges:ConcurrentLinkedQueue<RectEdge> = ConcurrentLinkedQueue()
+        init {
+            for(i in 0..3) {
+                rectEdges.add(RectEdge(i,Math.min(w,h)/3))
+            }
+        }
         fun update(stopcb:()->Unit) {
             updatingEdges.forEach { updatingEdge ->
                 updatingEdge.update()
@@ -94,6 +99,32 @@ class RectEdgeView(ctx:Context):View(ctx) {
                     }
                 }
             }
+        }
+    }
+    class RectEdgeAnimator(var container:RectEdgeContainer,var view:RectEdgeView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                container.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
         }
     }
 }
