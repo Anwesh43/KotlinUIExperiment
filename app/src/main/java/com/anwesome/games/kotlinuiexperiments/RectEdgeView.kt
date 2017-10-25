@@ -127,4 +127,22 @@ class RectEdgeView(ctx:Context):View(ctx) {
             })
         }
     }
+    class RectEdgeRenderer(var view:RectEdgeView,var time:Int = 0) {
+        var animator:RectEdgeAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = RectEdgeAnimator(RectEdgeContainer(w,h),view)
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
