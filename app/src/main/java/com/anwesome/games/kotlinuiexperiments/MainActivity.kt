@@ -167,8 +167,9 @@ class MainActivity : AppCompatActivity() {
 //        })
         //CorrespondingButtonPieView.create(this)
         //CorrespondingButtonPieView.addSelectionListener({i->createToast("$i collapsed")},{i->createToast("$i expanded")})
-        RotateLineButtonView.create(this)
-        RotateLineButtonView.addClickListener({i -> createToast("$i opened")},{i -> createToast("$i closed")})
+//        RotateLineButtonView.create(this)
+//        RotateLineButtonView.addClickListener({i -> createToast("$i opened")},{i -> createToast("$i closed")})
+        RectEdgeView.create(this)
     }
     override fun onPause() {
         super.onPause()
