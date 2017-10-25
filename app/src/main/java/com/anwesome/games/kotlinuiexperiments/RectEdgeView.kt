@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -144,6 +145,14 @@ class RectEdgeView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        var view:RectEdgeView?=null
+        fun create(activity:Activity) {
+            view = RectEdgeView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
