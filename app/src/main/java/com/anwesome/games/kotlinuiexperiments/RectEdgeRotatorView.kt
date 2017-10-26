@@ -85,7 +85,7 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
                 if(rotator.stopped()) {
                     animated = false
                     when(rotator.state.i) {
-                        rotator.state.scales.size -> view.listener?.openListener?.invoke()
+                        rotator.state.scales.size-1 -> view.listener?.openListener?.invoke()
                         0 -> view.listener?.closeListener?.invoke()
                     }
                     view.invalidate()
