@@ -98,4 +98,20 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
             rotator.draw(canvas,paint)
         }
     }
+    class RERRenderer(var view:RectEdgeRotatorView,var time:Int = 0) {
+        var animator:RERAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = RERAnimator(RectEdgeRotator(w/5,0.5f*h,0.7f*w),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
