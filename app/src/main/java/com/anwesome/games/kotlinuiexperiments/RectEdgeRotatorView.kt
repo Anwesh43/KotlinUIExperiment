@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.graphics.*
 import android.view.*
 import android.content.*
@@ -113,6 +114,14 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        var view:RectEdgeRotatorView?=null
+        fun create(activity:Activity) {
+            view = RectEdgeRotatorView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
