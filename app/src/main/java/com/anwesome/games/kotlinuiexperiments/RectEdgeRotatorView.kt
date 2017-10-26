@@ -69,4 +69,33 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    class RERAnimator(var rotator:RectEdgeRotator,var view:RectEdgeRotatorView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                rotator.update()
+                if(rotator.stopped()) {
+                    animated = true
+                    view.invalidate()
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                rotator.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            rotator.draw(canvas,paint)
+        }
+    }
 }
