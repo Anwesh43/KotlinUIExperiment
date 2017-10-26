@@ -11,6 +11,7 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RERRenderer(this)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -33,6 +34,9 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
             for(i in 0..1) {
                 canvas.save()
                 canvas.rotate(-30f*i)
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(0f,size,(size/6),paint)
+                paint.style = Paint.Style.FILL
                 canvas.drawCircle(0f,size,(size/6)*state.scales[1],paint)
                 canvas.restore()
             }
@@ -107,6 +111,9 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = RERAnimator(RectEdgeRotator(w/5,0.5f*h,0.7f*w),view)
+                paint.color = Color.parseColor("#FF9800")
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
