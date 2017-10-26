@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity() {
 //        RotateLineButtonView.addClickListener({i -> createToast("$i opened")},{i -> createToast("$i closed")})
 //        RectEdgeView.create(this)
         RectEdgeRotatorView.create(this)
+        RectEdgeRotatorView.addListener({createToast("opened")},{createToast("closed")})
     }
     override fun onPause() {
         super.onPause()
