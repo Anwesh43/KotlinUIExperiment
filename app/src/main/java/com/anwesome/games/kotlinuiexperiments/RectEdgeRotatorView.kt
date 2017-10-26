@@ -35,9 +35,9 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
                 canvas.save()
                 canvas.rotate(-30f*i)
                 paint.style = Paint.Style.STROKE
-                canvas.drawCircle(0f,size,(size/6),paint)
+                canvas.drawCircle(size,0f,(size/12),paint)
                 paint.style = Paint.Style.FILL
-                canvas.drawCircle(0f,size,(size/6)*state.scales[1],paint)
+                canvas.drawCircle(size,0f,(size/12)*state.scales[1],paint)
                 canvas.restore()
             }
             canvas.restore()
@@ -55,19 +55,20 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
         fun update() {
             scales[i]+=dir*0.1f
             if(scales[i]>1 && dir == 1) {
-                dir = 0
                 scales[i] = 1f
+                incrementDir()
             }
             if(scales[i] < 0 && dir == -1) {
-                dir = 0
                 scales[i] = 0f
+                incrementDir()
             }
-            if(dir == 0) {
-                i += currDir
-                if(i == scales.size || i == -1) {
-                    currDir *= -1
-                    i+=currDir
-                }
+        }
+        fun incrementDir() {
+            i += currDir
+            if(i == scales.size || i == -1) {
+                currDir *= -1
+                i+=currDir
+                dir = 0
             }
         }
         fun startUpdating() {
@@ -81,7 +82,7 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
             if(animated) {
                 rotator.update()
                 if(rotator.stopped()) {
-                    animated = true
+                    animated = false
                     view.invalidate()
                 }
                 try {
