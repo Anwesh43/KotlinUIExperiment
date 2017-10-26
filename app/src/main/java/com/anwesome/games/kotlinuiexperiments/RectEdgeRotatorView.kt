@@ -43,4 +43,29 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class RectEdgeRotatorState(var i:Int = 0,var dir:Int = 0,var currDir:Int = 1) {
+        var scales:Array<Float> = arrayOf(0f,0f,0f)
+        fun update() {
+            scales[i]+=dir*0.1f
+            if(scales[i]>1 && dir == 1) {
+                dir = 0
+                scales[i] = 1f
+            }
+            if(scales[i] < 0 && dir == -1) {
+                dir = 0
+                scales[i] = 0f
+            }
+            if(dir == 0) {
+                i += currDir
+                if(i == scales.size || i == -1) {
+                    currDir *= -1
+                    i+=currDir
+                }
+            }
+        }
+        fun startUpdating() {
+            dir = currDir
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
