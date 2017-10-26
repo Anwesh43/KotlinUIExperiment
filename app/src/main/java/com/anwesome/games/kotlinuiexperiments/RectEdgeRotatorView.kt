@@ -10,6 +10,7 @@ import android.content.*
 class RectEdgeRotatorView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RERRenderer(this)
+    var listener:RectEdgeRotatorListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -83,6 +84,10 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
                 rotator.update()
                 if(rotator.stopped()) {
                     animated = false
+                    when(rotator.state.i) {
+                        rotator.state.scales.size -> view.listener?.openListener?.invoke()
+                        0 -> view.listener?.closeListener?.invoke()
+                    }
                     view.invalidate()
                 }
                 try {
@@ -131,5 +136,9 @@ class RectEdgeRotatorView(ctx:Context):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addListener(openListener:()->Unit,closeListener:()->Unit) {
+            view?.listener = RectEdgeRotatorListener(openListener,closeListener)
+        }
     }
+    data class RectEdgeRotatorListener(var openListener:()->Unit,var closeListener:()->Unit)
 }
