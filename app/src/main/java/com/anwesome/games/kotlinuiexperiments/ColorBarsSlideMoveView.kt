@@ -18,4 +18,19 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class ColorSlideMove(var i:Float,var x:Float,var y:Float,var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawRect(RectF(0f,0f,w,h),paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun stopped():Boolean = false
+        fun startUpdating() {
+
+        }
+    }
 }
