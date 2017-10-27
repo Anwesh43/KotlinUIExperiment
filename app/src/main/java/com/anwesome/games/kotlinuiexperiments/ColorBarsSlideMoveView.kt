@@ -19,18 +19,19 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         return true
     }
     data class ColorSlideMove(var i:Float,var x:Float,var y:Float,var w:Float,var h:Float) {
+        var state = ColorSlideMoveState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.drawRect(RectF(0f,0f,w,h),paint)
+            canvas.drawRect(RectF(0f,0f,w*state.scale,h),paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class ColorSlideMoveState(var scale:Float=0f,var dir:Float = 0f) {
