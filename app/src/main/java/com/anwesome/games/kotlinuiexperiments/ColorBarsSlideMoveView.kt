@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.*
 import android.view.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 27/10/17.
  */
@@ -51,5 +53,48 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
             dir = 1-2*this.scale
         }
     }
-
+    class ColorBarsSlideContainer(var w:Float,var h:Float) {
+        var j:Int = 0
+        var dir:Int = 0
+        var currDir:Int = 1
+        var bars:ConcurrentLinkedQueue<ColorSlideMove> = ConcurrentLinkedQueue()
+        fun update(stopcb:()->Unit) {
+            val curr = bars.getAt(j)
+            curr?.update()
+            if(curr?.stopped()?:false) {
+                j+=dir
+                if(j == bars.size && j == -1) {
+                    currDir *=-1
+                    j+=currDir
+                    dir = 0
+                    stopcb()
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            bars.forEach { bar ->
+                bar.draw(canvas, paint)
+            }
+            canvas.restore()
+        }
+        fun startUpdating(startcb:()->Unit) {
+            if(dir == 0) {
+                dir = currDir
+                startcb()
+            }
+        }
+    }
+}
+fun ConcurrentLinkedQueue<ColorBarSlideMoveView.ColorSlideMove>.getAt(i:Int):ColorBarSlideMoveView.ColorSlideMove? {
+    var index = 0
+    var curr:ColorBarSlideMoveView.ColorSlideMove ?=null
+    this.forEach {
+        if(i == index) {
+            curr = it
+            return it
+        }
+        index++
+    }
+    return curr
 }
