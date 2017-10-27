@@ -123,6 +123,24 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
             }
         }
     }
+    class ColorBarSlideMoveRenderer(var view:ColorBarSlideMoveView) {
+        var time = 0
+        var animator:ColorBarSlideMoveAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                var container = ColorBarsSlideContainer(w,h)
+                animator = ColorBarSlideMoveAnimator(container,view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
 fun ConcurrentLinkedQueue<ColorBarSlideMoveView.ColorSlideMove>.getAt(i:Int):ColorBarSlideMoveView.ColorSlideMove? {
     var index = 0
