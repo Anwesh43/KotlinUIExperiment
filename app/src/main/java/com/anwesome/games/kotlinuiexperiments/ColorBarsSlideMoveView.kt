@@ -33,4 +33,22 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
 
         }
     }
+    data class ColorSlideMoveState(var scale:Float=0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 1f
+                dir = 0f
+            }
+            if(scale < 0) {
+                scale = 0f
+                dir = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+    }
+
 }
