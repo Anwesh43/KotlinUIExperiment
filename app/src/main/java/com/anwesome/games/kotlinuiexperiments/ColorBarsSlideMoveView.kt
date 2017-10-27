@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -141,6 +142,14 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        var view:ColorBarSlideMoveView?=null
+        fun create(activity:Activity) {
+            view = ColorBarSlideMoveView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
