@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 /**
  * Created by anweshmishra on 27/10/17.
  */
+val slideColors:Array<String> = arrayOf("#009688","#FF6F00","#0277BD","#f44336","#283593")
 class ColorBarSlideMoveView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
@@ -20,9 +21,10 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class ColorSlideMove(var i:Float,var x:Float,var y:Float,var w:Float,var h:Float) {
+    data class ColorSlideMove(var i:Int,var x:Float,var y:Float,var w:Float,var h:Float) {
         var state = ColorSlideMoveState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor(slideColors[i])
             canvas.save()
             canvas.translate(x,y)
             canvas.drawRect(RectF(0f,0f,w*state.scale,h),paint)
@@ -58,6 +60,16 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         var dir:Int = 0
         var currDir:Int = 1
         var bars:ConcurrentLinkedQueue<ColorSlideMove> = ConcurrentLinkedQueue()
+        init {
+            if(slideColors.size > 0) {
+                var size = (w / 2) / slideColors.size
+                var x = 0f
+                for (i in 0..slideColors.size - 1) {
+                    bars.add(ColorSlideMove(i,x,h/2-w/4,size,w/2))
+                    x += size
+                }
+            }
+        }
         fun update(stopcb:()->Unit) {
             val curr = bars.getAt(j)
             curr?.update()
