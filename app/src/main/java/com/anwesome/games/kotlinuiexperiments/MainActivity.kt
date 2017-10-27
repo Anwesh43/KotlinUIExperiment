@@ -173,6 +173,7 @@ class MainActivity : AppCompatActivity() {
 //        RectEdgeRotatorView.create(this)
 //        RectEdgeRotatorView.addListener({createToast("opened")},{createToast("closed")})
         ColorBarSlideMoveView.create(this)
+        ColorBarSlideMoveView.addFillListener({i->createToast("$i filled")},{i->createToast("$i emptied")})
     }
     override fun onPause() {
         super.onPause()
