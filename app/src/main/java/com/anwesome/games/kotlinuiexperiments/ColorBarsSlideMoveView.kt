@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 val slideColors:Array<String> = arrayOf("#009688","#FF6F00","#0277BD","#f44336","#283593")
 class ColorBarSlideMoveView(ctx:Context):View(ctx) {
+    var listener:ColorBarSlideFillListener?=null
     val renderer = ColorBarSlideMoveRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
@@ -66,19 +67,24 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         init {
             if(slideColors.size > 0) {
                 var size = (w / 2) / slideColors.size
-                var x = 0f
+                var x = w/4
                 for (i in 0..slideColors.size - 1) {
                     bars.add(ColorSlideMove(i,x,h/2-w/4,size,w/2))
                     x += size
                 }
             }
         }
-        fun update(stopcb:()->Unit) {
+        fun update(view: ColorBarSlideMoveView,stopcb:()->Unit) {
             val curr = bars.getAt(j)
             curr?.update()
             if(curr?.stopped()?:false) {
                 j+=dir
-                if(j == bars.size && j == -1) {
+                bars.getAt(j)?.startUpdating()
+                if(j == bars.size || j == -1) {
+                    when(dir) {
+                        1 -> view.listener?.fillListener?.invoke(j)
+                        -1 -> view.listener?.emptyListener?.invoke(j)
+                    }
                     currDir *=-1
                     j+=currDir
                     dir = 0
@@ -95,6 +101,7 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         }
         fun startUpdating(startcb:()->Unit) {
             if(dir == 0) {
+                bars.getAt(j)?.startUpdating()
                 dir = currDir
                 startcb()
             }
@@ -104,9 +111,9 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
         var animated:Boolean = false
         fun update() {
             if(animated) {
-                container.update {
+                container.update(view,{
                     animated = false
-                }
+                })
                 try {
                     Thread.sleep(50)
                     view.invalidate()
@@ -151,7 +158,11 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addFillListener(fillListener: (Int) -> Unit, emptyListener:(Int)->Unit) {
+            view?.listener = ColorBarSlideFillListener(fillListener,emptyListener)
+        }
     }
+    data class ColorBarSlideFillListener(var fillListener:(Int)->Unit,var emptyListener:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<ColorBarSlideMoveView.ColorSlideMove>.getAt(i:Int):ColorBarSlideMoveView.ColorSlideMove? {
     var index = 0
