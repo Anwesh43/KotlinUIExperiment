@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
@@ -14,6 +15,8 @@ import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     //var crossTapView:CrossTapView?=null
+    var textAdded:Boolean = false
+    var textView:TextView?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        var view:CircleCreatorView = CircleCreatorView(this)
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 //        for(i in 1..8) {
 //            viewGroup.addSwitch(SwitchSelectionListener(this,i))
 //        }
+        textView = TextView(this)
         var bitmap:Bitmap = BitmapFactory.decodeResource(resources,R.drawable.stp)
 //        var view:ScaleHorizontalButtonListView = ScaleHorizontalButtonListView(this)
 //        for(i in 0..5) {
@@ -173,7 +177,21 @@ class MainActivity : AppCompatActivity() {
 //        RectEdgeRotatorView.create(this)
 //        RectEdgeRotatorView.addListener({createToast("opened")},{createToast("closed")})
         ColorBarSlideMoveView.create(this)
-        ColorBarSlideMoveView.addFillListener({i->createToast("$i filled")},{i->createToast("$i emptied")})
+        ColorBarSlideMoveView.addFillListener({i->createTextView("$i filled")},{i->createTextView("$i emptied")})
+
+    }
+
+    fun createTextView(text:String) {
+        if(!textAdded) {
+            textView?.textSize = 20f
+            textView?.x = 0f
+            val size = DimensionsUtil.getDimension(this)
+            textView?.y = size.x*1.1f
+            textView?.setTextColor(Color.BLACK)
+            addContentView(textView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            textAdded = true
+        }
+        textView?.text = text
     }
     override fun onPause() {
         super.onPause()

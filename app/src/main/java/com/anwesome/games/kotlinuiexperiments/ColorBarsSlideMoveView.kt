@@ -78,12 +78,12 @@ class ColorBarSlideMoveView(ctx:Context):View(ctx) {
             val curr = bars.getAt(j)
             curr?.update()
             if(curr?.stopped()?:false) {
-                j+=dir
-                bars.getAt(j)?.startUpdating()
                 when(dir) {
                     1 -> view.listener?.fillListener?.invoke(j)
                     -1 -> view.listener?.emptyListener?.invoke(j)
                 }
+                j+=dir
+                bars.getAt(j)?.startUpdating()
                 if(j == bars.size || j == -1) {
                     currDir *=-1
                     j+=currDir
