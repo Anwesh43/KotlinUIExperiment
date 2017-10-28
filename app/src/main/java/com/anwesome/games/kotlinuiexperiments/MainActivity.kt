@@ -175,10 +175,10 @@ class MainActivity : AppCompatActivity() {
 //        RotateLineButtonView.addClickListener({i -> createToast("$i opened")},{i -> createToast("$i closed")})
 ////        RectEdgeView.create(this)
 //        RectEdgeRotatorView.create(this)
-//        RectEdgeRotatorView.addListener({createToast("opened")},{createToast("closed")})
-        ColorBarSlideMoveView.create(this)
-        ColorBarSlideMoveView.addFillListener({i->createTextView("$i filled")},{i->createTextView("$i emptied")})
-
+////        RectEdgeRotatorView.addListener({createToast("opened")},{createToast("closed")})
+//        ColorBarSlideMoveView.create(this)
+//        ColorBarSlideMoveView.addFillListener({i->createTextView("$i filled")},{i->createTextView("$i emptied")})
+        LineJoinerView.create(this)
     }
 
     fun createTextView(text:String) {
