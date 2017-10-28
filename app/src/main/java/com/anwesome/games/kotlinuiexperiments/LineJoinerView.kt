@@ -104,4 +104,30 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
     }
+    class JointAnimator(var container:JointContainer,var view:LineJoinerView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update(view,{
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.handleTap(x,y,{
+                animated = true
+                view.postInvalidate()
+            })
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+    }
 }
