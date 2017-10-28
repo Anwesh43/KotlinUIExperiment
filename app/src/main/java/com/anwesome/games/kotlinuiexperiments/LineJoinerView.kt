@@ -20,4 +20,30 @@ class LineJoinerView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class Joint(var i:Float,var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.save()
+            paint.strokeWidth = size/60
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,size/15,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawCircle(0f,0f,size/15,paint)
+            canvas.restore()
+            canvas.save()
+            canvas.rotate(-60f)
+            paint.strokeWidth = size/80
+            canvas.drawLine(0f,0f,size,0f,paint)
+            canvas.restore()
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun stopped():Boolean = false
+        fun startUpdating() {
+
+        }
+    }
 }
