@@ -26,6 +26,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
     data class Joint(var i:Int,var x:Float,var y:Float,var size:Float) {
         var state = JointState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#FF9800")
             val scale = state.scale
             canvas.save()
             canvas.translate(x,y)
@@ -34,10 +35,10 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,size/15,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawCircle(0f,0f,(size/15)*state.scale,paint)
+            canvas.drawCircle(0f,0f,(size/15)*scale,paint)
             canvas.restore()
             canvas.save()
-            canvas.rotate(-60f*(1-state.scale))
+            canvas.rotate(-60f*(1-scale))
             paint.strokeWidth = size/80
             canvas.drawLine(0f,0f,size,0f,paint)
             canvas.restore()
