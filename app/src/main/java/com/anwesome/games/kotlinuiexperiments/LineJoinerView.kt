@@ -130,4 +130,21 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             container.draw(canvas,paint)
         }
     }
+    class JointRenderer(var view:LineJoinerView) {
+        var time = 0
+        var animator:JointAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0 ){
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = JointAnimator(JointContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
