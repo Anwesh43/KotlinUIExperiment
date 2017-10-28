@@ -26,7 +26,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
     }
     data class Joint(var i:Int,var x:Float,var y:Float,var size:Float) {
         var state = JointState()
-        fun draw(canvas:Canvas,paint:Paint) {
+        fun draw(canvas:Canvas,paint:Paint,k:Int=1) {
             paint.color = Color.parseColor("#FF9800")
             val scale = state.scale
             canvas.save()
@@ -41,7 +41,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             canvas.save()
             canvas.rotate(-60f*(1-scale))
             paint.strokeWidth = size/30
-            canvas.drawLine(0f,0f,size,0f,paint)
+            canvas.drawLine(0f,0f,size*k,0f,paint)
             canvas.restore()
             canvas.restore()
         }
@@ -74,16 +74,25 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         init {
             if(n > 0) {
                 val size = (3*w/4)/n
-                var x = w/5
-                for (i in 0..n - 1) {
+                var x = w/8
+                for (i in 0..n) {
                     joints.add(Joint(i,x,h/2,size))
-                    x+=size
+                    if(i != n) {
+                        x += size
+                    }
                 }
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            var i  = 0
             joints.forEach { joint ->
-                joint.draw(canvas,paint)
+                if(i == joints.size-1) {
+                    joint.draw(canvas,paint,0)
+                }
+                else {
+                    joint.draw(canvas,paint)
+                }
+                i++
             }
         }
         fun update(view:LineJoinerView,stopcb:()->Unit) {
@@ -91,6 +100,11 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
                 joint.update()
                 if(joint.stopped()) {
                     updatingJoints.remove(joint)
+                    if(joint.i == n-1) {
+                        val currJoint = joints.getLast()
+                        currJoint?.startUpdating()
+                        updatingJoints.add(currJoint)
+                    }
                     if(updatingJoints.size == 0) {
                         stopcb()
                     }
@@ -161,4 +175,14 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
+}
+fun ConcurrentLinkedQueue<LineJoinerView.Joint>.getLast():LineJoinerView.Joint? {
+    var i = 0
+    this.forEach { joint ->
+        if(i == this.size-1) {
+           return joint
+        }
+        i++
+    }
+    return null
 }
