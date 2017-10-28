@@ -2,12 +2,13 @@ package com.anwesome.games.kotlinuiexperiments
 import android.content.*
 import android.view.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by anweshmishra on 28/10/17.
  */
 
-class LineJoinerView(ctx:Context):View(ctx) {
+class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -20,7 +21,7 @@ class LineJoinerView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class Joint(var i:Float,var x:Float,var y:Float,var size:Float) {
+    data class Joint(var i:Int,var x:Float,var y:Float,var size:Float) {
         var state = JointState()
         fun draw(canvas:Canvas,paint:Paint) {
             val scale = state.scale
@@ -61,5 +62,24 @@ class LineJoinerView(ctx:Context):View(ctx) {
             dir = 1-2*scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class JointContainer(var w:Float,var h:Float,var n:Int) {
+        var joints:ConcurrentLinkedQueue<Joint> = ConcurrentLinkedQueue()
+        var updatingJoints:ConcurrentLinkedQueue<Joint> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                val size = (3*w/4)/n
+                var x = 0f
+                for (i in 0..n - 1) {
+                    joints.add(Joint(i,x,h/2,size))
+                    x+=size
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            joints.forEach { joint ->
+                joint.draw(canvas,paint)
+            }
+        }
     }
 }
