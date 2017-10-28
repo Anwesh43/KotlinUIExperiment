@@ -100,6 +100,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             joints.forEach{ joint ->
                 if(joint.handleTap(x,y)) {
+                    joint.startUpdating()
                     updatingJoints.add(joint)
                     if(updatingJoints.size == 1) {
                         startcb()
