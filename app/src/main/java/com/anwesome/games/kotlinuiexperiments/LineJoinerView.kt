@@ -34,13 +34,13 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             canvas.save()
             paint.strokeWidth = size/60
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0f,0f,size/15,paint)
+            canvas.drawCircle(0f,0f,size/10,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawCircle(0f,0f,(size/15)*scale,paint)
+            canvas.drawCircle(0f,0f,(size/10)*scale,paint)
             canvas.restore()
             canvas.save()
             canvas.rotate(-60f*(1-scale))
-            paint.strokeWidth = size/80
+            paint.strokeWidth = size/30
             canvas.drawLine(0f,0f,size,0f,paint)
             canvas.restore()
             canvas.restore()
@@ -143,6 +143,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = JointAnimator(JointContainer(w,h,view.n),view)
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
