@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = JointRenderer(this)
+    var allFillListener:AllFillListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -70,6 +71,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
     }
     class JointContainer(var w:Float,var h:Float,var n:Int) {
         var joints:ConcurrentLinkedQueue<Joint> = ConcurrentLinkedQueue()
+        var j = 0
         var updatingJoints:ConcurrentLinkedQueue<Joint> = ConcurrentLinkedQueue()
         init {
             if(n > 0) {
@@ -100,6 +102,18 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
                 joint.update()
                 if(joint.stopped()) {
                     updatingJoints.remove(joint)
+                    if(joint.state.scale >= 1f) {
+                        j++
+                        if(j == joints.size) {
+                            view.allFillListener?.onFill?.invoke()
+                        }
+                    }
+                    else {
+                        j--
+                        if(j == 0) {
+                            view.allFillListener?.onEmpty?.invoke()
+                        }
+                    }
                     if(joint.i == n-1) {
                         val currJoint = joints.getLast()
                         currJoint?.startUpdating()
@@ -113,7 +127,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             joints.forEach{ joint ->
-                if(joint.handleTap(x,y)) {
+                if(joint.handleTap(x,y) && (joint.i) != (joints.size-1)) {
                     joint.startUpdating()
                     updatingJoints.add(joint)
                     if(updatingJoints.size == 1) {
@@ -174,7 +188,11 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addAllFillListener(onFill:()->Unit,onEmpty:()->Unit) {
+            view?.allFillListener = AllFillListener(onFill,onEmpty)
+        }
     }
+    data class AllFillListener(var onFill:()->Unit,var onEmpty:()->Unit)
 }
 fun ConcurrentLinkedQueue<LineJoinerView.Joint>.getLast():LineJoinerView.Joint? {
     var i = 0
