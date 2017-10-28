@@ -48,6 +48,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         fun startUpdating() {
             state.startUpdating()
         }
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
     }
     data class JointState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
@@ -69,7 +70,7 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         init {
             if(n > 0) {
                 val size = (3*w/4)/n
-                var x = 0f
+                var x = w/5
                 for (i in 0..n - 1) {
                     joints.add(Joint(i,x,h/2,size))
                     x+=size
@@ -79,6 +80,27 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             joints.forEach { joint ->
                 joint.draw(canvas,paint)
+            }
+        }
+        fun update(view:LineJoinerView,stopcb:()->Unit) {
+            updatingJoints.forEach { joint ->
+                joint.update()
+                if(joint.stopped()) {
+                    updatingJoints.remove(joint)
+                    if(updatingJoints.size == 0) {
+                        stopcb()
+                    }
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            joints.forEach{ joint ->
+                if(joint.handleTap(x,y)) {
+                    updatingJoints.add(joint)
+                    if(updatingJoints.size == 1) {
+                        startcb()
+                    }
+                }
             }
         }
     }
