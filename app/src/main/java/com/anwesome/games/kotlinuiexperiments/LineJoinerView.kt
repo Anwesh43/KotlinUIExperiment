@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -148,6 +149,14 @@ class LineJoinerView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        var view:LineJoinerView?=null
+        fun create(activity:Activity) {
+            view = LineJoinerView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
