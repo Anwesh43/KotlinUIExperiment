@@ -10,6 +10,7 @@ class FanDotView(ctx:Context):View(ctx) {
     val renderer = FanDotRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -116,6 +117,9 @@ class FanDotView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = FanDotAnimator(FanDot(w/2,h/2,Math.min(w,h)/25,Math.min(w,h)/4),view)
+                paint.color = Color.parseColor("#0097A7")
+                paint.strokeWidth = Math.min(w,h)/45
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
