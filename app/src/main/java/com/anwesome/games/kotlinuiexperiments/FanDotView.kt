@@ -27,9 +27,9 @@ class FanDotView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x, y)
-            canvas.strokeAndScaleFillCircle(0f, 0f, r*state.scales[0],1f, paint)
+            canvas.strokeAndScaleFillCircle(0f, 0f, r,state.scales[0], paint)
             canvas.drawInATriangle {
-                canvas.strokeAndScaleFillCircle(0f,-size,r*state.scales[0],1f,paint)
+                canvas.strokeAndScaleFillCircle(0f,-size,r,state.scales[0],paint)
             }
             canvas.save()
             canvas.rotate(prevDeg+120f*state.scales[2])
