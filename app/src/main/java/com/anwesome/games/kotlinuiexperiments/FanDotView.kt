@@ -108,6 +108,22 @@ class FanDotView(ctx:Context):View(ctx) {
             }
         }
     }
+    class FanDotRenderer(var view:FanDotView,var time:Int = 0) {
+        var animator:FanDotAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = FanDotAnimator(FanDot(w/2,h/2,Math.min(w,h)/25,Math.min(w,h)/4),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
 fun Canvas.drawInATriangle(drawCb:()->Unit) {
     for(i in 0..2) {
