@@ -41,6 +41,39 @@ class FanDotView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class FanDotState(var j:Int=0,var dir:Float = 0f) {
+        val scales:Array<Float> = arrayOf(0f,0f,0f)
+        fun update(stopcb:()->Unit) {
+            scales[j] += 0.1f*dir
+            if(scales[j] > 1) {
+                scales[j] = 1f
+                if(j == scales.size-1) {
+                    scales[j] = 0f
+                    stopcb()
+                    j--
+                    dir = -1f
+                }
+                else {
+                    j++
+                }
+            }
+            else if(scales[j] < 0) {
+                scales[j] = 0f
+                if(j == 0) {
+                    dir = 0f
+                }
+                else {
+                    j--
+                }
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0f) {
+                dir = 1f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
 fun Canvas.drawInATriangle(drawCb:()->Unit) {
     for(i in 0..2) {
