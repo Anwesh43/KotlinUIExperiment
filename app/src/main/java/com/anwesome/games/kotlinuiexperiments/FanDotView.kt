@@ -80,6 +80,34 @@ class FanDotView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class FanDotAnimator(var fanDot:FanDot,var view:FanDotView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                fanDot.update()
+                if(fanDot.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            fanDot.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                fanDot.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
 fun Canvas.drawInATriangle(drawCb:()->Unit) {
     for(i in 0..2) {
