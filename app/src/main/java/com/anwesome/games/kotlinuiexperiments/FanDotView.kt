@@ -20,26 +20,32 @@ class FanDotView(ctx:Context):View(ctx) {
         return true
     }
     data class FanDot(var x:Float,var y:Float,var r:Float,var size:Float,var prevDeg:Float  = 0f) {
+        var state = FanDotState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x, y)
-            canvas.strokeAndScaleFillCircle(0f, 0f, r,1f, paint)
+            canvas.strokeAndScaleFillCircle(0f, 0f, r*state.scales[0],1f, paint)
             canvas.drawInATriangle {
-                canvas.strokeAndScaleFillCircle(0f,-size,r,1f,paint)
+                canvas.strokeAndScaleFillCircle(0f,-size,r*state.scales[0],1f,paint)
             }
+            canvas.save()
+            canvas.rotate(prevDeg+120f*state.scales[2])
             canvas.drawInATriangle {
-                canvas.drawLine(0f,0f,0f,-size,paint)
+                canvas.drawLine(0f,0f,0f,-size*state.scales[1],paint)
             }
             canvas.restore()
             canvas.restore()
         }
         fun update() {
-
+            state.update({
+                prevDeg += 120f
+                prevDeg %= 360
+            })
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class FanDotState(var j:Int=0,var dir:Float = 0f) {
         val scales:Array<Float> = arrayOf(0f,0f,0f)
