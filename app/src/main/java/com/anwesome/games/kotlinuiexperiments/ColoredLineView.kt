@@ -70,5 +70,15 @@ class ColoredLineView(ctx:Context):View(ctx) {
                 }
             }
         }
+        data class ColoredLineState(var scale:Float = 0f,var deg:Float = 0f) {
+            fun update(stopcb:()->Unit) {
+                scale = Math.abs(Math.sin(deg*Math.PI/180).toFloat())
+                deg+=4.5f
+                if(deg > 180) {
+                    deg = 0f
+                    stopcb()
+                }
+            }
+        }
     }
 }
