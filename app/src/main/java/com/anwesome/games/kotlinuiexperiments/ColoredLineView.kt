@@ -11,15 +11,16 @@ import java.util.concurrent.ConcurrentLinkedQueue
 val lineColors = arrayOf("#00C853", "#f44336", "#FFEA00", "#00838F", "#3F51B5")
 
 class ColoredLineView(ctx: Context) : View(ctx) {
+    val renderer = ColoredLineRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas: Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
