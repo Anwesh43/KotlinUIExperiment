@@ -180,7 +180,8 @@ class MainActivity : AppCompatActivity() {
 //        ColorBarSlideMoveView.addFillListener({i->createTextView("$i filled")},{i->createTextView("$i emptied")})
 //        LineJoinerView.create(this)
 //        LineJoinerView.addAllFillListener({createTextView("All Lines are Joined")},{createTextView("No Lines are joined")})
-        FanDotView.create(this)
+        //FanDotView.create(this)
+        ColoredLineView.create(this)
     }
 
     fun createTextView(text:String) {
