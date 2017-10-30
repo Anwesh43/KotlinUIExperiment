@@ -26,8 +26,9 @@ class ColoredLineView(ctx: Context) : View(ctx) {
     }
 
     data class ColoredLine(var x: Float, var y: Float, var size: Float) {
+        var state = ColoredLineState()
         fun draw(canvas: Canvas, paint: Paint) {
-            val adjustedSize = size / 4 + (size / 4)
+            val adjustedSize = size / 4 + (size / 4)*state.scale
             paint.strokeWidth = size / 10
             canvas.save()
             canvas.translate(x, y)
@@ -36,14 +37,8 @@ class ColoredLineView(ctx: Context) : View(ctx) {
         }
 
         fun update(stopcb: () -> Unit) {
-
+            state.update(stopcb)
         }
-
-        fun startUpdating() {
-
-        }
-
-        fun stopped(): Boolean = true
     }
 
     data class ColoredLineContainer(var w: Float, var h: Float) {
@@ -77,7 +72,6 @@ class ColoredLineView(ctx: Context) : View(ctx) {
                     stopcb()
                 } else {
                     curr = coloredLines.getAt(j)
-                    curr?.startUpdating()
                 }
             })
         }
@@ -85,7 +79,6 @@ class ColoredLineView(ctx: Context) : View(ctx) {
         fun handleTap(startcb: () -> Unit) {
             if (j == 0) {
                 curr = coloredLines.getAt(0)
-                curr?.startUpdating()
                 startcb()
             }
         }
