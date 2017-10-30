@@ -20,4 +20,21 @@ class ColoredLineView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class ColoredLine(var x:Float,var y:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            val adjustedSize = size/4+(size/4)
+            paint.strokeWidth = size/20
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawLine(0f,-adjustedSize,0f,adjustedSize,paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+    }
 }
