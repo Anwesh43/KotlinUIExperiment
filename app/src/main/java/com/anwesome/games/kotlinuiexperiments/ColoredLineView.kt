@@ -27,10 +27,11 @@ class ColoredLineView(ctx: Context) : View(ctx) {
         return true
     }
 
-    data class ColoredLine(var x: Float, var y: Float, var size: Float) {
+    data class ColoredLine(var i:Int,var x: Float, var y: Float, var size: Float) {
         var state = ColoredLineState()
         fun draw(canvas: Canvas, paint: Paint) {
             val adjustedSize = size / 4 + (size / 4)*state.scale
+            paint.color = Color.parseColor(lineColors[i])
             paint.strokeWidth = size / 10
             canvas.save()
             canvas.translate(x, y)
@@ -47,7 +48,6 @@ class ColoredLineView(ctx: Context) : View(ctx) {
         var j = 0
         val coloredLines: ConcurrentLinkedQueue<ColoredLine> = ConcurrentLinkedQueue()
         var curr: ColoredLine? = null
-        var animated = false
 
         init {
             if (lineColors.size > 0) {
@@ -55,7 +55,8 @@ class ColoredLineView(ctx: Context) : View(ctx) {
                 var x = w / 2 - (gap / 10) * (coloredLines.size.toFloat() / 2)
                 val y = h / 2 - gap / 2
                 for (i in 0..lineColors.size - 1) {
-                    coloredLines.add(ColoredLine(x, y, gap))
+                    coloredLines.add(ColoredLine(i,x, y, gap))
+                    x+=(gap/10)
                 }
             }
         }
@@ -102,12 +103,12 @@ class ColoredLineView(ctx: Context) : View(ctx) {
             container.draw(canvas,paint)
         }
         fun update() {
-            if(!animated) {
+            if(animated) {
                 container.update({
                     animated = false
                 })
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(10)
                     view.invalidate()
                 }
                 catch(ex:Exception) {
@@ -132,6 +133,7 @@ class ColoredLineView(ctx: Context) : View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = ColoredLineAnimator(ColoredLineContainer(w,h),view)
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
