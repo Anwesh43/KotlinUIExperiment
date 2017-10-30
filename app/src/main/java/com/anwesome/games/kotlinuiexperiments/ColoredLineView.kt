@@ -122,6 +122,23 @@ class ColoredLineView(ctx: Context) : View(ctx) {
             }
         }
     }
+    class ColoredLineRenderer(var view:ColoredLineView) {
+        var time = 0
+        var animator:ColoredLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ColoredLineAnimator(ColoredLineContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
 
 fun ConcurrentLinkedQueue<ColoredLineView.ColoredLine>.getAt(index: Int): ColoredLineView.ColoredLine? {
