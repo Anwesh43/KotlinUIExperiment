@@ -94,6 +94,34 @@ class ColoredLineView(ctx: Context) : View(ctx) {
             }
         }
     }
+    class ColoredLineAnimator(var container:ColoredLineContainer,var view:ColoredLineView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            if(!animated) {
+                container.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.handleTap {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
 
 fun ConcurrentLinkedQueue<ColoredLineView.ColoredLine>.getAt(index: Int): ColoredLineView.ColoredLine? {
