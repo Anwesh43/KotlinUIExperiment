@@ -55,15 +55,13 @@ class CrossFillerView(ctx:Context):View(ctx) {
             scales[j] += dir*0.1f
             if(Math.abs(scales[j]-prevScale) > 1) {
                 scales[j] = (prevScale+1)%2
-                prevScale = scales[j]
+                j+=dir
                 if(j == scales.size || j == -1) {
                     currDir *= -1
                     j+=currDir
                     dir = 0
                 }
-                else {
-                    j+=dir
-                }
+                prevScale = scales[j]
             }
         }
         fun startUpdating() {
