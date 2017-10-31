@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 31/10/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -112,6 +113,13 @@ class CrossFillerView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = CrossFillerView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
