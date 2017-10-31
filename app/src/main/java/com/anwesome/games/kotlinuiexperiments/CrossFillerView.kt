@@ -68,4 +68,32 @@ class CrossFillerView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    class CrossFillerAnimator(var crossFiller:CrossFiller,var view:CrossFillerView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                crossFiller.update()
+                if(crossFiller.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            crossFiller.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                crossFiller.startUpdating()
+                view.postInvalidate()
+            }
+        }
+    }
 }
