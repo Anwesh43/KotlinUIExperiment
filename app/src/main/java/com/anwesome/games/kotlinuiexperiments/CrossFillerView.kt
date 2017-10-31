@@ -45,4 +45,26 @@ class CrossFillerView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class CrossFillerState(var dir:Int = 0,var j:Int = 0,var prevScale:Float = 0f,var currDir:Int = 1) {
+        var scales:Array<Float> = arrayOf(0f,0f)
+        fun update() {
+            scales[j] += dir*0.1f
+            if(Math.abs(scales[j]-prevScale) > 1) {
+                scales[j] = (prevScale+1)%2
+                prevScale = scales[j]
+                if(j == scales.size || j == -1) {
+                    currDir *= -1
+                    j+=currDir
+                    dir = 0
+                }
+                else {
+                    j+=dir
+                }
+            }
+        }
+        fun startUpdating() {
+            dir = currDir
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
