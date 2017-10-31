@@ -183,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         //FanDotView.create(this)
         //ColoredLineView.create(this)
         CrossFillerView.create(this)
+        CrossFillerView.addSelectionListener({createToast("selected")},{createToast("unselected")})
     }
 
     fun createTextView(text:String) {
