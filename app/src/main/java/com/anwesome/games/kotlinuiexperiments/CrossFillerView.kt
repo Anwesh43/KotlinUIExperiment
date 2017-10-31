@@ -10,6 +10,7 @@ import android.graphics.*
 class CrossFillerView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CrossFillerRenderer(this)
+    var selectionListener:CrossFillSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -76,6 +77,10 @@ class CrossFillerView(ctx:Context):View(ctx) {
                 crossFiller.update()
                 if(crossFiller.stopped()) {
                     animated = false
+                    when(crossFiller.state.currDir) {
+                        -1 -> view?.selectionListener?.onUnSelectListener?.invoke()
+                        1 -> view?.selectionListener?.onSelectionListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -114,10 +119,15 @@ class CrossFillerView(ctx:Context):View(ctx) {
         }
     }
     companion object {
+        var view:CrossFillerView?=null
         fun create(activity:Activity) {
-            val view = CrossFillerView(activity)
+            view = CrossFillerView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addSelectionListener(onSelectionListener:()->Unit,onUnSelectListener:()->Unit) {
+            view?.selectionListener = CrossFillSelectionListener(onSelectionListener,onUnSelectListener)
+        }
     }
+    data class CrossFillSelectionListener(var onSelectionListener:()->Unit,var onUnSelectListener:()->Unit)
 }
