@@ -181,7 +181,8 @@ class MainActivity : AppCompatActivity() {
 //        LineJoinerView.create(this)
 //        LineJoinerView.addAllFillListener({createTextView("All Lines are Joined")},{createTextView("No Lines are joined")})
         //FanDotView.create(this)
-        ColoredLineView.create(this)
+        //ColoredLineView.create(this)
+        CrossFillerView.create(this)
     }
 
     fun createTextView(text:String) {
