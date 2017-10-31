@@ -96,4 +96,20 @@ class CrossFillerView(ctx:Context):View(ctx) {
             }
         }
     }
+    class CrossFillerRenderer(var view:CrossFillerView,var time:Int = 0) {
+        var animator:CrossFillerAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = CrossFillerAnimator(CrossFiller(w/2,h/2,2*Math.min(w,h)/3),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
