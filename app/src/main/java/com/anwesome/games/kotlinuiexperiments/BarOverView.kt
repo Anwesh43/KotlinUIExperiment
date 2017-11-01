@@ -44,4 +44,31 @@ class BarOverView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    class BarOverAnimator(var barOver:BarOver,var view:BarOverView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                barOver.update()
+                if(barOver.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            barOver.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
