@@ -28,7 +28,7 @@ class BarOverView(ctx:Context):View(ctx) {
                 canvas.save()
                 canvas.translate(x+(w/2*(i*2-1))*state.scale,y)
                 paint.color = Color.parseColor("#1565C0")
-                canvas.drawRect(RectF(-w/2,-h/2,w/2,h/2),paint)
+                canvas.drawRoundRect(RectF(-w/2,-h/2,w/2,h/2),w/10,w/10,paint)
                 canvas.restore()
             }
         }
