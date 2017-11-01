@@ -31,9 +31,16 @@ class BarOverView(ctx:Context):View(ctx) {
         fun update() {
 
         }
-        fun startUpdating() {
-
-        }
         fun stopped():Boolean = true
+    }
+    data class BarOverState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            scale = Math.abs(Math.sin(deg*Math.PI/180)).toFloat()
+            deg += 4.5f
+            if(deg > 180) {
+                deg = 0f
+            }
+        }
+        fun stopped():Boolean = deg == 0f
     }
 }
