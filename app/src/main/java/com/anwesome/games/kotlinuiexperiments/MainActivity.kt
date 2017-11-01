@@ -185,6 +185,9 @@ class MainActivity : AppCompatActivity() {
 //        CrossFillerView.create(this)
 //        CrossFillerView.addSelectionListener({createToast("selected")},{createToast("unselected")})
         BarOverView.create(this)
+        BarOverView.addSlideOverListener({
+            createToast("slided over")
+        })
     }
 
     fun createTextView(text:String) {
