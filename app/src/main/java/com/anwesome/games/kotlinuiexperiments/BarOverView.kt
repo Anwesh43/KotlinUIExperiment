@@ -18,4 +18,22 @@ class BarOverView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class BarOver(var x:Float,var y:Float,var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            for(i in 0..1) {
+                canvas.save()
+                canvas.translate(x+(w/2*(i*2-1)),y)
+                paint.color = Color.parseColor("#1565C0")
+                canvas.drawRect(RectF(-w/2,-h/2,w/2,h/2),paint)
+                canvas.restore()
+            }
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+    }
 }
