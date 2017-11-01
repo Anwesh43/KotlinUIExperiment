@@ -182,8 +182,9 @@ class MainActivity : AppCompatActivity() {
 //        LineJoinerView.addAllFillListener({createTextView("All Lines are Joined")},{createTextView("No Lines are joined")})
         //FanDotView.create(this)
         //ColoredLineView.create(this)
-        CrossFillerView.create(this)
-        CrossFillerView.addSelectionListener({createToast("selected")},{createToast("unselected")})
+//        CrossFillerView.create(this)
+//        CrossFillerView.addSelectionListener({createToast("selected")},{createToast("unselected")})
+        BarOverView.create(this)
     }
 
     fun createTextView(text:String) {
