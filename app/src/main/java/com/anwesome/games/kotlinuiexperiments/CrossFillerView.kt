@@ -78,8 +78,8 @@ class CrossFillerView(ctx:Context):View(ctx) {
                 if(crossFiller.stopped()) {
                     animated = false
                     when(crossFiller.state.currDir) {
-                        -1 -> view?.selectionListener?.onUnSelectListener?.invoke()
-                        1 -> view?.selectionListener?.onSelectionListener?.invoke()
+                        1 -> view?.selectionListener?.onUnSelectListener?.invoke()
+                        -1 -> view?.selectionListener?.onSelectionListener?.invoke()
                     }
                 }
                 try {
