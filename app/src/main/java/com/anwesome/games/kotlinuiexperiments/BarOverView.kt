@@ -9,6 +9,7 @@ import android.graphics.*
 class BarOverView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = BarOverRenderer(this)
+    var slideOverListener:OnSlideOverListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -54,6 +55,7 @@ class BarOverView(ctx:Context):View(ctx) {
                 barOver.update()
                 if(barOver.stopped()) {
                     animated = false
+                    view.slideOverListener?.listener?.invoke()
                 }
                 try {
                     Thread.sleep(50)
@@ -97,5 +99,9 @@ class BarOverView(ctx:Context):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addSlideOverListener(listener:()->Unit) {
+            view?.slideOverListener = OnSlideOverListener(listener)
+        }
     }
+    data class OnSlideOverListener(var listener:()->Unit)
 }
