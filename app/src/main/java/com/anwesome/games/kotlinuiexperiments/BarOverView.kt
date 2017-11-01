@@ -71,4 +71,20 @@ class BarOverView(ctx:Context):View(ctx) {
             }
         }
     }
+    class BarOverRenderer(var view:BarOverView,var time:Int = 0) {
+        var animator:BarOverAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = BarOverAnimator(BarOver(w/2,h/2,w/2,w/2),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
