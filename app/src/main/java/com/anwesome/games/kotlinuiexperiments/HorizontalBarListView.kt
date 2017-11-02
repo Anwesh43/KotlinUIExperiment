@@ -10,6 +10,7 @@ import android.view.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
+    var selectionListener:HorizontalButtonSelectionListener?=null
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = HorizontalBarRenderer(this)
     override fun onDraw(canvas:Canvas) {
@@ -117,6 +118,7 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             if(animated) {
                 list.update({
                     animated = false
+                    view?.selectionListener?.selectionListener?.invoke(list.prev?.i?:-1)
                 })
                 try {
                     Thread.sleep(50)
@@ -162,5 +164,9 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
+        fun addSelectionListener(selectionListener: (Int) -> Unit) {
+            view?.selectionListener = HorizontalButtonSelectionListener(selectionListener)
+        }
     }
+    data class HorizontalButtonSelectionListener(var selectionListener:(Int)->Unit)
 }
