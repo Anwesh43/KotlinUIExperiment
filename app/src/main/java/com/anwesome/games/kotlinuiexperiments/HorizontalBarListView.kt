@@ -125,4 +125,20 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             }
         }
     }
+    class HorizontalBarRenderer(var view:HorizontalBarListView,var time:Int = 0) {
+        var animator:HorizontalBarAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = HorizontalBarAnimator(HorizontalBarList(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
