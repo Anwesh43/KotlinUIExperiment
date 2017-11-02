@@ -97,6 +97,8 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             horizontalBars.forEach { it ->
                 if(it.handleTap(x,y)) {
                     curr = it
+                    curr?.startUpdating()
+                    prev?.startUpdating()
                     startcb()
                 }
             }
@@ -151,7 +153,7 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
         fun create(activity:Activity) {
             view = HorizontalBarListView(activity)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
