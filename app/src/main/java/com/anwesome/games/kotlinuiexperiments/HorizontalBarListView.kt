@@ -46,6 +46,19 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
         fun stopped():Boolean = true
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/2 && x<=this.x+w/2 && y>=this.y-w/2 && y<=this.y+w/2
     }
+    data class HorizontalBarState(var dir:Float=0f,var prevScale:Float = 0f,var scale:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(Math.abs(scale-prevScale) > 1) {
+                scale = (prevScale+1)%2
+                prevScale = scale
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+    }
     data class HorizontalBarList(var w:Float,var h:Float,var n:Int) {
         var horizontalBars:ConcurrentLinkedQueue<HorizontalBar> = ConcurrentLinkedQueue()
         var prev:HorizontalBar?=null
