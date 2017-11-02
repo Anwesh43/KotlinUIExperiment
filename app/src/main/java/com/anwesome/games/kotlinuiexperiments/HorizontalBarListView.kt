@@ -97,4 +97,32 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             }
         }
     }
+    class HorizontalBarAnimator(var list:HorizontalBarList,var view:HorizontalBarListView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                list.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            list.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                list.handleTap(x,y,{
+                    animated = true
+                    view.postInvalidate()
+                })
+            }
+        }
+    }
 }
