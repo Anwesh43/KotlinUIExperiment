@@ -28,9 +28,10 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
         val state = HorizontalBarState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.strokeCap = Paint.Cap.ROUND
-            paint.strokeWidth = Math.min(w,h)/40
+            paint.strokeWidth = Math.min(w,h)/20
             canvas.save()
             canvas.translate(x,y)
+            canvas.save()
             canvas.rotate(45f*state.scale)
             paint.color = Color.parseColor("#FAFAFA")
             for(i in 0..1) {
@@ -39,8 +40,9 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
                 canvas.drawLine(0f,-w/3,0f,w/3,paint)
                 canvas.restore()
             }
+            canvas.restore()
             paint.color = Color.parseColor("#9E9E9E")
-            canvas.drawRect(RectF(-w/2,w/2,w/2,w/2+h*state.scale),paint)
+            canvas.drawRoundRect(RectF(-w/3,w/2,w/3,w/2+h*state.scale),Math.min(w,h)/5,Math.min(w,h)/5,paint)
             canvas.restore()
         }
         fun update() {
@@ -58,6 +60,7 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             if(Math.abs(scale-prevScale) > 1) {
                 scale = (prevScale+1)%2
                 prevScale = scale
+                dir = 0f
             }
         }
         fun stopped():Boolean = dir == 0f
@@ -76,6 +79,7 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
                 val y = wsize/2
                 for (i in 1..n) {
                     horizontalBars.add(HorizontalBar(i,x,y,wsize,h/2))
+                    x+=wsize
                 }
             }
         }
@@ -96,10 +100,13 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             horizontalBars.forEach { it ->
                 if(it.handleTap(x,y)) {
-                    curr = it
-                    curr?.startUpdating()
-                    prev?.startUpdating()
-                    startcb()
+                    if(it != prev) {
+                        curr = it
+                        curr?.startUpdating()
+                        prev?.startUpdating()
+                        startcb()
+                    }
+                    return
                 }
             }
         }
