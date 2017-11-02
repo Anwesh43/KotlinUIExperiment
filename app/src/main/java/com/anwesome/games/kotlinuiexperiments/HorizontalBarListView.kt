@@ -31,12 +31,14 @@ class HorizontalBarListView(ctx:Context,var n:Int = 10):View(ctx) {
             canvas.save()
             canvas.translate(x,y)
             canvas.rotate(45f*state.scale)
+            paint.color = Color.parseColor("#FAFAFA")
             for(i in 0..1) {
                 canvas.save()
                 canvas.rotate(90f*i)
                 canvas.drawLine(0f,-w/3,0f,w/3,paint)
                 canvas.restore()
             }
+            paint.color = Color.parseColor("#9E9E9E")
             canvas.drawRect(RectF(-w/2,w/2,w/2,w/2+h*state.scale),paint)
             canvas.restore()
         }
