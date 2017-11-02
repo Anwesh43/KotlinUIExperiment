@@ -189,6 +189,9 @@ class MainActivity : AppCompatActivity() {
 //            createToast("slided over")
 //        })
         HorizontalBarListView.create(this)
+        HorizontalBarListView.addSelectionListener({ i ->
+            createToast("$i selected")
+        })
     }
 
     fun createTextView(text:String) {
