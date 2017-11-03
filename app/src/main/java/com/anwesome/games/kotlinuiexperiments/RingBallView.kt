@@ -21,21 +21,22 @@ class RingBallView(ctx:Context):View(ctx) {
         return true
     }
     data class CenterCornerBall(var x:Float,var y:Float,var r:Float,var size:Float) {
+        var state = CenterCornerBallState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.rotate(90f)
+            canvas.rotate(state.getCurrDeg())
             paint.style = Paint.Style.FILL
-            canvas.drawCircle(0f,-size,r,paint)
+            canvas.drawCircle(0f,-size*state.scale,r,paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating(deg:Float) {
-
+            state.startUpdating(deg)
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
     }
     data class CenterCornerBallState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         private var degs:ConcurrentLinkedQueue<Float> = ConcurrentLinkedQueue()
