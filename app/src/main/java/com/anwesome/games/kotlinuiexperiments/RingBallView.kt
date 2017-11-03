@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 03/11/17.
  */
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -140,6 +141,8 @@ class RingBallView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
+                paint.color = Color.parseColor("#FF9800")
+                paint.strokeWidth = Math.min(w,h)/40
                 animator = RingCenterCornerBallAnimator(RingForCenterBallContainer(w,h),view)
             }
             animator?.draw(canvas,paint)
@@ -148,6 +151,14 @@ class RingBallView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        var view:RingBallView?=null
+        fun create(activity:Activity) {
+            view = RingBallView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
