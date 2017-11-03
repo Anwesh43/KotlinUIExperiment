@@ -188,10 +188,11 @@ class MainActivity : AppCompatActivity() {
 //        BarOverView.addSlideOverListener({
 //            createToast("slided over")
 //        })
-        HorizontalBarListView.create(this)
-        HorizontalBarListView.addSelectionListener({ i ->
-            createToast("$i selected")
-        })
+//        HorizontalBarListView.create(this)
+//        HorizontalBarListView.addSelectionListener({ i ->
+//            createToast("$i selected")
+//        })
+        RingBallView.create(this)
     }
 
     fun createTextView(text:String) {
