@@ -66,7 +66,7 @@ class RingBallView(ctx:Context):View(ctx) {
     }
     data class RingForCenterBall(var deg:Float,var cx:Float,var cy:Float,var r:Float,var x:Float = cx.xInCircle(r,deg),var y:Float = cy.yInCircle(r,deg)) {
         fun draw(canvas:Canvas,paint:Paint) {
-            canvas.drawCircle(x,y,r/15,paint)
+            canvas.drawCircle(x,y,r/10,paint)
         }
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r/10 && x<=this.x+r/10 && y>=this.y-r/10 && y<=this.y+r/10
     }
@@ -96,7 +96,7 @@ class RingBallView(ctx:Context):View(ctx) {
 
         fun handleTap(x: Float, y: Float,startcb:()->Unit) {
             rings.forEach { ring ->
-                if (ring.handleTap(x, y)) {
+                if (ring.handleTap(x, y) && centerCornerBall.state.getCurrDeg() != ring.deg) {
                     centerCornerBall.startUpdating(ring.deg)
                     startcb()
                     return
@@ -142,7 +142,7 @@ class RingBallView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 paint.color = Color.parseColor("#FF9800")
-                paint.strokeWidth = Math.min(w,h)/40
+                paint.strokeWidth = Math.min(w,h)/60
                 animator = RingCenterCornerBallAnimator(RingForCenterBallContainer(w,h),view)
             }
             animator?.draw(canvas,paint)
@@ -173,5 +173,5 @@ fun ConcurrentLinkedQueue<Float>.getAt(i:Int):Float? {
     return null
 }
 
-fun Float.xInCircle(r:Float,deg:Float) = this+r*Math.cos(deg*Math.PI/180).toFloat()
-fun Float.yInCircle(r:Float,deg:Float) = this+r*Math.sin(deg*Math.PI/180).toFloat()
+fun Float.xInCircle(r:Float,deg:Float) = this+r*Math.cos(deg*Math.PI/180-Math.PI/2).toFloat()
+fun Float.yInCircle(r:Float,deg:Float) = this+r*Math.sin(deg*Math.PI/180-Math.PI/2).toFloat()
