@@ -18,4 +18,21 @@ class RingBallView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class CenterCornerBall(var x:Float,var y:Float,var r:Float,var size:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.rotate(90f)
+            paint.style = Paint.Style.FILL
+            canvas.drawCircle(0f,-size,r,paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating(deg:Float) {
+
+        }
+        fun stopped():Boolean = false
+    }
 }
