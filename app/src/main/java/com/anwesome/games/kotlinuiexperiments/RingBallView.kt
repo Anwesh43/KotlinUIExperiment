@@ -62,6 +62,13 @@ class RingBallView(ctx:Context):View(ctx) {
         }
     }
 }
+data class RingForCenterBall(var deg:Float,var cx:Float,var cy:Float,var r:Float,var x:Float = cx.xInCircle(r,deg),var y:Float = cy.yInCircle(r,deg)) {
+    fun draw(canvas:Canvas,paint:Paint) {
+        paint.style = Paint.Style.STROKE
+        canvas.drawCircle(x,y,r/15,paint)
+    }
+    fun handleTap(x:Float,y:Float):Boolean = x>=this.x-r/10 && x<=this.x+r/10 && y>=this.y-r/10 && y<=this.y+r/10
+}
 fun ConcurrentLinkedQueue<Float>.getAt(i:Int):Float? {
     var index = 0
     this.forEach {
@@ -72,3 +79,5 @@ fun ConcurrentLinkedQueue<Float>.getAt(i:Int):Float? {
     }
     return null
 }
+fun Float.xInCircle(r:Float,deg:Float) = this+r*Math.cos(deg*Math.PI/180).toFloat()
+fun Float.yInCircle(r:Float,deg:Float) = this+r*Math.sin(deg*Math.PI/180).toFloat()
