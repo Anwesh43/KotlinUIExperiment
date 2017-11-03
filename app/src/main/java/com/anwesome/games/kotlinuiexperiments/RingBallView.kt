@@ -11,10 +11,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class RingBallView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onMoveListener:OnMoveListener?=null
     val renderer = RingCenterBallRenderer(this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun setOnMoveListener(onMoveTo: (Int) -> Unit) {
+        onMoveListener = OnMoveListener(onMoveTo)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -113,6 +117,7 @@ class RingBallView(ctx:Context):View(ctx) {
                 container.update()
                 if(container.stopped()) {
                     animated = false
+                    view.onMoveListener?.onMoveTo?.invoke(((container.centerCornerBall.state.getCurrDeg()-45)/90).toInt())
                 }
                 try {
                     Thread.sleep(50)
@@ -154,13 +159,14 @@ class RingBallView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        var view:RingBallView?=null
-        fun create(activity:Activity) {
-            view = RingBallView(activity)
+        fun create(activity:Activity):RingBallView {
+            var view = RingBallView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            return view
         }
     }
+    data class OnMoveListener(var onMoveTo:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<Float>.getAt(i:Int):Float? {
     var index = 0
