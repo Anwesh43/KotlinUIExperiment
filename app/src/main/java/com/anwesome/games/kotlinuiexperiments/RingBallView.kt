@@ -90,15 +90,46 @@ class RingBallView(ctx:Context):View(ctx) {
             centerCornerBall.update()
         }
 
-        fun handleTap(x: Float, y: Float) {
+        fun handleTap(x: Float, y: Float,startcb:()->Unit) {
             rings.forEach { ring ->
                 if (ring.handleTap(x, y)) {
                     centerCornerBall.startUpdating(ring.deg)
+                    startcb()
+                    return
                 }
             }
         }
 
         fun stopped(): Boolean = centerCornerBall.stopped()
+    }
+    class RingCenterCornerBallAnimator(var container:RingForCenterBallContainer,var view:RingBallView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update()
+                if(container.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                container.handleTap(x,y,{
+                    animated = true
+                    view.postInvalidate()
+                })
+            }
+        }
     }
 }
 fun ConcurrentLinkedQueue<Float>.getAt(i:Int):Float? {
