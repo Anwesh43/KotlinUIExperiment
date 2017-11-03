@@ -131,6 +131,22 @@ class RingBallView(ctx:Context):View(ctx) {
             }
         }
     }
+    class RingCenterBallRenderer(var view:RingBallView,var time:Int = 0) {
+        var animator:RingCenterCornerBallAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = RingCenterCornerBallAnimator(RingForCenterBallContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
 fun ConcurrentLinkedQueue<Float>.getAt(i:Int):Float? {
     var index = 0
