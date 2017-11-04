@@ -24,18 +24,18 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         return true
     }
-    data class OnCircleButton(var i:Int,var deg:Float,var size:Float,var cx:Float,var cy:Float,var x:Float = cx.xInCircle(size,deg),var y:Float=cy.yInCircle(size,deg)) {
+    data class OnCircleButton(var i:Int,var deg:Float,var size:Float,var cx:Float,var cy:Float,var x:Float = cx.xInCircle(size,i*deg),var y:Float=cy.yInCircle(size,i*deg)) {
         var state = OnCircleButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
-            canvas.save()
-            canvas.translate(cx,cy)
-            canvas.rotate(deg*i)
+            paint.color = Color.parseColor("#311B92")
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(size,0f,size/10,paint)
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.drawCircle(0f,0f,size/10,paint)
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-size/10,-size/10,size/10,size/10),0f,360f*state.scale,true,paint)
-            canvas.strokeArc(0f,0f,size,deg*state.scale,paint)
             canvas.restore()
+            canvas.strokeArc(cx,cy,size,i*deg,deg*state.scale,paint)
         }
         fun update() {
             state.update()
@@ -67,7 +67,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             if(n > 0) {
                 val totalR = 2*Math.PI.toFloat()*(Math.min(w,h)/3)
                 val deg = 360f/n
-                val size = totalR/(1.4f)
+                val size = totalR/(1.4f*n)
                 for (i in 1..n) {
                     btns.add(OnCircleButton(i,deg,size,w/2,h/2))
                 }
@@ -92,6 +92,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             btns.forEach { btn ->
                 if(btn.handleTap(x,y)) {
+                    btn.startUpdating()
                     updatingBtns.add(btn)
                     if(updatingBtns.size == 1) {
                         startcb()
@@ -103,7 +104,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
     class OnCircleButtonAnimator(var container:OnCircleButtonContainer,var view:OnCircleButtonView){
         var animated = false
         fun draw(canvas:Canvas,paint:Paint) {
-
+            container.draw(canvas,paint)
         }
         fun update() {
             if(animated) {
@@ -121,7 +122,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             container.handleTap(x,y,{
-                animated = false
+                animated = true
                 view.postInvalidate()
             })
         }
@@ -133,6 +134,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = OnCircleButtonAnimator(OnCircleButtonContainer(w,h,view.n),view)
+                paint.strokeWidth = Math.min(w,h)/60
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -150,15 +152,15 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
 }
-fun Canvas.strokeArc(x:Float,y:Float,r:Float,deg:Float,paint:Paint) {
+fun Canvas.strokeArc(x:Float,y:Float,r:Float,startDeg:Float,deg:Float,paint:Paint) {
     paint.style = Paint.Style.STROKE
-    var d = 0f
+    var d = startDeg
     val n = 20
     val gap = deg/n
     val path = Path()
     for(i in 1..n) {
         val rx = x+r*Math.cos(d*Math.PI/180).toFloat()
-        val ry = x+r*Math.cos(d*Math.PI/180).toFloat()
+        val ry = x+r*Math.sin(d*Math.PI/180).toFloat()
         if(i == 1) {
             path.moveTo(rx,ry)
         }

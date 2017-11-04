@@ -192,10 +192,11 @@ class MainActivity : AppCompatActivity() {
 //        HorizontalBarListView.addSelectionListener({ i ->
 //            createToast("$i selected")
 //        })
-        val view = RingBallView.create(this)
-        view.setOnMoveListener { i ->
-            createTextView("Selected ${i}")
-        }
+//        val view = RingBallView.create(this)
+//        view.setOnMoveListener { i ->
+//            createTextView("Selected ${i}")
+//        }
+        val view = OnCircleButtonView.create(this)
     }
 
     fun createTextView(text:String) {
