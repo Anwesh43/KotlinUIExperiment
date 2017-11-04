@@ -94,6 +94,32 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
             }
         }
     }
+    class OnCircleButtonAnimator(var container:OnCircleButtonContainer,var view:OnCircleButtonView){
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+
+        }
+        fun update() {
+            if(animated) {
+                container.update{
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.handleTap(x,y,{
+                animated = false
+                view.postInvalidate()
+            })
+        }
+    }
 }
 fun Canvas.strokeArc(x:Float,y:Float,r:Float,deg:Float,paint:Paint) {
     paint.style = Paint.Style.STROKE
