@@ -20,4 +20,41 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class OnCircleButton(var i:Int,var deg:Float,var size:Float,var cx:Float,var cy:Float,var x:Float = cx.xInCircle(size,deg),var y:Float=cy.yInCircle(size,deg)) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(cx,cy)
+            canvas.rotate(deg*i)
+            canvas.drawCircle(size,0f,size/10,paint)
+            canvas.strokeArc(0f,0f,size,deg,paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
+    }
+}
+fun Canvas.strokeArc(x:Float,y:Float,r:Float,deg:Float,paint:Paint) {
+    paint.style = Paint.Style.STROKE
+    var d = 0f
+    val n = 20
+    val gap = deg/n
+    val path = Path()
+    for(i in 1..n) {
+        val rx = x+r*Math.cos(d*Math.PI/180).toFloat()
+        val ry = x+r*Math.cos(d*Math.PI/180).toFloat()
+        if(i == 1) {
+            path.moveTo(rx,ry)
+        }
+        else {
+            path.lineTo(rx,ry)
+        }
+        d += gap
+    }
+    this.drawPath(path,paint)
 }
