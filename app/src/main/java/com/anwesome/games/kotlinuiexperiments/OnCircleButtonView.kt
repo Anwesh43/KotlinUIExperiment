@@ -38,6 +38,20 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
         fun stopped():Boolean = true
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
     }
+    data class OnCircleButtonState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(Math.abs(scale - prevScale) > 1) {
+                scale = (prevScale+1)%2
+                dir = 0f
+                prevScale = scale
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+    }
 }
 fun Canvas.strokeArc(x:Float,y:Float,r:Float,deg:Float,paint:Paint) {
     paint.style = Paint.Style.STROKE
