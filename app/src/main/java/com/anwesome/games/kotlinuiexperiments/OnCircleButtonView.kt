@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 04/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -139,6 +140,13 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity):OnCircleButtonView {
+            val view = OnCircleButtonView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
