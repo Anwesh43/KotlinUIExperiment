@@ -24,7 +24,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         return true
     }
-    data class OnCircleButton(var i:Int,var deg:Float,var size:Float,var cx:Float,var cy:Float,var x:Float = cx.xInCircle(size,i*deg),var y:Float=cy.yInCircle(size,i*deg)) {
+    data class OnCircleButton(var i:Int,var deg:Float,var size:Float,var cx:Float,var cy:Float,var x:Float = cx.xInZeroCircle(size,i*deg),var y:Float=cy.yInZeroCircle(size,i*deg)) {
         var state = OnCircleButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#311B92")
@@ -135,6 +135,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                 val h = canvas.height.toFloat()
                 animator = OnCircleButtonAnimator(OnCircleButtonContainer(w,h,view.n),view)
                 paint.strokeWidth = Math.min(w,h)/60
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -155,12 +156,12 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
 fun Canvas.strokeArc(x:Float,y:Float,r:Float,startDeg:Float,deg:Float,paint:Paint) {
     paint.style = Paint.Style.STROKE
     var d = startDeg
-    val n = 20
+    val n = 40
     val gap = deg/n
     val path = Path()
     for(i in 1..n) {
         val rx = x+r*Math.cos(d*Math.PI/180).toFloat()
-        val ry = x+r*Math.sin(d*Math.PI/180).toFloat()
+        val ry = y+r*Math.sin(d*Math.PI/180).toFloat()
         if(i == 1) {
             path.moveTo(rx,ry)
         }
@@ -171,3 +172,6 @@ fun Canvas.strokeArc(x:Float,y:Float,r:Float,startDeg:Float,deg:Float,paint:Pain
     }
     this.drawPath(path,paint)
 }
+fun Float.xInZeroCircle(r:Float,deg:Float):Float = this+r*Math.cos(deg*Math.PI/180).toFloat()
+
+fun Float.yInZeroCircle(r:Float,deg:Float) = this+r*Math.sin(deg*Math.PI/180).toFloat()
