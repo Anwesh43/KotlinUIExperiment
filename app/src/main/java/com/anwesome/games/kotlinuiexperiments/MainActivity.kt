@@ -197,6 +197,7 @@ class MainActivity : AppCompatActivity() {
 //            createTextView("Selected ${i}")
 //        }
         val view = OnCircleButtonView.create(this)
+        view.setSelectionToggleListener({i->createToast("$i selected")},{i->createToast("$i unselected")})
     }
 
     fun createTextView(text:String) {
