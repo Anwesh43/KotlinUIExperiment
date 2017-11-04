@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class OnCircleButtonView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -51,6 +52,46 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
         fun stopped():Boolean = dir == 0f
         fun startUpdating() {
             dir = 1-2*this.scale
+        }
+    }
+    data class OnCircleButtonContainer(var w:Float,var h:Float,var n:Int) {
+        var btns:ConcurrentLinkedQueue<OnCircleButton> = ConcurrentLinkedQueue()
+        var updatingBtns:ConcurrentLinkedQueue<OnCircleButton> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                val totalR = 2*Math.PI.toFloat()*(Math.min(w,h)/3)
+                val deg = 360f/n
+                val size = totalR/(1.4f)
+                for (i in 1..n) {
+                    btns.add(OnCircleButton(i,deg,size,w/2,h/2))
+                }
+            }
+        }
+        fun update(stopcb:()->Unit) {
+            updatingBtns.forEach { updatingBtn ->
+                updatingBtn.update()
+                if(updatingBtn.stopped()) {
+                    updatingBtns.remove(updatingBtn)
+                    if(updatingBtns.size == 0) {
+                        stopcb()
+                    }
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            btns.forEach { btn ->
+                btn.draw(canvas,paint)
+            }
+        }
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            btns.forEach { btn ->
+                if(btn.handleTap(x,y)) {
+                    updatingBtns.add(btn)
+                    if(updatingBtns.size == 1) {
+                        startcb()
+                    }
+                }
+            }
         }
     }
 }
