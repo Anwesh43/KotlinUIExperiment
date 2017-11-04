@@ -27,8 +27,11 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
             canvas.save()
             canvas.translate(cx,cy)
             canvas.rotate(deg*i)
+            paint.style = Paint.Style.STROKE
             canvas.drawCircle(size,0f,size/10,paint)
-            canvas.strokeArc(0f,0f,size,deg,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-size/10,-size/10,size/10,size/10),0f,360f*state.scale,true,paint)
+            canvas.strokeArc(0f,0f,size,deg*state.scale,paint)
             canvas.restore()
         }
         fun update() {
