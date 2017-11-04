@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = OnCircleButtonRenderer(view = this)
+    var selectionListener:OnCircleButtonSelectionToggleListener ?= null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -73,11 +74,15 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
                 }
             }
         }
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:()->Unit,view:OnCircleButtonView) {
             updatingBtns.forEach { updatingBtn ->
                 updatingBtn.update()
                 if(updatingBtn.stopped()) {
                     updatingBtns.remove(updatingBtn)
+                    when(updatingBtn.state.scale) {
+                        1f -> view.selectionListener?.openListener?.invoke(updatingBtn.i)
+                        0f -> view.selectionListener?.closeListener?.invoke(updatingBtn.i)
+                    }
                     if(updatingBtns.size == 0) {
                         stopcb()
                     }
@@ -108,9 +113,9 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun update() {
             if(animated) {
-                container.update{
+                container.update({
                     animated = false
-                }
+                },view)
                 try {
                     Thread.sleep(50)
                     view.invalidate()
@@ -145,6 +150,9 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             animator?.handleTap(x,y)
         }
     }
+    fun setSelectionToggleListener(openListener: (Int) -> Unit, closeListener: (Int) -> Unit) {
+        selectionListener = OnCircleButtonSelectionToggleListener(openListener,closeListener)
+    }
     companion object {
         fun create(activity:Activity):OnCircleButtonView {
             val view = OnCircleButtonView(activity)
@@ -152,6 +160,7 @@ class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
             return view
         }
     }
+    data class OnCircleButtonSelectionToggleListener(var openListener:(Int)->Unit,var closeListener:(Int)->Unit)
 }
 fun Canvas.strokeArc(x:Float,y:Float,r:Float,startDeg:Float,deg:Float,paint:Paint) {
     paint.style = Paint.Style.STROKE
