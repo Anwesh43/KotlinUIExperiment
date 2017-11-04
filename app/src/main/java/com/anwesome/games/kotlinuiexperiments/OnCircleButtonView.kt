@@ -8,7 +8,7 @@ import android.content.*
 import android.graphics.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class OnCircleButtonView(ctx:Context):View(ctx) {
+class OnCircleButtonView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -121,6 +121,22 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
                 animated = false
                 view.postInvalidate()
             })
+        }
+    }
+    class OnCircleButtonRenderer(var view:OnCircleButtonView,var time:Int = 0) {
+        var animator:OnCircleButtonAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = OnCircleButtonAnimator(OnCircleButtonContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
         }
     }
 }
