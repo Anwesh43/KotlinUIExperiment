@@ -21,6 +21,7 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
         return true
     }
     data class OnCircleButton(var i:Int,var deg:Float,var size:Float,var cx:Float,var cy:Float,var x:Float = cx.xInCircle(size,deg),var y:Float=cy.yInCircle(size,deg)) {
+        var state = OnCircleButtonState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(cx,cy)
@@ -30,12 +31,12 @@ class OnCircleButtonView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
     }
     data class OnCircleButtonState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
