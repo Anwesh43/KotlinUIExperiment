@@ -7,14 +7,16 @@ import android.view.*
 import android.content.*
 import android.graphics.*
 class AnalogCameraLikeView(ctx:Context):View(ctx) {
+    val renderer = AnalogCameraRenderer(this)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean  {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -29,7 +31,7 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
             paint.color = Color.parseColor("#212121")
             canvas.drawCircle(0f,0f,w/5,paint)
             paint.color = Color.parseColor("#9E9E9E")
-            canvas.drawCircle(0f,0f,w/10,paint)
+            canvas.drawCircle(0f,0f,w/10+w/10*state.scale,paint)
             val h = -(w/20*state.scale)
             canvas.drawRoundRect(RectF(-w/20,-w/3-w/20-h,w/20,-w/3-h),w/30,w/30,paint)
             canvas.restore()
