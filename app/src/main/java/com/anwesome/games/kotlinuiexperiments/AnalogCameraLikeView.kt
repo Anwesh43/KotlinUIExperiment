@@ -41,4 +41,17 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
         fun stopped():Boolean = false
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2-w/5 && x<=w/2+w/5 && y>=h/2-w/5 && y<=h/2+w/5
     }
+    data class AnalogCameraState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f){
+        fun update() {
+            scale += dir*0.1f
+            if(Math.abs(prevScale-scale) > 1) {
+                dir = 0f
+                scale = (prevScale+1)%2
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+    }
 }
