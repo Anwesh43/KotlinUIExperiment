@@ -40,24 +40,20 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
         fun update() {
             state.update()
         }
-        fun startUpdating() {
-            state.startUpdating()
-        }
         fun stopped():Boolean = state.stopped()
         fun handleTap(x:Float,y:Float):Boolean = x>=w/2-w/5 && x<=w/2+w/5 && y>=h/2-w/5 && y<=h/2+w/5
     }
-    data class AnalogCameraState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f){
+    data class AnalogCameraState(var scale:Float = 0f,var deg:Float = 0f){
         fun update() {
-            scale += dir*0.1f
-            if(Math.abs(prevScale-scale) > 1) {
-                dir = 0f
-                scale = (prevScale+1)%2
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+            deg += 4.5f
+            if(deg > 180) {
+                deg = 0f
+                scale = 0f
             }
         }
-        fun stopped():Boolean = dir == 0f
-        fun startUpdating() {
-            dir = 1-2*this.scale
-        }
+        fun stopped():Boolean = deg == 0f
+
     }
     class AnalogCameraAnimator(var shape:AnalogCameraShape,var view:AnalogCameraLikeView) {
         var animated = false
@@ -76,11 +72,11 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
                 }
             }
         }
-        fun startUpdating() {
-            shape.startUpdating()
-        }
         fun handleTap(x:Float,y:Float) {
-            shape.handleTap(x,y)
+            if(shape.handleTap(x,y)) {
+                animated = true
+                view.postInvalidate()
+            }
         }
         fun draw(canvas:Canvas,paint:Paint) {
             shape.draw(canvas,paint)
@@ -106,7 +102,7 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
         fun create(activity:Activity) {
             val view = AnalogCameraLikeView(activity)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
