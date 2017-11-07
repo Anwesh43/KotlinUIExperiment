@@ -34,7 +34,7 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
             paint.color = Color.parseColor("#9E9E9E")
             canvas.drawCircle(0f,0f,w/10+w/10*state.scale,paint)
             val h = -(w/20*state.scale)
-            canvas.drawRoundRect(RectF(-w/20,-w/3-w/20-h,w/20,-w/3-h),w/30,w/30,paint)
+            canvas.drawRoundRect(RectF(-w/20,-w/4-w/20-h,w/20,-w/4-h),w/30,w/30,paint)
             canvas.restore()
         }
         fun update() {
