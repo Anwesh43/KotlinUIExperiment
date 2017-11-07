@@ -83,4 +83,20 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
             shape.draw(canvas,paint)
         }
     }
+    class AnalogCameraRenderer(var view:AnalogCameraLikeView,var time:Int = 0) {
+        var animator:AnalogCameraAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = AnalogCameraAnimator(AnalogCameraShape(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
