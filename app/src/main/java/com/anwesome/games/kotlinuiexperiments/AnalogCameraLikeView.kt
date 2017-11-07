@@ -56,4 +56,31 @@ class AnalogCameraLikeView(ctx:Context):View(ctx) {
             dir = 1-2*this.scale
         }
     }
+    class AnalogCameraAnimator(var shape:AnalogCameraShape,var view:AnalogCameraLikeView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                shape.update()
+                if(shape.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex: Exception) {
+
+                }
+            }
+        }
+        fun startUpdating() {
+            shape.startUpdating()
+        }
+        fun handleTap(x:Float,y:Float) {
+            shape.handleTap(x,y)
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            shape.draw(canvas,paint)
+        }
+    }
 }
