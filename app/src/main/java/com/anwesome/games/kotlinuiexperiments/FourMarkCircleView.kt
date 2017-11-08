@@ -28,13 +28,15 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
+            paint.color = Color.WHITE
             canvas.drawCircle(0f,0f,w/3,paint)
+            paint.color = Color.GRAY
             canvas.rotate(90f*state.scale)
             for(i in 0..3) {
                 canvas.save()
                 canvas.rotate(90f*i)
                 canvas.save()
-                canvas.translate(0f,-w/4)
+                canvas.translate(w/4,0f)
                 canvas.drawArc(RectF(-w/12,-w/12,w/12,w/12),-15f,30f,true,paint)
                 canvas.restore()
                 canvas.restore()
