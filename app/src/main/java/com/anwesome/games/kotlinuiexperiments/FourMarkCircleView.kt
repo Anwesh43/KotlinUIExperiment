@@ -32,12 +32,7 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
                 canvas.rotate(90f*i)
                 canvas.save()
                 canvas.translate(0f,-w/4)
-                for(j in 0..1) {
-                    canvas.save()
-                    canvas.rotate(15f*(2*i-1))
-                    canvas.drawLine(0f,-w/4,0f,-w/3,paint)
-                    canvas.restore()
-                }
+                canvas.drawArc(RectF(-w/12,-w/12,w/12,w/12),-15f,30f,true,paint)
                 canvas.restore()
                 canvas.restore()
             }
@@ -71,5 +66,33 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
             }
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class FourMarkCircleAnimator(var fourMarkCircle:FourMarkCircle,var view:FourMarkCircleView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                fourMarkCircle.update()
+                if(fourMarkCircle.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            fourMarkCircle.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                fourMarkCircle.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
     }
 }
