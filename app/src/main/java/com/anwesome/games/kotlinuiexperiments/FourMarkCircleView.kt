@@ -50,4 +50,25 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class FourMarkState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(Math.abs(scale - prevScale) > 1) {
+                scale  = (prevScale+1)%2
+                prevScale = scale
+                if(dir == 1.0f) {
+                    dir = -1.0f
+                }
+                else {
+                    dir = 0.0f
+                }
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0f) {
+                dir = 1.0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
