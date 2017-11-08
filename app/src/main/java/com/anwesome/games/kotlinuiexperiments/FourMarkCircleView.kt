@@ -21,11 +21,12 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
         return true
     }
     data class FourMarkCircle(var w:Float,var h:Float) {
+        var state = FourMarkState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
             canvas.drawCircle(0f,0f,w/3,paint)
-            canvas.rotate(90f)
+            canvas.rotate(90f*state.scale)
             for(i in 0..3) {
                 canvas.save()
                 canvas.rotate(90f*i)
@@ -43,12 +44,12 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class FourMarkState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
