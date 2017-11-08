@@ -199,6 +199,7 @@ class MainActivity : AppCompatActivity() {
 //        val view = OnCircleButtonView.create(this)
 //        view.setSelectionToggleListener({i->createToast("$i selected")},{i->createToast("$i unselected")})
         AnalogCameraLikeView.create(this)
+        FourMarkCircleView.create(this)
     }
 
     fun createTextView(text:String) {
