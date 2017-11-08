@@ -11,6 +11,10 @@ import android.graphics.*
 class FourMarkCircleView(ctx:Context):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = FourMarkCircleRenderer(this)
+    var clickListener:FourMarkCircleClickListener?=null
+    fun addClickListener(listener:()->Unit) {
+        clickListener = FourMarkCircleClickListener(listener)
+    }
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -78,6 +82,7 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
             if(animated) {
                 fourMarkCircle.update()
                 if(fourMarkCircle.stopped()) {
+                    view.clickListener?.onClickListener?.invoke()
                     animated = false
                 }
                 try {
@@ -124,4 +129,5 @@ class FourMarkCircleView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class FourMarkCircleClickListener(var onClickListener:()->Unit)
 }
