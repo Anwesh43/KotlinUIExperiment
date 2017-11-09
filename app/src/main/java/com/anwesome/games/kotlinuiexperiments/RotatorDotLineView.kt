@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class RotatorDotLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
+        canvas.drawColor(Color.parseColor("#212121"))
 
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
@@ -99,6 +100,7 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#FDD835")
             dots.forEach { dot ->
                 dot.draw(canvas,paint)
             }
