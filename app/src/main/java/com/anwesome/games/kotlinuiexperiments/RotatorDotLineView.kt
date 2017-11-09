@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class RotatorDotLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -20,7 +21,7 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class RotatorLine(var x:Float,var y:Float,var deg:Float=0f,var size:Float,var prevDeg:Float = 0f) {
+    data class RotatorLine(var x:Float,var y:Float,var size:Float,var deg:Float=0f,var prevDeg:Float = 0f) {
         var state = RotatorLineState()
         fun update() {
             state.startUpdating()
@@ -70,6 +71,33 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.drawCircle(0f,0f,size/10,paint)
             canvas.restore()
+        }
+    }
+    data class RotatorLineContainer(var w:Float,var h:Float,var size:Float = Math.min(w,h)/3,var line:RotatorLine = RotatorLine(w/2,h/2,size)) {
+        var dots:ConcurrentLinkedQueue<LineDot> = ConcurrentLinkedQueue()
+        var curr:LineDot?=null
+        var prev:LineDot?=null
+        init {
+            for(i in 0..1) {
+                dots.add(LineDot(i,w/2,h/2,size))
+            }
+        }
+        fun update() {
+
+        }
+        fun handleTap(x:Float,y:Float) {
+            dots.forEach { dot ->
+                if(dot.handleTap(x,y)) {
+                    curr = dot
+                    line.startUpdating(dot.deg)
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            dots.forEach { dot ->
+                dot.draw(canvas,paint)
+            }
+            line.draw(canvas,paint)
         }
     }
 }
