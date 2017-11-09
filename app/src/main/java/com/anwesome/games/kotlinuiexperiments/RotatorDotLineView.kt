@@ -82,14 +82,19 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
                 dots.add(LineDot(i,w/2,h/2,size))
             }
         }
-        fun update() {
-
+        fun update(stopcb:()->Unit) {
+            line.update()
+            if(line.stopped()) {
+                stopcb()
+            }
         }
-        fun handleTap(x:Float,y:Float) {
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
             dots.forEach { dot ->
                 if(dot.handleTap(x,y)) {
                     curr = dot
                     line.startUpdating(dot.deg)
+                    startcb()
+                    return
                 }
             }
         }
@@ -98,6 +103,35 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
                 dot.draw(canvas,paint)
             }
             line.draw(canvas,paint)
+        }
+    }
+    data class RotatorLineAnimator(var rotatorLineContainer:RotatorLineContainer,var view:RotatorDotLineView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                rotatorLineContainer.update({
+                    animated = false
+                })
+
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            rotatorLineContainer.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                rotatorLineContainer.handleTap(x,y,{
+                    animated = true
+                    view.postInvalidate()
+                })
+            }
         }
     }
 }
