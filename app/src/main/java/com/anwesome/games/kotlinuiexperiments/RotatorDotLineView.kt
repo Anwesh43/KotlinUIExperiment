@@ -104,7 +104,10 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
         }
         fun update(stopcb:()->Unit) {
             line.update()
+            curr?.update()
+            prev?.update()
             if(line.stopped()) {
+                prev = curr
                 stopcb()
             }
         }
@@ -114,6 +117,8 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
                     curr = dot
                     line.startUpdating(dot.deg)
                     startcb()
+                    curr?.startUpdating()
+                    prev?.startUpdating()
                     return
                 }
             }
