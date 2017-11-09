@@ -20,20 +20,36 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class RotatorLine(var x:Float,var y:Float,var deg:Float,var size:Float) {
+    data class RotatorLine(var x:Float,var y:Float,var deg:Float=0f,var size:Float,var prevDeg:Float = 0f) {
         fun update() {
 
         }
-        fun startUpdating() {
-
+        fun startUpdating(finalDeg:Float) {
+            deg = finalDeg - prevDeg
         }
         fun stopped():Boolean = true
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.rotate(deg)
-            canvas.drawLine(0f,0f,0f,-size,paint)
+            canvas.rotate(prevDeg+deg)
+            canvas.drawLine(0f,0f,size,0f,paint)
             canvas.restore()
         }
+    }
+    data class RotatorLineState(var dir:Float= 0f,var scale:Float = 0f){
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 1f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0f) {
+                dir = 1f
+                scale = 0f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
     }
 }
