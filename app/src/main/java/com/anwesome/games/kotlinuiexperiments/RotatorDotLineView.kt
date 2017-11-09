@@ -125,6 +125,7 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.strokeCap = Paint.Cap.ROUND
             paint.color = Color.parseColor("#FDD835")
             dots.forEach { dot ->
                 dot.draw(canvas,paint)
