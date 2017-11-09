@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 09/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -151,6 +152,13 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = RotatorDotLineView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
