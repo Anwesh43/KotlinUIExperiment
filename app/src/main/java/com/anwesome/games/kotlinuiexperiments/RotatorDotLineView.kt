@@ -49,18 +49,25 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
-    data class RotatorLineState(var dir:Float= 0f,var scale:Float = 0f){
+    data class RotatorLineState(var dir:Float= 0f,var scale:Float = 0f,var prevScale:Float = 0f,var reverse:Boolean = false){
         fun update() {
             scale += dir*0.1f
-            if(scale > 1) {
-                scale = 1f
+            if(Math.abs(scale-prevScale) > 1) {
+                scale = (prevScale+1)%2
                 dir = 0f
+                prevScale = scale
             }
         }
         fun startUpdating() {
             if(dir == 0f) {
-                dir = 1f
-                scale = 0f
+                if(reverse) {
+                    dir = 1-2*this.scale
+                }
+                else {
+                    dir = 1f
+                    scale = 0f
+                    prevScale = 0f
+                }
             }
         }
         fun stopped():Boolean = dir == 0f
