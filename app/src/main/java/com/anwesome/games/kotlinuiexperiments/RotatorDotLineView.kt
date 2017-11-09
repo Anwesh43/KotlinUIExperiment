@@ -59,4 +59,17 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class LineDot(var i:Int,var x:Float,var cy:Float,var size:Float,var y:Float = cy+size*(2*i-1),var deg:Float = 90f*(2*i-1)) {
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-size/10 && x<=this.x+size/10 && y>=this.y-size/10 && y<=this.y+size/10
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.strokeWidth = size/25
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,size/10,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawCircle(0f,0f,size/10,paint)
+            canvas.restore()
+        }
+    }
 }
