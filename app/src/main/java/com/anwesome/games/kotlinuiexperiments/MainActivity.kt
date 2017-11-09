@@ -201,7 +201,10 @@ class MainActivity : AppCompatActivity() {
 //        AnalogCameraLikeView.create(this)
 //        var view = FourMarkCircleView.create(this)
 //        view.addClickListener { createToast("clicked") }
-        RotatorDotLineView.create(this)
+        val view = RotatorDotLineView.create(this)
+        view.addSelectionListener { i ->
+            createToast("selected ${i} dot")
+        }
     }
 
     fun createTextView(text:String) {
