@@ -27,15 +27,17 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
     data class RotatorLine(var x:Float,var y:Float,var size:Float,var deg:Float=0f,var prevDeg:Float = 0f) {
         var state = RotatorLineState()
         fun update() {
-            state.startUpdating()
+            state.update()
         }
         fun startUpdating(finalDeg:Float) {
             deg = finalDeg - prevDeg
+            state.startUpdating()
         }
         fun stopped():Boolean {
             val stopCondition = state.stopped()
             if(stopCondition) {
                 prevDeg += deg
+                deg = 0f
             }
             return stopCondition
         }
