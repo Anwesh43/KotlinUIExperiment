@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class RotatorDotLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RotatorLineRenderer(this)
+    var lineDotSleectionListener:RotateDotLineSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -137,6 +138,7 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
             if(animated) {
                 rotatorLineContainer.update({
                     animated = false
+                    view.lineDotSleectionListener?.selectionListener?.invoke(rotatorLineContainer.curr?.i?:-1)
                 })
 
                 try {
@@ -176,11 +178,16 @@ class RotatorDotLineView(ctx:Context):View(ctx) {
             animator?.handleTap(x,y)
         }
     }
+    fun addSelectionListener(selectionListener: (Int) -> Unit) {
+        lineDotSleectionListener = RotateDotLineSelectionListener(selectionListener)
+    }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity):RotatorDotLineView {
             val view = RotatorDotLineView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            return view
         }
     }
+    data class RotateDotLineSelectionListener(var selectionListener:(Int)->Unit)
 }
