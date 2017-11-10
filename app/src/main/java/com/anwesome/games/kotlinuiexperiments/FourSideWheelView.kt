@@ -19,4 +19,30 @@ class FourSideWheelView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class FourSideWheel(var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            val r = Math.min(w,h)/3
+            val r1 = 0.4f*Math.min(w,h)
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawCircle(0f,0f,r,paint)
+            for(i in 0..3) {
+                canvas.save()
+                canvas.rotate(90f*i)
+                canvas.drawArc(RectF(-r1,-r1,r1,r1),15f,60f,true,paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+    }
 }
