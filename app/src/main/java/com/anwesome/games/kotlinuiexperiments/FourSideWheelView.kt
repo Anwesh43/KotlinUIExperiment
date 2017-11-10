@@ -123,7 +123,7 @@ class FourSideWheelView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity):View {
+        fun create(activity:Activity):FourSideWheelView {
             val view = FourSideWheelView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
