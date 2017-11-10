@@ -65,4 +65,32 @@ class FourSideWheelView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    class FourSideWheelAnimator(var fourSideWheel:FourSideWheel,var view:FourSideWheelView){
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                fourSideWheel.update()
+                if(fourSideWheel.stopped()){
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            fourSideWheel.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                fourSideWheel.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
