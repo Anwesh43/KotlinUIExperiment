@@ -93,4 +93,20 @@ class FourSideWheelView(ctx:Context):View(ctx) {
             }
         }
     }
+    class FourSideWheelRenderer(var time:Int = 0,var view:FourSideWheelView) {
+        var animator:FourSideWheelAnimator?=null
+        fun handleTap() {
+            animator?.handleTap()
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = FourSideWheelAnimator(FourSideWheel(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+    }
 }
