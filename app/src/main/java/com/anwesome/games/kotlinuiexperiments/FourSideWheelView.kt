@@ -25,6 +25,7 @@ class FourSideWheelView(ctx:Context):View(ctx) {
     data class FourSideWheel(var w:Float,var h:Float) {
         var state = FourSideWheelState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#FFC107")
             val r = Math.min(w,h)/3
             val r1 = 0.4f*Math.min(w,h)
             canvas.save()
