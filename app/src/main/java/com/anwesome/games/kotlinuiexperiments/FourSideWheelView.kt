@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 10/11/17.
  */
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -109,6 +110,14 @@ class FourSideWheelView(ctx:Context):View(ctx) {
             animator?.draw(canvas,paint)
             animator?.update()
             time++
+        }
+    }
+    companion object {
+        fun create(activity:Activity):View {
+            val view = FourSideWheelView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            return view
         }
     }
 }
