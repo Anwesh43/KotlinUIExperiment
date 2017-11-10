@@ -10,6 +10,7 @@ import android.view.*
 class FourSideWheelView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = FourSideWheelRenderer(view = this)
+    var fourSideWheelOnClickListener:FourSideWheelOnClickListener ?= null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -21,6 +22,9 @@ class FourSideWheelView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    fun addClickListener(clickListener:()->Unit) {
+        fourSideWheelOnClickListener = FourSideWheelOnClickListener(clickListener)
     }
     data class FourSideWheel(var w:Float,var h:Float) {
         var state = FourSideWheelState()
@@ -80,6 +84,7 @@ class FourSideWheelView(ctx:Context):View(ctx) {
                 fourSideWheel.update()
                 if(fourSideWheel.stopped()){
                     animated = false
+                    view.fourSideWheelOnClickListener?.onClickListener?.invoke()
                 }
                 try {
                     Thread.sleep(50)
@@ -125,4 +130,5 @@ class FourSideWheelView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class FourSideWheelOnClickListener(var onClickListener:()->Unit)
 }
