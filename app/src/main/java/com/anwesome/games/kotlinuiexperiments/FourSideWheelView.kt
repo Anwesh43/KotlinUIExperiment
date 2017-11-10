@@ -45,4 +45,22 @@ class FourSideWheelView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class FourSideWheelState(var dir:Float = 0f,var deg:Float = 0f,var prevDeg:Float = 0f,var scale:Float = 0f) {
+        fun update() {
+            scale += Math.sin(2*(deg-prevDeg)*Math.PI/180).toFloat()
+            deg = prevDeg + 90f*0.1f*dir
+            if(prevDeg - deg >= 90) {
+                deg = prevDeg +90f
+                prevDeg = deg
+                dir = 0f
+                scale = 0f
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0f) {
+                dir = 1f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
