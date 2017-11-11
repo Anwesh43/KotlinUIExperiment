@@ -43,4 +43,18 @@ class DoubleSideExpanderView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class SideExpanderState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(Math.abs(scale-prevScale) > 1) {
+                scale = (prevScale+1)%2
+                prevScale = 0f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
