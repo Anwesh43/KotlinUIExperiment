@@ -22,27 +22,30 @@ class DoubleSideExpanderView(ctx:Context):View(ctx) {
         return true
     }
     data class SideExpander(var i:Int,var w:Float,var h:Float,var x:Float=w/2-(w/4+w/10)*(2*i-1),var y:Float=h/2) {
+        var state = SideExpanderState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,w/10,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-w/10,-w/10,w/10,w/10),0f,360f,true,paint)
+            canvas.drawArc(RectF(-w/10,-w/10,w/10,w/10),0f,360f*state.scale,true,paint)
             canvas.restore()
             val rx = w/2-w/4+i*(w/4)
             canvas.save()
             canvas.translate(w/2,h/2)
-            canvas.drawRect(RectF(rx-w/2,-w/8,rx+w/2,w/8),paint)
+            canvas.scale(state.scale,1f)
+            canvas.drawRect(RectF(rx-w/2,-w/8,rx-w/4,w/8),paint)
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
+        fun handleTap(x:Float,y:Float):Boolean = x>=this.x-w/10 && x<=this.x+w/10 && y>=this.y-w/10 && y<=this.y+w/10
     }
     data class SideExpanderState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
@@ -84,7 +87,7 @@ class DoubleSideExpanderView(ctx:Context):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float) {
-            
+
         }
     }
 }
