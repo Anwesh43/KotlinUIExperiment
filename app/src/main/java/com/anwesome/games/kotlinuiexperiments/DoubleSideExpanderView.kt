@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class DoubleSideExpanderView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -56,5 +57,34 @@ class DoubleSideExpanderView(ctx:Context):View(ctx) {
             dir = 1-2*this.scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    data class DoubleSideExapnder(var w:Float,var h:Float) {
+        var sideExpanders = ConcurrentLinkedQueue<SideExpander>()
+        var tappedExpanders = ConcurrentLinkedQueue<SideExpander>()
+        init {
+            for(i in 0..1) {
+                sideExpanders.add(SideExpander(i,w,h))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            sideExpanders.forEach{ sideExpander ->
+                sideExpander.draw(canvas,paint)
+            }
+        }
+        fun update(stopcb:()->Unit) {
+            tappedExpanders.forEach { tappedExpander ->
+                tappedExpander.update()
+                if(tappedExpander.stopped()) {
+                    if(tappedExpanders.remove(tappedExpander)) {
+                        if(tappedExpanders.size == 0) {
+                            stopcb()
+                        }
+                    }
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            
+        }
     }
 }
