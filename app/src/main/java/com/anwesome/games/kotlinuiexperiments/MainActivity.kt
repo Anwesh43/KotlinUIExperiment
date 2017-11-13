@@ -205,8 +205,9 @@ class MainActivity : AppCompatActivity() {
 //        view.addSelectionListener { i ->
 //            createToast("selected ${i} dot")
 //        }
-        val view = FourSideWheelView.create(this)
-        view.addClickListener { createToast("clicked") }
+//        val view = FourSideWheelView.create(this)
+//        view.addClickListener { createToast("clicked") }
+        val view = ConcentricCircleListView.create(this)
     }
 
     fun createTextView(text:String) {

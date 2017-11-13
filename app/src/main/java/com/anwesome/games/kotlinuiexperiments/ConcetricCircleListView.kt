@@ -29,7 +29,7 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.scale(1f,1f)
+            canvas.scale(state.scale,state.scale)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,r,paint)
             canvas.restore()
@@ -79,7 +79,6 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             circles.forEach { circle ->
                 circle.draw(canvas,paint)
-                state.update()
             }
         }
         fun handleTap(startcb:()->Unit) {
@@ -111,7 +110,7 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
                 }
                 try {
                     Thread.sleep(50)
-                    view.invalidate();
+                    view.invalidate()
                 }
                 catch(ex:Exception) {
 
