@@ -129,26 +129,27 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
     }
- }
-class ConcentricCircleRenderer(var view:ConcentricCircleListView) {
-    var time = 0
-    var animator:ConcentricCircleListView.ConcentricCircleAnimator?=null
-    fun render(canvas:Canvas,paint:Paint) {
-        if(time == 0) {
-            val w = canvas.width.toFloat()
-            val h = canvas.height.toFloat()
-            animator = ConcentricCircleListView.ConcentricCircleAnimator(ConcentricCircleListView.ConcentricCircleList(w,h,view.n),view)
-            paint.strokeWidth = Math.min(w,h)/60
-            paint.color = Color.parseColor("#4A148C")
+    class ConcentricCircleRenderer(var view:ConcentricCircleListView) {
+        var time = 0
+        var animator:ConcentricCircleListView.ConcentricCircleAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = ConcentricCircleListView.ConcentricCircleAnimator(ConcentricCircleListView.ConcentricCircleList(w,h,view.n),view)
+                paint.strokeWidth = Math.min(w,h)/60
+                paint.color = Color.parseColor("#4A148C")
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
         }
-        animator?.draw(canvas,paint)
-        animator?.update()
-        time++
+        fun handleTap() {
+            animator?.handleTap()
+        }
     }
-    fun handleTap() {
-        animator?.handleTap()
-    }
-}
+ }
+
 fun ConcurrentLinkedQueue<ConcentricCircleListView.ConcentricCircle>.getAt(i:Int):ConcentricCircleListView.ConcentricCircle? {
     var index = 0
     this.forEach { concentricCircle ->
