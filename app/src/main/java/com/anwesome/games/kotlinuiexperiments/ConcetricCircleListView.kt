@@ -10,13 +10,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val renderer = ConcentricCircleRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -135,7 +137,7 @@ class ConcentricCircleRenderer(var view:ConcentricCircleListView) {
         if(time == 0) {
             val w = canvas.width.toFloat()
             val h = canvas.height.toFloat()
-            animator = ConcentricCircleListView.ConcentricCircleAnimator(ConcentricCircleListView.ConcentricCircleList(w,h),view)
+            animator = ConcentricCircleListView.ConcentricCircleAnimator(ConcentricCircleListView.ConcentricCircleList(w,h,view.n),view)
         }
         animator?.draw(canvas,paint)
         animator?.update()
