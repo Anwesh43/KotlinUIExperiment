@@ -22,6 +22,7 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         return true
     }
     data class ConcentricCircle(var x:Float,var y:Float,var r:Float){
+        var state:ConcentricCircleState = ConcentricCircleState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
@@ -31,11 +32,11 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class ConcentricCircleState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
@@ -76,6 +77,7 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         fun handleTap(startcb:()->Unit) {
             state.startUpdating()
             circles.getAt(state.j)?.startUpdating()
+            startcb()
         }
     }
     data class ConcentricCircleListState(var maxLimit:Int,var j:Int = 0,var dir:Int = 0,var currDir:Int = 1) {
