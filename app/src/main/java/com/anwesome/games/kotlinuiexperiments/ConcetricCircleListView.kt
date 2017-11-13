@@ -56,7 +56,16 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         var state = ConcentricCircleListState(n)
         val circles:ConcurrentLinkedQueue<ConcentricCircle> = ConcurrentLinkedQueue()
         fun update(stopcb:()->Unit) {
-
+            circles.getAt(state.j)?.update()
+            if(circles.getAt(state.j)?.stopped()?:false) {
+                state.update()
+                if(state.stopped()) {
+                    stopcb()
+                }
+                else {
+                    circles.getAt(state.j)?.startUpdating()
+                }
+            }
         }
         fun draw(canvas:Canvas,paint:Paint) {
             circles.forEach { circle ->
@@ -65,16 +74,22 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
         fun handleTap(startcb:()->Unit) {
-
+            state.startUpdating()
+            circles.getAt(state.j)?.startUpdating()
         }
     }
-    data class ConcentricCircleListState(var maxLimit:Int,var j:Int = 0,var dir:Int = 1) {
+    data class ConcentricCircleListState(var maxLimit:Int,var j:Int = 0,var dir:Int = 0,var currDir:Int = 1) {
         fun update() {
             j+=dir
             if(j == maxLimit || j == -1) {
-                dir *= -1
-                j+=dir
+                dir = 0
+                currDir *= -1
+                j+=currDir
             }
+        }
+        fun stopped():Boolean = dir == 0
+        fun startUpdating() {
+            dir = currDir
         }
     }
  }
