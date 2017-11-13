@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class ConcentricCircleListView(ctx:Context):View(ctx) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -51,4 +52,28 @@ class ConcentricCircleListView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class ConcentricCircleList(var w:Float,var h:Float) {
+        val circles:ConcurrentLinkedQueue<ConcentricCircle> = ConcurrentLinkedQueue()
+        fun update(stopcb:()->Unit) {
+
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            circles.forEach { circle ->
+                circle.draw(canvas,paint)
+            }
+        }
+        fun handleTap(startcb:()->Unit) {
+
+        }
+    }
  }
+fun ConcurrentLinkedQueue<ConcentricCircleListView.ConcentricCircle>.getAt(i:Int):ConcentricCircleListView.ConcentricCircle? {
+    var index = 0
+    this.forEach { concentricCircle ->
+        if(index == i) {
+            return concentricCircle
+        }
+        index++
+    }
+    return null
+}
