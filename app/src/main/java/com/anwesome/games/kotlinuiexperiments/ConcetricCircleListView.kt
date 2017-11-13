@@ -94,6 +94,34 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
             dir = currDir
         }
     }
+    class ConcentricCircleAnimator(var concentricCircleList:ConcentricCircleList,var view:ConcentricCircleListView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                concentricCircleList.update {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate();
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            concentricCircleList.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+               concentricCircleList.handleTap {
+                   animated = true
+                   view.postInvalidate()
+               }
+            }
+        }
+    }
  }
 fun ConcurrentLinkedQueue<ConcentricCircleListView.ConcentricCircle>.getAt(i:Int):ConcentricCircleListView.ConcentricCircle? {
     var index = 0
