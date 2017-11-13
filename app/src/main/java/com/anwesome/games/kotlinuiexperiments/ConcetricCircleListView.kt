@@ -20,5 +20,21 @@ class ConcentricCircleListView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class ConcentricCircle(var x:Float,var y:Float,var r:Float){
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x,y)
+            canvas.scale(1f,1f)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r,paint)
+            canvas.restore()
+        }
+        fun update() {
 
-}
+        }
+        fun stopped():Boolean = false
+        fun startUpdating() {
+
+        }
+    }
+ }
