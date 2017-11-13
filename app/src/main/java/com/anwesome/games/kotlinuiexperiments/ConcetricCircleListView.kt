@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 13/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -146,6 +147,14 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):ConcentricCircleListView {
+            val view = ConcentricCircleListView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            return view
         }
     }
  }
