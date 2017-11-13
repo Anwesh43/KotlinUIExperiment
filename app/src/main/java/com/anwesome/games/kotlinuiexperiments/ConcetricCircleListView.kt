@@ -8,7 +8,7 @@ import android.content.*
 import android.graphics.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class ConcentricCircleListView(ctx:Context):View(ctx) {
+class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -52,7 +52,8 @@ class ConcentricCircleListView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    data class ConcentricCircleList(var w:Float,var h:Float) {
+    data class ConcentricCircleList(var w:Float,var h:Float,var n:Int) {
+        var state = ConcentricCircleListState(n)
         val circles:ConcurrentLinkedQueue<ConcentricCircle> = ConcurrentLinkedQueue()
         fun update(stopcb:()->Unit) {
 
@@ -60,10 +61,20 @@ class ConcentricCircleListView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             circles.forEach { circle ->
                 circle.draw(canvas,paint)
+                state.update()
             }
         }
         fun handleTap(startcb:()->Unit) {
 
+        }
+    }
+    data class ConcentricCircleListState(var maxLimit:Int,var j:Int = 0,var dir:Int = 1) {
+        fun update() {
+            j+=dir
+            if(j == maxLimit || j == -1) {
+                dir *= -1
+                j+=dir
+            }
         }
     }
  }
