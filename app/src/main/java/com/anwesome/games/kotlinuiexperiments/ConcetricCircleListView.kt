@@ -56,6 +56,11 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
     data class ConcentricCircleList(var w:Float,var h:Float,var n:Int) {
         var state = ConcentricCircleListState(n)
         val circles:ConcurrentLinkedQueue<ConcentricCircle> = ConcurrentLinkedQueue()
+        init {
+            for(i in 0..n-1) {
+                circles.add(ConcentricCircle(w/2,h/2,Math.min(w,h)/3))
+            }
+        }
         fun update(stopcb:()->Unit) {
             circles.getAt(state.j)?.update()
             if(circles.getAt(state.j)?.stopped()?:false) {
@@ -123,6 +128,23 @@ class ConcentricCircleListView(ctx:Context,var n:Int = 5):View(ctx) {
         }
     }
  }
+class ConcentricCircleRenderer(var view:ConcentricCircleListView) {
+    var time = 0
+    var animator:ConcentricCircleListView.ConcentricCircleAnimator?=null
+    fun render(canvas:Canvas,paint:Paint) {
+        if(time == 0) {
+            val w = canvas.width.toFloat()
+            val h = canvas.height.toFloat()
+            animator = ConcentricCircleListView.ConcentricCircleAnimator(ConcentricCircleListView.ConcentricCircleList(w,h),view)
+        }
+        animator?.draw(canvas,paint)
+        animator?.update()
+        time++
+    }
+    fun handleTap() {
+        animator?.handleTap()
+    }
+}
 fun ConcurrentLinkedQueue<ConcentricCircleListView.ConcentricCircle>.getAt(i:Int):ConcentricCircleListView.ConcentricCircle? {
     var index = 0
     this.forEach { concentricCircle ->
