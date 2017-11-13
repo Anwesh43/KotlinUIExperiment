@@ -138,6 +138,8 @@ class ConcentricCircleRenderer(var view:ConcentricCircleListView) {
             val w = canvas.width.toFloat()
             val h = canvas.height.toFloat()
             animator = ConcentricCircleListView.ConcentricCircleAnimator(ConcentricCircleListView.ConcentricCircleList(w,h,view.n),view)
+            paint.strokeWidth = Math.min(w,h)/60
+            paint.color = Color.parseColor("#4A148C")
         }
         animator?.draw(canvas,paint)
         animator?.update()
