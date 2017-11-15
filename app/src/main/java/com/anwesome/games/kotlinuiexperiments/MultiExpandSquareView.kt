@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 15/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -114,6 +115,13 @@ class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
         }
         fun handleTap() {
             animator?.startUpdating()
+        }
+    }
+    companion object{
+        fun create(activity:Activity):View {
+            val view = MultiExpandSquareView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
