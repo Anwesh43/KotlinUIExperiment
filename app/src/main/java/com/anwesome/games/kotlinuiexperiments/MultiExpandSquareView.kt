@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class MultiExpandSquareView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -21,9 +22,8 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
         return true
     }
     data class MultiExpandSquare(var i:Int,var n:Int,var x:Float,var y:Float,var size:Float,var cx:Float = x,var cy:Float = y) {
-        var state = MutliExpandSquareState()
-        fun draw(canvas:Canvas,paint:Paint) {
-            val gap = ((n/2-i)*size/4)*state.scale
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            val gap = ((n/2-i)*size/4)
             x = cx - gap
             y = cy - gap
             canvas.save()
@@ -31,13 +31,6 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
             canvas.drawRect(RectF(-size/2,-size/2,size/2,size/2),paint)
             canvas.restore()
         }
-        fun update() {
-            state.update()
-        }
-        fun startUpdating() {
-            state.startUpdating()
-        }
-        fun stopped():Boolean = state.stopped()
     }
     data class MutliExpandSquareState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
@@ -52,5 +45,29 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
             dir = 1-2*this.prevScale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    class MultiExpanderSquareContainer(var w:Float,var h:Float,var n:Int) {
+        var state = MutliExpandSquareState()
+        var squares:ConcurrentLinkedQueue<MultiExpandSquare> = ConcurrentLinkedQueue()
+        init {
+            for(i in 0..n-1) {
+                squares.add(MultiExpandSquare(i,n,w/2,h/2,Math.min(w,h)/3))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            squares.forEach { square ->
+                square.draw(canvas,paint,state.scale)
+            }
+        }
+        fun update(stopcb:()->Unit) {
+            state.update()
+            if(state.stopped()) {
+                stopcb()
+            }
+        }
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating()
+            startcb()
+        }
     }
 }
