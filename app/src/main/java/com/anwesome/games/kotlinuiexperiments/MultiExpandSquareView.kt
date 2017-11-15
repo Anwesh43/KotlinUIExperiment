@@ -6,17 +6,20 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import android.hardware.camera2.params.ColorSpaceTransform
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = MutliSquareRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean  {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -103,7 +106,7 @@ class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = MultiSquareAnimator(MultiExpanderSquareContainer(w,h),view)
+                animator = MultiSquareAnimator(MultiExpanderSquareContainer(w,h,view.n),view)
             }
             animator?.draw(canvas,paint)
             animator?.update()
