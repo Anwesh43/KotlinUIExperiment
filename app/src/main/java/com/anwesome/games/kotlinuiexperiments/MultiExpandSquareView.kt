@@ -26,7 +26,7 @@ class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
     }
     data class MultiExpandSquare(var i:Int,var n:Int,var x:Float,var y:Float,var size:Float,var cx:Float = x,var cy:Float = y) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
-            val gap = (((n/2-i).toFloat()/n.toFloat())*size/4)
+            val gap = (((n/2-i).toFloat()/n.toFloat())*size/4)*scale
             x = cx - gap
             y = cy - gap
             canvas.save()
