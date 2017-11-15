@@ -21,8 +21,9 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
         return true
     }
     data class MultiExpandSquare(var i:Int,var n:Int,var x:Float,var y:Float,var size:Float,var cx:Float = x,var cy:Float = y) {
+        var state = MutliExpandSquareState()
         fun draw(canvas:Canvas,paint:Paint) {
-            val gap = ((n/2-i)*size/4)
+            val gap = ((n/2-i)*size/4)*state.scale
             x = cx - gap
             y = cy - gap
             canvas.save()
@@ -31,12 +32,12 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class MutliExpandSquareState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
