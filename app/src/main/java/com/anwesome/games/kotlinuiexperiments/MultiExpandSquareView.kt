@@ -7,7 +7,6 @@ import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
-import android.hardware.camera2.params.ColorSpaceTransform
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
@@ -32,7 +31,7 @@ class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
             y = cy - gap
             canvas.save()
             canvas.translate(x,y)
-            canvas.drawRect(RectF(-size/2,-size/2,size/2,size/2),paint)
+            canvas.drawRoundRect(RectF(-size/2,-size/2,size/2,size/2),size/10,size/10,paint)
             canvas.restore()
         }
     }
@@ -108,6 +107,7 @@ class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = MultiSquareAnimator(MultiExpanderSquareContainer(w,h,view.n),view)
+                paint.color = Color.parseColor("#283593")
             }
             animator?.draw(canvas,paint)
             animator?.update()
