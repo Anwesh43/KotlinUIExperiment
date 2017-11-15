@@ -8,7 +8,7 @@ import android.content.*
 import android.graphics.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class MultiExpandSquareView(ctx:Context):View(ctx) {
+class MultiExpandSquareView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -23,7 +23,7 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
     }
     data class MultiExpandSquare(var i:Int,var n:Int,var x:Float,var y:Float,var size:Float,var cx:Float = x,var cy:Float = y) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
-            val gap = ((n/2-i)*size/4)
+            val gap = (((n/2-i).toFloat()/n.toFloat())*size/4)
             x = cx - gap
             y = cy - gap
             canvas.save()
@@ -95,6 +95,22 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
                     view.postInvalidate()
                 }
             }
+        }
+    }
+    class MutliSquareRenderer(var view:MultiExpandSquareView,var time:Int = 0) {
+        var animator:MultiSquareAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = MultiSquareAnimator(MultiExpanderSquareContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.startUpdating()
         }
     }
 }
