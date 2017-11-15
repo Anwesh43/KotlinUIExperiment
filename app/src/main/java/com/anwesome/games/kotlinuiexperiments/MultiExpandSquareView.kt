@@ -70,4 +70,31 @@ class MultiExpandSquareView(ctx:Context):View(ctx) {
             startcb()
         }
     }
+    class MultiSquareAnimator(var multiSquareContainer:MultiExpanderSquareContainer,var view:MultiExpandSquareView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                try {
+                    multiSquareContainer.update {
+                        animated = false
+                    }
+                    Thread.sleep(50)
+                    view.invalidate()
+                } catch(ex: Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            multiSquareContainer.draw(canvas,paint)
+        }
+        fun startUpdating() {
+            if(!animated) {
+                multiSquareContainer.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
