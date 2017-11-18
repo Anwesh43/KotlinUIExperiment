@@ -92,4 +92,20 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
             }
         }
     }
+    data class BringInTextRenderer(var view:BringInTextView,var time:Int = 0) {
+        var animator:BringInTextAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = BringInTextAnimator(BringInText(w,h,view.text),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
