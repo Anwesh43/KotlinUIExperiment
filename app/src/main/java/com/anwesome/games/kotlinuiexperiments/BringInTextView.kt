@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.content.Context
 import android.view.*
 import android.graphics.*
@@ -106,6 +107,12 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = BringInTextView(activity)
+            activity.setContentView(view)
         }
     }
 }
