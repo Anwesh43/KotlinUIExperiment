@@ -32,15 +32,16 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
             canvas.drawRoundRect(RectF(-w/3,-h/15,w/3,h/15),h/10,h/10,paint)
             canvas.save()
             canvas.scale(state.scale,state.scale)
-            paint.color = Color.parseColor("#00E5FF")
+            paint.color = Color.parseColor("#00C853")
             canvas.drawRoundRect(RectF(-w/3,-h/15,w/3,h/15),h/10,h/10,paint)
             canvas.restore()
             paint.textSize = h/15
             paint.color = Color.WHITE
             for(i in 0..1) {
                 canvas.save()
-                canvas.scale(1f-2*i,1f)
-                canvas.drawText(text,-w/2+(w/2)*state.scale,(1f-2*i)*(h/5),paint)
+                val factor = 1-2*i
+                val offset = w/2+paint.measureText(text)
+                canvas.drawText(text,offset*factor-offset*state.scale*factor,(1f-2*i)*(h/5),paint)
                 canvas.restore()
             }
             canvas.restore()
@@ -91,6 +92,7 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             if(!animated) {
+                bringInText.startUpdating()
                 animated = true
                 view.postInvalidate()
             }
