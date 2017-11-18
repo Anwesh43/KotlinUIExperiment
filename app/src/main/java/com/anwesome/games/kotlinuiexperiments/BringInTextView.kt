@@ -10,13 +10,15 @@ import android.graphics.*
 
 class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = BringInTextRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap(event.x,event.y)
             }
         }
         return true
@@ -34,6 +36,7 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
             canvas.drawRoundRect(RectF(-w/3,-h/15,w/3,h/15),h/10,h/10,paint)
             canvas.restore()
             paint.textSize = h/15
+            paint.color = Color.WHITE
             for(i in 0..1) {
                 canvas.save()
                 canvas.scale(1f-2*i,1f)
