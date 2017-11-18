@@ -209,6 +209,7 @@ class MainActivity : AppCompatActivity() {
 //        view.addClickListener { createToast("clicked") }
 //        val view = ConcentricCircleListView.create(this)
         val view = MultiExpandSquareView.create(this)
+        BringInTextView.create(this)
     }
 
     fun createTextView(text:String) {
