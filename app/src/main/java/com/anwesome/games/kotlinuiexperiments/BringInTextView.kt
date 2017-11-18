@@ -49,4 +49,18 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
         fun stopped():Boolean = false
 
     }
+    data class BringInTextState(var scale:Float=0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(Math.abs(scale-prevScale) > 1) {
+                scale = prevScale+dir
+                prevScale = scale
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
