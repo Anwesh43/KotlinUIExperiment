@@ -63,4 +63,31 @@ class BringInTextView(ctx:Context,var text:String="Hello"):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class BringInTextAnimator(var bringInText:BringInText,var view:BringInTextView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                bringInText.update()
+                if(bringInText.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            bringInText.draw(canvas,paint)
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
