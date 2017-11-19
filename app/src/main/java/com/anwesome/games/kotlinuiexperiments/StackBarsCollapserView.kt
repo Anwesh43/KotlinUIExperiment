@@ -26,9 +26,11 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
     }
     class StackBar(var i:Int,var w:Float,var h:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#f44336")
+            var p = i%2
             canvas.save()
             canvas.translate(w/2,h/2)
-            canvas.scale(1f-2*i,1f)
+            canvas.scale(1f-2*p,1f)
             canvas.drawRect(RectF(-w/2*scale,-h/2,0f,h/2),paint)
             canvas.restore()
         }
@@ -42,7 +44,7 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             canvas.translate(cx,cy)
             canvas.rotate(90f*scale)
             paint.color = Color.parseColor("#FAFAFA")
-            paint.strokeWidth = cr/18
+            paint.strokeWidth = cr/5
             paint.strokeCap = Paint.Cap.ROUND
             for(i in 0..1) {
                 canvas.save()
