@@ -208,8 +208,9 @@ class MainActivity : AppCompatActivity() {
 //        val view = FourSideWheelView.create(this)
 //        view.addClickListener { createToast("clicked") }
 //        val view = ConcentricCircleListView.create(this)
-        val view = MultiExpandSquareView.create(this)
-        BringInTextView.create(this)
+//        val view = MultiExpandSquareView.create(this)
+//        BringInTextView.create(this)
+        StackBarsCollapserView.create(this)
     }
 
     fun createTextView(text:String) {
