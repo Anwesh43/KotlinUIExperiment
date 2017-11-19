@@ -2,10 +2,13 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.LinkedList
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 19/11/17.
  */
-class StackBarsCollapserView(ctx:Context):View(ctx) {
+class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -48,5 +51,35 @@ class StackBarsCollapserView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun handleTap(x:Float,y:Float) = x>=cx-cr && x<=cx+cr && y>=cy-cr && y<=cy+cr
+    }
+    class StackBarsCollapser(var w:Float,var h:Float, var n:Int,var collapser:StackBarCollapser = StackBarCollapser(w/2,h/10)) {
+        var bars:LinkedList<StackBar> = LinkedList()
+        init {
+            for(i in 0..n-1) {
+                bars.add(StackBar(i,w/2,h/10))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            var y = h/2-(h/10)*(n+1)/2
+            canvas.save()
+            canvas.translate(w/4,y)
+            collapser.draw(canvas,paint,1f)
+            var by = h/10
+            bars.forEach { bar ->
+                canvas.save()
+                canvas.translate(0f,by)
+                bar.draw(canvas,paint,1f)
+                canvas.restore()
+                by += h/10
+            }
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
     }
 }
