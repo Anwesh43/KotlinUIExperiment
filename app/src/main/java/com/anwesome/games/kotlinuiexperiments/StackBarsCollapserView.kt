@@ -75,10 +75,17 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             }
             canvas.restore()
         }
-        fun update() {
+        fun update(stopcb:()->Unit) {
             state.update()
+            if(state.stopped()) {
+                stopcb()
+            }
         }
-        fun stopped():Boolean = state.stopped()
+        fun handleTap(x:Float,y:Float,startcb:()->Unit) {
+            if(collapser.handleTap(x,y)) {
+                startcb()
+            }
+        }
     }
     class StackBarCollapserState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
