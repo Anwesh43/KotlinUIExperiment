@@ -125,4 +125,20 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
     }
+    data class StackBarCollapserRenderer(var view:StackBarsCollapserView,var time:Int = 0) {
+        var animator:StackBarCollapserAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.width.toFloat()
+                animator = StackBarCollapserAnimator(StackBarsCollapser(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
