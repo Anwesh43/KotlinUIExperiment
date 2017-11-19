@@ -53,6 +53,7 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
         fun handleTap(x:Float,y:Float) = x>=cx-cr && x<=cx+cr && y>=cy-cr && y<=cy+cr
     }
     class StackBarsCollapser(var w:Float,var h:Float, var n:Int,var collapser:StackBarCollapser = StackBarCollapser(w/2,h/10)) {
+        val state = StackBarCollapserState()
         var bars:LinkedList<StackBar> = LinkedList()
         init {
             for(i in 0..n-1) {
@@ -63,24 +64,21 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             var y = h/2-(h/10)*(n+1)/2
             canvas.save()
             canvas.translate(w/4,y)
-            collapser.draw(canvas,paint,1f)
+            collapser.draw(canvas,paint,state.scale)
             var by = h/10
             bars.forEach { bar ->
                 canvas.save()
                 canvas.translate(0f,by)
-                bar.draw(canvas,paint,1f)
+                bar.draw(canvas,paint,state.scale)
                 canvas.restore()
                 by += h/10
             }
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun startUpdating() {
-
-        }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     class StackBarCollapserState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
