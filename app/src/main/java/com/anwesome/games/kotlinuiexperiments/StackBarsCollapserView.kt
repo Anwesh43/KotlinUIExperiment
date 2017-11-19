@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = StackBarCollapserRenderer(this)
+    var clickListener:StackBarClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -111,6 +112,7 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             if(animated) {
                 stackBarsCollapser.update({
                     animated = false
+                    view.clickListener?.onClick?.invoke()
                 })
                 try {
                     Thread.sleep(50)
@@ -147,9 +149,11 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity):StackBarsCollapserView {
             val view = StackBarsCollapserView(activity)
             activity.setContentView(view)
+            return view 
         }
     }
+    data class StackBarClickListener(var onClick:()->Unit)
 }
