@@ -82,7 +82,7 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun handleTap(x:Float,y:Float,startcb:()->Unit) {
-            if(collapser.handleTap(x,y)) {
+            if(collapser.handleTap(x-w/4,y-(h/2-(h/10)*(n+1)/2))) {
                 startcb()
             }
         }
@@ -96,5 +96,33 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun stopped():Boolean = deg == 0f
+    }
+    data class StackBarCollapserAnimator(var stackBarsCollapser:StackBarsCollapser,var view:StackBarsCollapserView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            stackBarsCollapser.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                stackBarsCollapser.update({
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            if(!animated) {
+                stackBarsCollapser.handleTap(x,y,{
+                    animated = true
+                    view.postInvalidate()
+                })
+            }
+        }
     }
 }
