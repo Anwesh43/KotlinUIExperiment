@@ -18,4 +18,13 @@ class StackBarsCollapserView(ctx:Context):View(ctx) {
         }
         return true
     }
+    class StackBar(var i:Int,var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            canvas.scale(1f-2*i,1f)
+            canvas.drawRect(RectF(-w/2*scale,-h/2,0f,h/2),paint)
+            canvas.restore()
+        }
+    }
 }
