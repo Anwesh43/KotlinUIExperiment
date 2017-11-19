@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -141,6 +142,12 @@ class StackBarsCollapserView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap(x:Float,y:Float) {
             animator?.handleTap(x,y)
+        }
+    }
+    companion object {
+        fun create(activity:Activity) {
+            val view = StackBarsCollapserView(activity)
+            activity.setContentView(view)
         }
     }
 }
