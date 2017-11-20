@@ -33,4 +33,15 @@ class JumpingLineJointView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
+    data class JumpingLineJointState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+            deg += 10f
+            if(deg > 180) {
+                deg = 0f
+                scale = 0f
+            }
+        }
+        fun stopped():Boolean = deg == 0f
+    }
 }
