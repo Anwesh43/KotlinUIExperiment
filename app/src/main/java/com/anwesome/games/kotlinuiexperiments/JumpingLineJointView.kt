@@ -72,4 +72,20 @@ class JumpingLineJointView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class JumpingLineRenderer(var view:JumpingLineJointView,var time:Int = 0) {
+        var animator:JumpingLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = JumpingLineAnimator(JumpingLineJoint(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
