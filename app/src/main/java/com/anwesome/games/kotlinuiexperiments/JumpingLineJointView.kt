@@ -82,6 +82,8 @@ class JumpingLineJointView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = JumpingLineAnimator(JumpingLineJoint(w,h),view)
+                paint.strokeWidth = Math.min(w,h)/30
+                paint.strokeCap = Paint.Cap.ROUND
                 paint.color = Color.parseColor("#1565C0")
             }
             animator?.draw(canvas,paint)
