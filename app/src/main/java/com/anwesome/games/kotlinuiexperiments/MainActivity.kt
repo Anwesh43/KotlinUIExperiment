@@ -210,10 +210,11 @@ class MainActivity : AppCompatActivity() {
 //        val view = ConcentricCircleListView.create(this)
 //        val view = MultiExpandSquareView.create(this)
 //        BringInTextView.create(this)
-        val view =  StackBarsCollapserView.create(this)
-        view.clickListener = StackBarsCollapserView.StackBarClickListener {
-            createToast("clicked")
-        }
+//        val view =  StackBarsCollapserView.create(this)
+//        view.clickListener = StackBarsCollapserView.StackBarClickListener {
+//            createToast("clicked")
+//        }
+        val view = JumpingLineJointView.create(this)
     }
 
     fun createTextView(text:String) {
