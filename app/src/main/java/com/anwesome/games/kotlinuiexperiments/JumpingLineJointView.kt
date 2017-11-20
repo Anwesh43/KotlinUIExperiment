@@ -8,13 +8,15 @@ import android.graphics.*
 import android.view.*
 class JumpingLineJointView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = JumpingLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -79,6 +81,7 @@ class JumpingLineJointView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = JumpingLineAnimator(JumpingLineJoint(w,h),view)
+                paint.color = Color.parseColor("#1565C0")
             }
             animator?.draw(canvas,paint)
             animator?.update()
