@@ -44,4 +44,32 @@ class JumpingLineJointView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    data class JumpingLineAnimator(var jumpingLineJoint:JumpingLineJoint,var view:JumpingLineJointView) {
+        var state = JumpingLineJointState()
+        var animated = false
+        fun update() {
+            if(animated) {
+                state.update()
+                if(state.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            jumpingLineJoint.draw(canvas,paint,state.scale)
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
