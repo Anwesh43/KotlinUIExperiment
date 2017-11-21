@@ -43,7 +43,6 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
     data class LineIndicator(var x:Float,var y:Float,var w:Float,var k:Float = 0f) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.CYAN
-            paint.strokeWidth = w/35
             paint.strokeCap = Paint.Cap.ROUND
             canvas.drawLine(x,y,x+k,y,paint)
         }
@@ -145,6 +144,7 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = CompletionIndicatorAnimator(CompletionIndicatorContainer(w,h,view.n),view)
+                paint.strokeWidth = w/35
             }
             animator?.render(canvas,paint)
             time++

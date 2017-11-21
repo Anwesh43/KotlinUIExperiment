@@ -214,7 +214,8 @@ class MainActivity : AppCompatActivity() {
 //        view.clickListener = StackBarsCollapserView.StackBarClickListener {
 //            createToast("clicked")
 //        }
-        val view = JumpingLineJointView.create(this)
+//        val view = JumpingLineJointView.create(this)
+        val view = CompletionIndicatorView.create(this,6)
     }
 
     fun createTextView(text:String) {
