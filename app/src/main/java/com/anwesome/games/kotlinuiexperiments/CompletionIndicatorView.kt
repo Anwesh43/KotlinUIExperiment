@@ -19,4 +19,16 @@ class CompletionIndicatorView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class CompletionIndicator(var x:Float,var y:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = false
+    }
 }
