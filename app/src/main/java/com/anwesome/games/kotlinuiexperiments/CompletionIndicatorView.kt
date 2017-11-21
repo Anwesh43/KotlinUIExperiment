@@ -6,7 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
-class CompletionIndicatorView(ctx:Context):View(ctx) {
+class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -19,16 +19,31 @@ class CompletionIndicatorView(ctx:Context):View(ctx) {
         }
         return true
     }
-    data class CompletionIndicator(var x:Float,var y:Float) {
+    data class CompletionIndicator(var x:Float,var y:Float,var r:Float,var gap:Float,var deg:Float = 0f,var prevDeg:Float = 0f) {
         fun draw(canvas:Canvas,paint:Paint) {
-
+            paint.style = Paint.Style.STROKE
+            paint.color = Color.GRAY
+            canvas.drawCircle(x,y,r,paint)
+            paint.color = Color.CYAN
+            canvas.drawArc(RectF(x-r,y-r,x+r,y+r),0f,deg,false,paint)
         }
-        fun update() {
-
+        fun update(scale:Float) {
+            deg = prevDeg+gap*scale
         }
-        fun startUpdating() {
-
+        fun setDeg() {
+            deg = prevDeg+gap
+            prevDeg = deg
         }
-        fun stopped():Boolean = false
+    }
+    data class LineIndicator(var x:Float,var y:Float,var w:Float,var k:Float = 0f) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.CYAN
+            paint.strokeWidth = w/35
+            paint.strokeCap = Paint.Cap.ROUND
+            canvas.drawLine(x,y,x+k,y,paint)
+        }
+        fun update(scale:Float) {
+            k = w*scale
+        }
     }
 }
