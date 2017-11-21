@@ -110,6 +110,31 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
             }
         }
     }
+    class CompletionIndicatorAnimator(var container:CompletionIndicatorContainer,var view:CompletionIndicatorView) {
+        var animated:Boolean = false
+        fun render(canvas:Canvas,paint:Paint) {
+            container.render(canvas,paint,{
+                animated = false
+            })
+            if(animated) {
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.handleTap {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
 fun ConcurrentLinkedQueue<CompletionIndicatorView.LineIndicator>.getAt(i:Int):CompletionIndicatorView.LineIndicator? {
     var index:Int = 0
