@@ -29,7 +29,7 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
             paint.style = Paint.Style.STROKE
             paint.color = Color.GRAY
             canvas.drawCircle(x,y,r,paint)
-            paint.color = Color.CYAN
+            paint.color = Color.parseColor("#C51162")
             canvas.drawArc(RectF(x-r,y-r,x+r,y+r),0f,deg,false,paint)
         }
         fun update(scale:Float) {
@@ -42,7 +42,7 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
     }
     data class LineIndicator(var x:Float,var y:Float,var w:Float,var k:Float = 0f) {
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.CYAN
+            paint.color = Color.parseColor("#C51162")
             paint.strokeCap = Paint.Cap.ROUND
             canvas.drawLine(x,y,x+k,y,paint)
         }
@@ -75,10 +75,11 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
         var j:Int = 0
         var state = CompletionIndicatorState()
         init {
-            var y = h/5 + h/10
+            var y = h/5 + h/9
             val gapY = (h-y)/(n+1)
+            y+= gapY
             for(i in 0..n-1){
-                lineIndicators.add(LineIndicator(w/20,y,19*w/20))
+                lineIndicators.add(LineIndicator(w/20,y,9*w/10))
                 y+=gapY
             }
         }
@@ -99,7 +100,7 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
             }
         }
         private fun update(stopcb:()->Unit) {
-            if(j < n) {
+            if(j < n && state.dir != 0f) {
                 state.update()
                 completionIndicator.update(state.scale)
                 lineIndicators.getAt(j)?.update(state.scale)
