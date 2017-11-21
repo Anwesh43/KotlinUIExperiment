@@ -46,4 +46,21 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
             k = w*scale
         }
     }
+    data class CompletionIndicatorState(var scale:Float = 0f,var dir:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(scale > 1) {
+                scale = 1f
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            if(dir == 0f) {
+                scale = 0f
+                dir = 1f
+            }
+        }
+        fun stopped():Boolean = dir == 0f
+    }
+
 }
