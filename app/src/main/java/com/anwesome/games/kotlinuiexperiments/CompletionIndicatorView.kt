@@ -6,6 +6,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
@@ -45,6 +47,9 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
         fun update(scale:Float) {
             k = w*scale
         }
+        fun setK() {
+            k = w
+        }
     }
     data class CompletionIndicatorState(var scale:Float = 0f,var dir:Float = 0f) {
         fun update() {
@@ -62,5 +67,57 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-
+    data class CompletionIndicatorContainer(var w:Float,var h:Float,var n:Int) {
+        var completionIndicator = CompletionIndicator(w/2,h/5,h/12,360f/n)
+        var lineIndicators:ConcurrentLinkedQueue<LineIndicator> = ConcurrentLinkedQueue()
+        var j:Int = 0
+        var state = CompletionIndicatorState()
+        init {
+            var y = h/5 + h/10
+            val gapY = (h-y)/(n+1)
+            for(i in 0..n-1){
+                lineIndicators.add(LineIndicator(w/20,y,19*w/20))
+                y+=gapY
+            }
+        }
+        private fun draw(canvas:Canvas,paint:Paint) {
+            completionIndicator.draw(canvas,paint)
+            lineIndicators.forEach { lineIndicator ->
+                lineIndicator.draw(canvas,paint)
+            }
+        }
+        fun render(canvas:Canvas,paint:Paint,stopcb:()->Unit) {
+            update(stopcb)
+            draw(canvas,paint)
+        }
+        fun handleTap(startcb:()->Unit) {
+            if(j < n) {
+                state.startUpdating()
+                startcb()
+            }
+        }
+        private fun update(stopcb:()->Unit) {
+            if(j < n) {
+                state.update()
+                completionIndicator.update(state.scale)
+                lineIndicators.getAt(j)?.update(state.scale)
+                if(state.stopped()) {
+                    completionIndicator.setDeg()
+                    lineIndicators.getAt(j)?.setK()
+                    stopcb()
+                    j++
+                }
+            }
+        }
+    }
+}
+fun ConcurrentLinkedQueue<CompletionIndicatorView.LineIndicator>.getAt(i:Int):CompletionIndicatorView.LineIndicator? {
+    var index:Int = 0
+    this.forEach {
+        if(i == index) {
+            return it
+        }
+        index++
+    }
+    return null
 }
