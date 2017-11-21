@@ -122,6 +122,7 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
         fun render(canvas:Canvas,paint:Paint) {
             container.render(canvas,paint,{
                 animated = false
+                view.completionListener?.onComplete?.invoke(container.j)
             })
             if(animated) {
                 try {
@@ -138,7 +139,6 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
                 container.handleTap {
                     animated = true
                     view.postInvalidate()
-                    view.completionListener?.onComplete?.invoke(container.j)
                 }
             }
         }
