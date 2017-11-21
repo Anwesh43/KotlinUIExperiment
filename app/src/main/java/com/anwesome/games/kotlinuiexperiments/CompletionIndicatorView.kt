@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 21/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -150,6 +151,13 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity,n:Int):View {
+            val view = CompletionIndicatorView(activity,n)
+            activity.setContentView(view)
+            return view
         }
     }
 }
