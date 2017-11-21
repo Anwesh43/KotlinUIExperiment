@@ -216,6 +216,9 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        val view = JumpingLineJointView.create(this)
         val view = CompletionIndicatorView.create(this,6)
+        view.addCompletionIndicatorListener{ i ->
+            createToast("$i completed")
+        }
     }
 
     fun createTextView(text:String) {
