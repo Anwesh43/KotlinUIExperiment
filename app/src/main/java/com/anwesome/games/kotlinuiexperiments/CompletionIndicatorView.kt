@@ -12,9 +12,13 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CompletionIndicatorRenderer(this)
+    var completionListener:CompletionIndicatorListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun addCompletionIndicatorListener(cb:(Int)->Unit) {
+        completionListener = CompletionIndicatorListener(cb)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -134,6 +138,7 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
                 container.handleTap {
                     animated = true
                     view.postInvalidate()
+                    view.completionListener?.onComplete?.invoke(container.j)
                 }
             }
         }
@@ -155,12 +160,13 @@ class CompletionIndicatorView(ctx:Context,var n:Int):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity,n:Int):View {
+        fun create(activity:Activity,n:Int):CompletionIndicatorView {
             val view = CompletionIndicatorView(activity,n)
             activity.setContentView(view)
             return view
         }
     }
+    data class CompletionIndicatorListener(var onComplete:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<CompletionIndicatorView.LineIndicator>.getAt(i:Int):CompletionIndicatorView.LineIndicator? {
     var index:Int = 0
