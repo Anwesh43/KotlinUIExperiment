@@ -98,10 +98,11 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
         }
     }
     companion object {
-        fun create(activity:Activity) {
+        fun create(activity:Activity):ArcLineMoverView {
             val view = ArcLineMoverView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
+            return view
         }
     }
 }
