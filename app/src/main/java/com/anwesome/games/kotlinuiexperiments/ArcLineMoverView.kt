@@ -21,6 +21,7 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
         return true
     }
     data class ArcLineMover(var w:Float,var h:Float) {
+        var state = ArcLineMoverState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = Math.min(w,h)/40
@@ -34,12 +35,10 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = false
-        fun startUpdating() {
+        fun stopped():Boolean = state.stopped()
 
-        }
     }
     data class ArcLineMoverState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update() {
