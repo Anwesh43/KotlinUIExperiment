@@ -31,8 +31,15 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
             canvas.translate(x,y)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,size/10,paint)
+            paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-size/10,-size/10,size/10,size/10),0f,360f*scale,true,paint)
-            canvas.drawLine(0f,0f,size*scale,0f,paint)
+            for(i in 0..1) {
+                canvas.save()
+                canvas.translate(size,0f)
+                canvas.rotate(i*-90f)
+                canvas.drawLine(-size, 0f, -size+size * scale, 0f, paint)
+                canvas.restore()
+            }
             canvas.restore()
         }
     }
@@ -47,7 +54,7 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
             for(i in 0..n-1) {
                 stepPies.add(StepPie(x,y,x_gap))
                 x += x_gap
-                y += y_gap
+                y += x_gap
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
@@ -99,6 +106,7 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap() {
             if(!animated) {
+                container.startUpdating()
                 animated = true
                 view.postInvalidate()
             }
@@ -109,7 +117,7 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
         fun render(canvas:Canvas,paint:Paint) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
-                val h = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
                 animator = StepPieAnimator(StepPieContainer(w,h,view.n),view)
                 paint.strokeCap = Paint.Cap.ROUND
                 paint.color = Color.parseColor("#FF9800")

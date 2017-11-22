@@ -219,7 +219,8 @@ class MainActivity : AppCompatActivity() {
 //        view.addCompletionIndicatorListener{ i ->
 //            createToast("$i completed")
 //        }
-        val view = ArcLineMoverView.create(this)
+        //val view = ArcLineMoverView.create(this)
+        val view = StepPieView.create(this)
     }
 
     fun createTextView(text:String) {
