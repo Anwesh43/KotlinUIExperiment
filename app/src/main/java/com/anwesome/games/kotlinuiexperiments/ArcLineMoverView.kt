@@ -50,4 +50,31 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = deg == 0f
     }
+    data class ArcLineMoverAnimator(var arcLineMover:ArcLineMover,var view:ArcLineMoverView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            arcLineMover.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                arcLineMover.update()
+                if(arcLineMover.stopped()) {
+                    animated = false
+                    try {
+                        Thread.sleep(50)
+                        view.invalidate()
+                    }
+                    catch(ex:Exception){
+
+                    }
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
