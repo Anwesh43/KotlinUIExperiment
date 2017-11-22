@@ -8,7 +8,7 @@ import android.graphics.*
 import android.view.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class StepPieView(ctx:Context):View(ctx) {
+class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas){
 
@@ -99,6 +99,23 @@ class StepPieView(ctx:Context):View(ctx) {
                 animated = true
                 view.postInvalidate()
             }
+        }
+    }
+    data class StepPieRenderer(var view:StepPieView,var time:Int = 0) {
+        var animator:StepPieAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.width.toFloat()
+                animator = StepPieAnimator(StepPieContainer(w,h,view.n),view)
+                paint.strokeWidth = Math.min(w,h)/30
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
         }
     }
 }
