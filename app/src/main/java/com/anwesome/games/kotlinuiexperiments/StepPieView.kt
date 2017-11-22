@@ -50,7 +50,7 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
             val x_gap = w/(n+1)
             val y_gap = h/(n+1)
             var x = x_gap/2
-            var y = y_gap/2
+            var y = x_gap/2
             for(i in 0..n-1) {
                 stepPies.add(StepPie(x,y,x_gap))
                 x += x_gap
@@ -60,6 +60,14 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             stepPies.forEach {
                 it.draw(canvas,paint,state.scale)
+            }
+            for(i in 0..1) {
+                var gap = w/(n+1)
+                canvas.save()
+                canvas.translate(gap/2,gap/2+(n)*gap)
+                canvas.rotate(-i*90f)
+                canvas.drawLine(0f,0f,(n)*gap*state.scale,0f,paint)
+                canvas.restore()
             }
         }
         fun update() {
