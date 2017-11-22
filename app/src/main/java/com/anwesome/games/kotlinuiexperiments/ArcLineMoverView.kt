@@ -26,6 +26,7 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
     data class ArcLineMover(var w:Float,var h:Float) {
         var state = ArcLineMoverState()
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#E65100")
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = Math.min(w,h)/40
             canvas.save()
@@ -100,7 +101,7 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
         fun create(activity:Activity) {
             val view = ArcLineMoverView(activity)
             val size = DimensionsUtil.getDimension(activity)
-            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
         }
     }
 }
