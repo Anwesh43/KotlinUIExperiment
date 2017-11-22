@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 23/11/17.
  */
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -118,6 +119,13 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):StepPieView {
+            val view = StepPieView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
