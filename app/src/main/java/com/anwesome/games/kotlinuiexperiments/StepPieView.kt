@@ -23,8 +23,11 @@ class StepPieView(ctx:Context):View(ctx) {
     }
     data class StepPie(var x:Float,var y:Float,var size:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.strokeWidth = size/25
             canvas.save()
             canvas.translate(x,y)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,size/10,paint)
             canvas.drawArc(RectF(-size/10,-size/10,size/10,size/10),0f,360f*scale,true,paint)
             canvas.drawLine(0f,0f,size*scale,0f,paint)
             canvas.restore()
