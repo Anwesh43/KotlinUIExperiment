@@ -215,10 +215,11 @@ class MainActivity : AppCompatActivity() {
 //            createToast("clicked")
 //        }
 //        val view = JumpingLineJointView.create(this)
-        val view = CompletionIndicatorView.create(this,6)
-        view.addCompletionIndicatorListener{ i ->
-            createToast("$i completed")
-        }
+//        val view = CompletionIndicatorView.create(this,6)
+//        view.addCompletionIndicatorListener{ i ->
+//            createToast("$i completed")
+//        }
+        val view = ArcLineMoverView.create(this)
     }
 
     fun createTextView(text:String) {
