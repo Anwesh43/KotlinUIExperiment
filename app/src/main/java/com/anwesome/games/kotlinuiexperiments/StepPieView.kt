@@ -74,4 +74,31 @@ class StepPieView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class StepPieAnimator(var container:StepPieContainer,var view:StepPieView) {
+        var animated:Boolean = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                container.update()
+                if(container.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun handleTap() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
