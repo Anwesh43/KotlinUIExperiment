@@ -10,13 +10,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = StepPieRenderer(this)
     override fun onDraw(canvas:Canvas){
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -108,7 +110,7 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.width.toFloat()
                 animator = StepPieAnimator(StepPieContainer(w,h,view.n),view)
-                paint.strokeWidth = Math.min(w,h)/30
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
