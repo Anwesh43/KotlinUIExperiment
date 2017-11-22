@@ -112,6 +112,7 @@ class StepPieView(ctx:Context,var n:Int = 6):View(ctx) {
                 val h = canvas.width.toFloat()
                 animator = StepPieAnimator(StepPieContainer(w,h,view.n),view)
                 paint.strokeCap = Paint.Cap.ROUND
+                paint.color = Color.parseColor("#FF9800")
             }
             animator?.draw(canvas,paint)
             animator?.update()
