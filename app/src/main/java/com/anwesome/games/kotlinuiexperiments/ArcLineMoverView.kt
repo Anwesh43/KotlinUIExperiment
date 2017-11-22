@@ -26,16 +26,17 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
     data class ArcLineMover(var w:Float,var h:Float) {
         var state = ArcLineMoverState()
         fun draw(canvas:Canvas,paint:Paint) {
+            val deg = 90*state.scale
             paint.color = Color.parseColor("#E65100")
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = Math.min(w,h)/40
             canvas.save()
             canvas.translate(w/2,h/2)
             canvas.save()
-            canvas.rotate(90f)
+            canvas.rotate(deg)
             canvas.drawLine(0f,0f,w/3,0f,paint)
             canvas.restore()
-            canvas.drawArc(RectF(-w/3,-w/3,w/3,w/3),0f,90f,false,paint)
+            canvas.drawArc(RectF(-w/3,-w/3,w/3,w/3),0f,deg,false,paint)
             canvas.restore()
         }
         fun update() {
@@ -64,13 +65,13 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
                 arcLineMover.update()
                 if(arcLineMover.stopped()) {
                     animated = false
-                    try {
-                        Thread.sleep(50)
-                        view.invalidate()
-                    }
-                    catch(ex:Exception){
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception){
 
-                    }
                 }
             }
         }
@@ -88,6 +89,7 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = ArcLineMoverAnimator(ArcLineMover(w,h),view)
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
