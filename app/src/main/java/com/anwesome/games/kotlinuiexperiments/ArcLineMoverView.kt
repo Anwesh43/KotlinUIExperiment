@@ -41,4 +41,14 @@ class ArcLineMoverView(ctx:Context):View(ctx) {
 
         }
     }
+    data class ArcLineMoverState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update() {
+            deg += 10f
+            if(deg > 180) {
+                deg = 0f
+            }
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+        }
+        fun stopped():Boolean = deg == 0f
+    }
 }
