@@ -34,6 +34,7 @@ class StepPieView(ctx:Context):View(ctx) {
         }
     }
     data class StepPieContainer(var w:Float,var h:Float,var n:Int) {
+        val state = StepPieState()
         val stepPies:ConcurrentLinkedQueue<StepPie> = ConcurrentLinkedQueue()
         init {
             val x_gap = w/(n+1)
@@ -48,15 +49,15 @@ class StepPieView(ctx:Context):View(ctx) {
         }
         fun draw(canvas:Canvas,paint:Paint) {
             stepPies.forEach {
-                it.draw(canvas,paint,0f)
+                it.draw(canvas,paint,state.scale)
             }
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
     data class StepPieState(var scale:Float = 0f,var dir:Float=0f,var prevScale:Float = 0f) {
