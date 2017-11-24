@@ -12,6 +12,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = UpDownBallsRenderer(this)
+    var onUpDownListener:OnUpDownListener?=null
+    fun addOnUpDownListener(downListener:()->Unit,upListener:()->Unit) {
+        onUpDownListener = OnUpDownListener(downListener,upListener)
+    }
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -83,6 +87,10 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
                 container.update()
                 if(container.stopped()) {
                     animated = false
+                    when(container.state.scale) {
+                        1f -> view.onUpDownListener?.downListener?.invoke()
+                        0f -> view.onUpDownListener?.upListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -129,4 +137,5 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
             return view
         }
     }
+    data class OnUpDownListener(var downListener:()->Unit,var upListener:()->Unit)
 }
