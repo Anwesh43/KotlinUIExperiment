@@ -220,7 +220,8 @@ class MainActivity : AppCompatActivity() {
 //            createToast("$i completed")
 //        }
         //val view = ArcLineMoverView.create(this)
-        val view = StepPieView.create(this)
+//        val view = StepPieView.create(this)
+        val view = UpDownBallView.create(this)
     }
 
     fun createTextView(text:String) {
