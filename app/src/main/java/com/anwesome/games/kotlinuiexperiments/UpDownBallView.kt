@@ -74,4 +74,31 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class UpDownBallsAnimator(var container:UpDownBallContainer,var view:UpDownBallView,var animated:Boolean = false) {
+        fun update() {
+            if(animated) {
+                container.update()
+                if(container.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
