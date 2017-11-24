@@ -40,7 +40,7 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
             val gap = w/(2*n+1)
             var x:Float = gap*1.5f - w/2
             for(i in 0..n-1) {
-                upDownBalls.add(UpDownBall(x,gap-h/2,gap/2,2*h/5-gap))
+                upDownBalls.add(UpDownBall(x,-gap/2-h/2,gap/2,h/2))
                 x+= 2*gap
             }
         }
@@ -50,7 +50,7 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
                 canvas.translate(w/2,h/2)
                 canvas.scale(1f,1f-2*i)
                 upDownBalls.forEach { upDownBall ->
-                    upDownBall.draw(canvas,paint,1f)
+                    upDownBall.draw(canvas,paint,state.scale)
                 }
                 canvas.restore()
             }
