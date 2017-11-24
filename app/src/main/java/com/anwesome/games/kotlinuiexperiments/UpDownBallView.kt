@@ -31,6 +31,7 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
         }
     }
     data class UpDownBallContainer(var w:Float,var h:Float,var n:Int) {
+        var state = UpDownBallState()
         var upDownBalls:ConcurrentLinkedQueue<UpDownBall> = ConcurrentLinkedQueue()
         init {
             val gap = w/(2*n+1)
@@ -52,12 +53,12 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class UpDownBallState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
