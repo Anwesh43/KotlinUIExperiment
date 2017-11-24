@@ -114,6 +114,7 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = UpDownBallsAnimator(UpDownBallContainer(w,h,view.n),view)
+                paint.color = Color.parseColor("#00E676")
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -125,7 +126,7 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
             val view = UpDownBallView(activity)
             val size = DimensionsUtil.getDimension(activity)
             activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
-            return view 
+            return view
         }
     }
 }
