@@ -222,6 +222,7 @@ class MainActivity : AppCompatActivity() {
         //val view = ArcLineMoverView.create(this)
 //        val view = StepPieView.create(this)
         val view = UpDownBallView.create(this)
+        view.addOnUpDownListener({createToast("balls are down")},{createToast("balls are up")})
     }
 
     fun createTextView(text:String) {
