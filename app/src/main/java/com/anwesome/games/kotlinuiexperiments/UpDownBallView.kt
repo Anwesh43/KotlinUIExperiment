@@ -101,4 +101,18 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
     }
+    data class UpDownBallsRenderer(var animator:UpDownBallsAnimator,var time:Int = 0) {
+        fun handleTap() {
+            animator?.handleTap()
+        }
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+    }
 }
