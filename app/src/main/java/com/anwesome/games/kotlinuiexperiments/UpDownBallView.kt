@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 24/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -117,6 +118,14 @@ class UpDownBallView(ctx:Context,var n:Int = 5):View(ctx) {
             animator?.draw(canvas,paint)
             animator?.update()
             time++
+        }
+    }
+    companion object {
+        fun create(activity:Activity):UpDownBallView {
+            val view = UpDownBallView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.y))
+            return view 
         }
     }
 }
