@@ -102,4 +102,20 @@ class RectArcMoverView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class RectArcMoverRenderer(var view:RectArcMoverView,var time:Int = 0) {
+        var animator:RectArcMoverAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = RectArcMoverAnimator(RectArcMoverContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
