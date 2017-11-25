@@ -9,11 +9,15 @@ import android.content.*
 import android.graphics.*
 
 class RectArcMoverView(ctx:Context):View(ctx) {
+    var onRectArcMoverListener:OnRectArcMoverListener?=null
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = RectArcMoverRenderer(this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun addOnRectArcMoverListener(completeListener:()->Unit,incompleteListener:()->Unit) {
+        onRectArcMoverListener = OnRectArcMoverListener(completeListener,incompleteListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -87,6 +91,10 @@ class RectArcMoverView(ctx:Context):View(ctx) {
                 container.update()
                 if(container.stopped()) {
                     animated = false
+                    when(container.state.prevDir) {
+                        -1 -> view.onRectArcMoverListener?.completeListener?.invoke()
+                        1 -> view.onRectArcMoverListener?.incompleteListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -131,4 +139,5 @@ class RectArcMoverView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class OnRectArcMoverListener(var completeListener:()->Unit,var incompleteListener:()->Unit)
 }
