@@ -60,7 +60,7 @@ class RectArcMoverView(ctx:Context):View(ctx) {
             state.startUpdating()
         }
     }
-    data class RectArcMoverState(var dir:Int = 0,var prevDir:Int = 0,var j:Int = 0,var prevScale:Float = 0f) {
+    data class RectArcMoverState(var dir:Int = 0,var prevDir:Int = 1,var j:Int = 0,var prevScale:Float = 0f) {
         var scales:Array<Float> = arrayOf(0f,0f)
         fun update() {
             scales[j] += dir*0.1f
@@ -70,6 +70,7 @@ class RectArcMoverView(ctx:Context):View(ctx) {
                 if(j == scales.size || j == -1) {
                     prevDir*=-1
                     j+=prevDir
+                    dir = 0
                 }
             }
         }
