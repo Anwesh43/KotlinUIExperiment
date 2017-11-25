@@ -74,4 +74,32 @@ class RectArcMoverView(ctx:Context):View(ctx) {
         }
         fun stopped():Boolean = dir == 0
     }
+    data class RectArcMoverAnimator(var container:RectArcMoverContainer,var view:RectArcMoverView) {
+        var animated:Boolean = false
+        fun update() {
+            if(animated) {
+                container.update()
+                if(container.stopped()) {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.startUpdating()
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
