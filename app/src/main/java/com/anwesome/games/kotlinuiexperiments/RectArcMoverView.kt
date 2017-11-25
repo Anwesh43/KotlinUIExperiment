@@ -24,11 +24,18 @@ class RectArcMoverView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             for(i in 0..1) {
                 canvas.save()
-                canvas.translate(w/2,h/2)
+                canvas.translate(0f,0f)
                 canvas.scale(1f,1f-2*i)
-                canvas.drawRect(RectF(-w/2,-h/2,w/2,0f),paint)
+                canvas.drawRect(RectF(-w/2,-h/2,w/2,-h/2+((h/2)*scale)),paint)
                 canvas.restore()
             }
+        }
+    }
+    data class CenterArc(var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*scale,true,paint)
+            canvas.restore()
         }
     }
 }
