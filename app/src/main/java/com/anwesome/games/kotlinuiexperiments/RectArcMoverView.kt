@@ -39,22 +39,23 @@ class RectArcMoverView(ctx:Context):View(ctx) {
         }
     }
     data class RectArcMoverContainer(var w:Float,var h:Float,var arc:CenterArc = CenterArc(Math.min(w,h)/10),var rectBar:RectBarUpDown = RectBarUpDown(w,h)) {
+        var state = RectArcMoverState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
-            rectBar.draw(canvas,paint,1f)
-            arc.draw(canvas,paint,1f)
+            rectBar.draw(canvas,paint,state.scales[0])
+            arc.draw(canvas,paint,state.scales[1])
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
         fun startUpdating() {
-
+            state.startUpdating()
         }
     }
-    data class RectArcMoverState(var dir:Int = 0f,var prevDir:Int = 0f,var j:Int = 0,var prevScale:Float = 0f) {
+    data class RectArcMoverState(var dir:Int = 0,var prevDir:Int = 0,var j:Int = 0,var prevScale:Float = 0f) {
         var scales:Array<Float> = arrayOf(0f,0f)
         fun update() {
             scales[j] += dir*0.1f
