@@ -38,4 +38,20 @@ class RectArcMoverView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
+    data class RectArcMoverContainer(var w:Float,var h:Float,var arc:CenterArc = CenterArc(Math.min(w,h)/10),var rectBar:RectBarUpDown = RectBarUpDown(w,h)) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            rectBar.draw(canvas,paint,1f)
+            arc.draw(canvas,paint,1f)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun stopped():Boolean = true
+        fun startUpdating() {
+
+        }
+    }
 }
