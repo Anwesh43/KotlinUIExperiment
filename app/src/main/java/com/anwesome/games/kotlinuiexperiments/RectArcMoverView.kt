@@ -25,6 +25,7 @@ class RectArcMoverView(ctx:Context):View(ctx) {
     }
     data class RectBarUpDown(var w:Float,var h:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#f44336")
             for(i in 0..1) {
                 canvas.save()
                 canvas.translate(0f,0f)
@@ -36,6 +37,7 @@ class RectArcMoverView(ctx:Context):View(ctx) {
     }
     data class CenterArc(var r:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#FFC107")
             canvas.save()
             canvas.drawArc(RectF(-r,-r,r,r),0f,360f*scale,true,paint)
             canvas.restore()
