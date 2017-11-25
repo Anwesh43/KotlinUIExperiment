@@ -224,6 +224,7 @@ class MainActivity : AppCompatActivity() {
 //        val view = UpDownBallView.create(this)
 //        view.addOnUpDownListener({createToast("balls are down")},{createToast("balls are up")})
         val view = RectArcMoverView.create(this)
+        view.addOnRectArcMoverListener({createToast("completed")},{createToast("incompleted")})
     }
 
     fun createTextView(text:String) {
