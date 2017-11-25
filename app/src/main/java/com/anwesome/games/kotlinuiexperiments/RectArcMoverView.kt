@@ -54,4 +54,23 @@ class RectArcMoverView(ctx:Context):View(ctx) {
 
         }
     }
+    data class RectArcMoverState(var dir:Int = 0f,var prevDir:Int = 0f,var j:Int = 0,var prevScale:Float = 0f) {
+        var scales:Array<Float> = arrayOf(0f,0f)
+        fun update() {
+            scales[j] += dir*0.1f
+            if(Math.abs(scales[j]-prevScale) > 1f) {
+                scales[j] = prevScale+dir
+                j+=dir
+                if(j == scales.size || j == -1) {
+                    prevDir*=-1
+                    j+=prevDir
+                }
+            }
+        }
+        fun startUpdating() {
+            dir = prevDir
+            prevScale = scales[j]
+        }
+        fun stopped():Boolean = dir == 0
+    }
 }
