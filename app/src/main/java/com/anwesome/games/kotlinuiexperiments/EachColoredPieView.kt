@@ -27,10 +27,10 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
         return true
     }
     data class EachColoredPie(var i:Int,var r:Float) {
-        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float,deg:Float) {
             canvas.save()
             paint.color = Color.parseColor(pieAvailableColors[i])
-            canvas.drawArc(RectF(-r,-r,r,r),90f*i,90*scale,true,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),deg*i,deg*scale,true,paint)
             canvas.restore()
         }
     }
@@ -43,6 +43,7 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            val deg = 360f/n
             canvas.save()
             canvas.translate(w/2,h/2)
             paint.color = Color.WHITE
@@ -50,7 +51,7 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
             pies.forEach { pie ->
-                pie.draw(canvas,paint,state.scale)
+                pie.draw(canvas,paint,state.scale,deg)
             }
             canvas.restore()
         }
