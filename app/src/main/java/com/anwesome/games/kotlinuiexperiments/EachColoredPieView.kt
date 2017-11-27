@@ -47,6 +47,7 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             canvas.save()
             canvas.translate(w/2,h/2)
             paint.color = Color.WHITE
+            paint.strokeWidth = r/15
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,r,paint)
             paint.style = Paint.Style.FILL
@@ -76,7 +77,7 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             }
         }
         fun startUpdating() {
-            scale = 1-2*this.dir
+            dir = 1-2*this.scale
         }
         fun stopped():Boolean = dir == 0f
     }
@@ -123,7 +124,7 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
     companion object{
         fun create(activity:MainActivity,vararg n:Int):EachColoredPieView {
             val view = EachColoredPieView(activity)
-            if(n.size == 1 && n[0] <= defaultPieColorSize) {
+            if(n.size == 1 && n[0] <= defaultPieColorSize && n[0] > 0) {
                 view.n = n[0]
             }
             val size = DimensionsUtil.getDimension(activity)
