@@ -13,13 +13,15 @@ val pieAvailableColors:Array<String> = arrayOf("#f44336","#FFC107","#1565C0","#8
 val defaultPieColorSize = 8
 class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = EachColoredPieRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
