@@ -74,4 +74,30 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
+    data class EachColoredPieAnimator(var container:EachColoredPieContainer,var view:EachColoredPieView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{
+                    animated = false
+                }
+                try {
+                    view.invalidate()
+                    Thread.sleep(50)
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            container.startUpdating {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
