@@ -32,11 +32,10 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             canvas.restore()
         }
     }
-    data class EachColoredPieContainer(var w:Float,var h:Float,var n:Int) {
+    data class EachColoredPieContainer(var w:Float,var h:Float,var n:Int,val r:Float = Math.min(w,h)/3) {
         var pies:ConcurrentLinkedQueue<EachColoredPie> = ConcurrentLinkedQueue()
         var state = EachColoredPieState()
         init {
-            val r = Math.min(w,h)/3
             for(i in 0..n) {
                 pies.add(EachColoredPie(i,r))
             }
@@ -44,6 +43,10 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
+            paint.color = Color.WHITE
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.style = Paint.Style.FILL
             pies.forEach { pie ->
                 pie.draw(canvas,paint,state.scale)
             }
