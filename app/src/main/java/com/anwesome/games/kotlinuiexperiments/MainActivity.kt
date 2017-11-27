@@ -226,6 +226,7 @@ class MainActivity : AppCompatActivity() {
 //        val view = RectArcMoverView.create(this)
 //        view.addOnRectArcMoverListener({createToast("completed")},{createToast("incompleted")})
         val view = EachColoredPieView.create(this,3)
+        view.addScaleUpDownListener({createToast("filled up")},{"filled down"})
     }
 
     fun createTextView(text:String) {

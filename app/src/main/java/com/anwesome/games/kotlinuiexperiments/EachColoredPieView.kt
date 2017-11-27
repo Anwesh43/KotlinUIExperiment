@@ -91,6 +91,10 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             if(animated) {
                 container.update{
                     animated = false
+                    when(container.state.scale) {
+                        0f -> view.onScaleUpDownListener?.scaleDwnListener?.invoke()
+                        1f -> view.onScaleUpDownListener?.scaleDwnListener?.invoke()
+                    }
                 }
                 try {
                     view.invalidate()
