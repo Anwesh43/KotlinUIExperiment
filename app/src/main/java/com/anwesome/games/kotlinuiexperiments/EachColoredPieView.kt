@@ -119,4 +119,15 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             animator?.handleTap()
         }
     }
+    companion object{
+        fun create(activity:MainActivity,vararg n:Int):EachColoredPieView {
+            val view = EachColoredPieView(activity)
+            if(n.size == 1 && n[0] <= defaultPieColorSize) {
+                view.n = n[0]
+            }
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view, ViewGroup.LayoutParams(size.x,size.x))
+            return view
+        }
+    }
 }
