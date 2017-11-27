@@ -55,4 +55,18 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
 
         }
     }
+    data class EachColoredPieState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(Math.abs(scale - prevScale) > 1) {
+                scale = prevScale+dir
+                prevScale = scale
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            scale = 1-2*this.dir
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
