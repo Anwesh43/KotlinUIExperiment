@@ -100,4 +100,18 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             }
         }
     }
+    data class EachColoredPieRenderer(var view:EachColoredPieView,var time:Int = 0) {
+        var animator:EachColoredPieAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                animator = EachColoredPieAnimator(EachColoredPieContainer(canvas.width.toFloat(),canvas.height.toFloat(),view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
