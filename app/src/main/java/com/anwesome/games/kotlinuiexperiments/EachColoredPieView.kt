@@ -12,11 +12,15 @@ import java.util.concurrent.*
 val pieAvailableColors:Array<String> = arrayOf("#f44336","#FFC107","#1565C0","#880E4F","#FF5722","#00E676","#3F51B5","#673AB7")
 val defaultPieColorSize = 8
 class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
+    var onScaleUpDownListener:EachColoredPieView.OnColorScaleUpDownListener?=null
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = EachColoredPieRenderer(this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun addScaleUpDownListener(scaleUpListener: () -> Unit,scaleDwnListener: () -> Unit) {
+        onScaleUpDownListener = OnColorScaleUpDownListener(scaleUpListener,scaleDwnListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -132,4 +136,5 @@ class EachColoredPieView(ctx:Context,var n:Int= defaultPieColorSize):View(ctx) {
             return view
         }
     }
+    data class OnColorScaleUpDownListener(var scaleUpListener:()->Unit,var scaleDwnListener:()->Unit)
 }
