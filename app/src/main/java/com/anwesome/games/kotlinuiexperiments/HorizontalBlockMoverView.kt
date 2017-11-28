@@ -132,6 +132,13 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             animator?.handleTap()
         }
     }
+    companion object {
+        fun create(activity:MainActivity):HorizontalBlockMoverView {
+            val view = HorizontalBlockMoverView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
 fun ConcurrentLinkedQueue<HorizontalBlockMoverView.HorizontalBlockMover>.getCurr(i:Int):HorizontalBlockMoverView.HorizontalBlockMover? {
     var index = 0
