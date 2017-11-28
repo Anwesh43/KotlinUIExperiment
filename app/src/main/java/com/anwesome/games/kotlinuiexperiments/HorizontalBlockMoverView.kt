@@ -88,6 +88,32 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             startcb()
         }
     }
+    data class HorizontalBlockMoverAnimator(var container:HorizontalBlockMoverContainer,var view:HorizontalBlockMoverView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            container.startUpdating {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
 fun ConcurrentLinkedQueue<HorizontalBlockMoverView.HorizontalBlockMover>.getCurr(i:Int):HorizontalBlockMoverView.HorizontalBlockMover? {
     var index = 0
