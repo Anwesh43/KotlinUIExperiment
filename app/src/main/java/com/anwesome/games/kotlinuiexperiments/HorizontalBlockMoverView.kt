@@ -70,12 +70,14 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         }
         fun draw(canvas:Canvas,paint:Paint) {
             if(n > 0) {
-                val y = blocks.getCurr(0)?.y?:0f+h/2
+                val y = (blocks.getCurr(0)?.y?:0f)+h/2
                 Log.d("y",""+y)
-                val gap = y*0.9f
+                Log.d("prev y",""+blocks.getCurr(0)?.y)
+                val gap = y*0.5f
                 val deg = 360/n
                 var curr_scale = blocks.getCurr(j)?.state?.scale?:0f
                 paint.style = Paint.Style.STROKE
+                paint.strokeWidth = gap/15
                 canvas.drawCircle(w/2,y/2,gap/2,paint)
                 paint.style = Paint.Style.FILL
                 canvas.drawArc(RectF(w/2-gap/2,y/2-gap/2,w/2+gap/2,y/2+gap/2),0f,deg*j+deg*(curr_scale),true,paint)
