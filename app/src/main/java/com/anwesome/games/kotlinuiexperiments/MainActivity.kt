@@ -225,8 +225,9 @@ class MainActivity : AppCompatActivity() {
 //        view.addOnUpDownListener({createToast("balls are down")},{createToast("balls are up")})
 //        val view = RectArcMoverView.create(this)
 //        view.addOnRectArcMoverListener({createToast("completed")},{createToast("incompleted")})
-        val view = EachColoredPieView.create(this,3)
-        view.addScaleUpDownListener({createToast("filled up")},{createToast("filled down")})
+//        val view = EachColoredPieView.create(this,3)
+//        view.addScaleUpDownListener({createToast("filled up")},{createToast("filled down")})
+        val view = HorizontalBlockMoverView.create(this)
     }
 
     fun createTextView(text:String) {

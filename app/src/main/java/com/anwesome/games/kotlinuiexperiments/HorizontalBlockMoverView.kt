@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import android.util.Log
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
@@ -27,8 +28,8 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         var state = HorizontalBlockMoverState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
-            canvas.translate(x+hor_w,y)
-            canvas.drawRect(RectF(-w/2,-w/2,w/2,w/2),paint)
+            canvas.translate(x+hor_w*state.scale,y)
+            canvas.drawRect(RectF(-w,-w/2,0f,w/2),paint)
             canvas.restore()
         }
         fun update() {
@@ -58,19 +59,19 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         init {
             if(n > 0) {
                 val h_gap = h/(2*n)
-                var x = w / 2 - h_gap
-                var y = h/2 - (h_gap*n)/2 + h_gap/2
-                for (i in 0..n) {
-                    blocks.add(HorizontalBlockMover(i,x,y,w/10,w/2))
-                    if(i % 2 == 1) {
-                        y += h_gap
-                    }
+                var x = 0f
+                var y = - (h_gap*n)/2 + h_gap/2
+                for (i in 0..n-1) {
+                    blocks.add(HorizontalBlockMover(i,x,y,h_gap,w/2))
+                    y += h_gap
+
                 }
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
             if(n > 0) {
-                val y = blocks.getCurr(0)?.y?:0f
+                val y = blocks.getCurr(0)?.y?:0f+h/2
+                Log.d("y",""+y)
                 val gap = y*0.9f
                 val deg = 360/n
                 var curr_scale = blocks.getCurr(j)?.state?.scale?:0f
@@ -79,9 +80,17 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
                 paint.style = Paint.Style.FILL
                 canvas.drawArc(RectF(w/2-gap/2,y/2-gap/2,w/2+gap/2,y/2+gap/2),0f,deg*j+deg*(curr_scale),true,paint)
             }
-            blocks.forEach { block ->
-                block.draw(canvas,paint)
+            canvas.save()
+            canvas.translate(w/2,h/2)
+            for(i in 0..1) {
+                canvas.save()
+                canvas.scale(1f-2*i,1f)
+                blocks.forEach { block ->
+                    block.draw(canvas, paint)
+                }
+                canvas.restore()
             }
+            canvas.restore()
         }
         fun update(stopcb:()->Unit) {
             blocks.getCurr(j)?.update()
@@ -120,9 +129,11 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             container.draw(canvas,paint)
         }
         fun handleTap() {
-            container.startUpdating {
-                animated = true
-                view.postInvalidate()
+            if(!animated) {
+                container.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
             }
         }
     }
