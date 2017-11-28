@@ -69,6 +69,16 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            if(n > 0) {
+                val y = blocks.getCurr(0)?.y?:0f
+                val gap = y*0.9f
+                val deg = 360/n
+                var curr_scale = blocks.getCurr(j)?.state?.scale?:0f
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(w/2,y/2,gap/2,paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawArc(RectF(w/2-gap/2,y/2-gap/2,w/2+gap/2,y/2+gap/2),0f,deg*j+deg*(curr_scale),true,paint)
+            }
             blocks.forEach { block ->
                 block.draw(canvas,paint)
             }
@@ -123,6 +133,7 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = HorizontalBlockMoverAnimator(HorizontalBlockMoverContainer(w,h,view.n),view)
+                paint.color = Color.parseColor("#FFC107")
             }
             animator?.draw(canvas,paint)
             animator?.update()
