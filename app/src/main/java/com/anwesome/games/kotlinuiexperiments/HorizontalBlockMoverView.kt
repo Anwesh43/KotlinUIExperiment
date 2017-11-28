@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -49,5 +50,32 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             dir = 1-2*this.scale
         }
         fun stopped():Boolean = dir == 0f
+    }
+    data class HorizontalBlockMoverContainer(var w:Float,var h:Float,var n:Int,var dir:Int = 1) {
+        var blocks:ConcurrentLinkedQueue<HorizontalBlockMover> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                val h_gap = h/(2*n)
+                var x = w / 2 - h_gap
+                var y = h/2 - (h_gap*n)/2 + h_gap/2
+                for (i in 0..n) {
+                    blocks.add(HorizontalBlockMover(i,x,y,w/10,w/2))
+                    if(i % 2 == 1) {
+                        y += h_gap
+                    }
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            blocks.forEach { block ->
+                block.draw(canvas,paint)
+            }
+        }
+        fun update(stopcb:()->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+
+        }
     }
 }
