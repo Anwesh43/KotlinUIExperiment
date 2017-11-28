@@ -21,6 +21,7 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         return true
     }
     data class HorizontalBlockMover(var i:Int,var prevX:Float,var y:Float,var w:Float,var hor_w:Float,var x:Float = prevX - hor_w) {
+        var state = HorizontalBlockMoverState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x+hor_w,y)
@@ -28,12 +29,12 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             canvas.restore()
         }
         fun update() {
-
+            state.update()
         }
         fun startUpdating() {
-
+            state.startUpdating()
         }
-        fun stopped():Boolean = true
+        fun stopped():Boolean = state.stopped()
     }
     data class HorizontalBlockMoverState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update() {
