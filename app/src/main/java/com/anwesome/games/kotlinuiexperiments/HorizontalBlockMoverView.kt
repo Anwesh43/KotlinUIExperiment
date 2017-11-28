@@ -79,3 +79,13 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         }
     }
 }
+fun ConcurrentLinkedQueue<HorizontalBlockMoverView.HorizontalBlockMover>.getCurr(i:Int):HorizontalBlockMoverView.HorizontalBlockMover? {
+    var index = 0
+    this.forEach { it ->
+        if(index == i) {
+            return it
+        }
+        index++
+    }
+    return null
+}
