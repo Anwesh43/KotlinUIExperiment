@@ -20,4 +20,19 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         }
         return true
     }
+    data class HorizontalBlockMover(var i:Int,var prevX:Float,var y:Float,var w:Float,var hor_w:Float,var x:Float = prevX - hor_w) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(x+hor_w,y)
+            canvas.drawRect(RectF(-w/2,-w/2,w/2,w/2),paint)
+            canvas.restore()
+        }
+        fun update() {
+
+        }
+        fun startUpdating() {
+
+        }
+        fun stopped():Boolean = true
+    }
 }
