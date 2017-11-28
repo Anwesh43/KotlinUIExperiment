@@ -35,4 +35,18 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         }
         fun stopped():Boolean = true
     }
+    data class HorizontalBlockMoverState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += dir*0.1f
+            if(Math.abs(scale - prevScale) > 1) {
+                scale = prevScale+dir
+                prevScale = scale
+                dir = 0f
+            }
+        }
+        fun startUpdating() {
+            dir = 1-2*this.scale
+        }
+        fun stopped():Boolean = dir == 0f
+    }
 }
