@@ -114,6 +114,22 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             }
         }
     }
+    data class HorizontalBlockMoverRenderer(var view:HorizontalBlockMoverView,var time:Int = 0) {
+        var animator:HorizontalBlockMoverAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = HorizontalBlockMoverAnimator(HorizontalBlockMoverContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun startUpdating() {
+            animator?.handleTap()
+        }
+    }
 }
 fun ConcurrentLinkedQueue<HorizontalBlockMoverView.HorizontalBlockMover>.getCurr(i:Int):HorizontalBlockMoverView.HorizontalBlockMover? {
     var index = 0
