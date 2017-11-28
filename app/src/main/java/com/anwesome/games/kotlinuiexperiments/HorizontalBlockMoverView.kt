@@ -10,11 +10,15 @@ import android.util.Log
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
+    var onMovementListener:HorizontalBlockMoverListener?=null
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = HorizontalBlockMoverRenderer(this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun addMovementListener(end:(Int)->Unit,start:(Int)->Unit) {
+        onMovementListener = HorizontalBlockMoverListener(end,start)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -110,6 +114,9 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             blocks.getCurr(j)?.startUpdating()
             startcb()
         }
+        fun getCurrScale():Float {
+            return blocks.getCurr(j)?.state?.scale?:0f
+        }
     }
     data class HorizontalBlockMoverAnimator(var container:HorizontalBlockMoverContainer,var view:HorizontalBlockMoverView) {
         var animated = false
@@ -117,6 +124,10 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             if(animated) {
                 container.update{
                     animated = false
+                    when(container.getCurrScale()) {
+                        0f -> view.onMovementListener?.onMoveStart?.invoke(container.j)
+                        1f -> view.onMovementListener?.onMoveEnd?.invoke(container.j)
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -163,6 +174,7 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             return view
         }
     }
+    data class HorizontalBlockMoverListener(var onMoveEnd:(Int)->Unit,var onMoveStart:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<HorizontalBlockMoverView.HorizontalBlockMover>.getCurr(i:Int):HorizontalBlockMoverView.HorizontalBlockMover? {
     var index = 0
