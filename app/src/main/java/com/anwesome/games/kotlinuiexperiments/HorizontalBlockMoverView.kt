@@ -51,7 +51,7 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
         }
         fun stopped():Boolean = dir == 0f
     }
-    data class HorizontalBlockMoverContainer(var w:Float,var h:Float,var n:Int,var dir:Int = 1) {
+    data class HorizontalBlockMoverContainer(var w:Float,var h:Float,var n:Int,var dir:Int = 1,var j:Int = 0) {
         var blocks:ConcurrentLinkedQueue<HorizontalBlockMover> = ConcurrentLinkedQueue()
         init {
             if(n > 0) {
@@ -72,10 +72,20 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             }
         }
         fun update(stopcb:()->Unit) {
+            blocks.getCurr(j)?.update()
+            if(blocks.getCurr(j)?.stopped()?:false) {
+                j+=dir
+                if(j == blocks.size || j == -1) {
+                    dir *= -1
+                    j += dir
 
+                }
+                stopcb()
+            }
         }
         fun startUpdating(startcb:()->Unit) {
-
+            blocks.getCurr(j)?.startUpdating()
+            startcb()
         }
     }
 }
