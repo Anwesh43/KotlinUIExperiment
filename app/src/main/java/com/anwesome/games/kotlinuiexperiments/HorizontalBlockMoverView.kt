@@ -115,7 +115,7 @@ class HorizontalBlockMoverView(ctx:Context,var n:Int = 4):View(ctx) {
             startcb()
         }
         fun getCurrScale():Float {
-            return blocks.getCurr(j)?.state?.scale?:0f
+            return blocks.getCurr(j-1)?.state?.scale?:0f
         }
     }
     data class HorizontalBlockMoverAnimator(var container:HorizontalBlockMoverContainer,var view:HorizontalBlockMoverView) {

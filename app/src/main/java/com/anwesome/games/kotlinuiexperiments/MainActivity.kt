@@ -228,6 +228,7 @@ class MainActivity : AppCompatActivity() {
 //        val view = EachColoredPieView.create(this,3)
 //        view.addScaleUpDownListener({createToast("filled up")},{createToast("filled down")})
         val view = HorizontalBlockMoverView.create(this)
+        view.addMovementListener({ i -> createToast("movement ended $i")},{i -> createToast("movement started $i")})
     }
 
     fun createTextView(text:String) {
