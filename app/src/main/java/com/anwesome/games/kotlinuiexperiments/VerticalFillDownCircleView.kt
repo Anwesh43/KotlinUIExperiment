@@ -37,15 +37,16 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
         }
     }
     data class VerticalFillController(var w:Float,var h:Float) {
+        var state = VerticalFillState()
         var circle = VerticalFillDownCircle(w/2,h/2,Math.min(w,h)/3)
         fun draw(canvas:Canvas,paint:Paint) {
-            circle.draw(canvas,paint,1f)
+            circle.draw(canvas,paint,state.scale)
         }
         fun update(stopcb:()->Unit) {
-
+            state.update(stopcb)
         }
-        fun startUpdating(starcb:()->Unit) {
-
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating(startcb)
         }
     }
     data class VerticalFillState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
