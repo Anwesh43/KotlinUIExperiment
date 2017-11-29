@@ -63,4 +63,32 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
             startcb()
         }
     }
+    data class VerticalFillAnimator(var controller:VerticalFillController,var view:VerticalFillDownCircleView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                controller.update{
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            controller.draw(canvas,paint)
+        }
+        fun startUpdating() {
+            if(!animated) {
+                controller.startUpdating{
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
