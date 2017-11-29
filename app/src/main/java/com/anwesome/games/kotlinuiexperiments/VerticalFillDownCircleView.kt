@@ -48,4 +48,19 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
 
         }
     }
+    data class VerticalFillState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update(stopcb:()->Unit) {
+            scale += dir*0.1f
+            if(Math.abs(scale-prevScale) > 1f) {
+                scale = prevScale+dir
+                dir = 0f
+                prevScale = scale
+                stopcb()
+            }
+        }
+        fun startUpdating(startcb:()->Unit) {
+            dir = 1f-2*scale
+            startcb()
+        }
+    }
 }
