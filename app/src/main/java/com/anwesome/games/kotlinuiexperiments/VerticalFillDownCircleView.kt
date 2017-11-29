@@ -11,9 +11,13 @@ import android.graphics.*
 class VerticalFillDownCircleView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = VerticalFillRenderer(this)
+    var onScaleListener:OnCircleScaleListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun addScaleListener(upListener:()->Unit,downListener:()->Unit) {
+        onScaleListener = OnCircleScaleListener(upListener, downListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action){
@@ -45,7 +49,7 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             circle.draw(canvas,paint,state.scale)
         }
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
@@ -53,13 +57,13 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
         }
     }
     data class VerticalFillState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             scale += dir*0.1f
             if(Math.abs(scale-prevScale) > 1f) {
                 scale = prevScale+dir
                 dir = 0f
                 prevScale = scale
-                stopcb()
+                stopcb(scale)
             }
         }
         fun startUpdating(startcb:()->Unit) {
@@ -71,8 +75,12 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
         var animated = false
         fun update() {
             if(animated) {
-                controller.update{
+                controller.update{ scale ->
                     animated = false
+                    when(scale) {
+                        0f -> view.onScaleListener?.downListener?.invoke()
+                        1f -> view.onScaleListener?.upListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -119,4 +127,5 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class OnCircleScaleListener(var upListener:()->Unit,var downListener:()->Unit)
 }
