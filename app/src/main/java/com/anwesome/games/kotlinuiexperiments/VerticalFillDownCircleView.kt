@@ -30,9 +30,22 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
             val path = Path()
             path.addRect(RectF(-r,-r,r,-r+2*r*scale),Path.Direction.CW)
             canvas.clipPath(path)
+            paint.color = Color.parseColor("#01579B")
             canvas.drawCircle(0f,0f,r,paint)
             canvas.restore()
             canvas.restore()
+        }
+    }
+    data class VerticalFillController(var w:Float,var h:Float) {
+        var circle = VerticalFillDownCircle(w/2,h/2,Math.min(w,h)/3)
+        fun draw(canvas:Canvas,paint:Paint) {
+            circle.draw(canvas,paint,1f)
+        }
+        fun update(stopcb:()->Unit) {
+
+        }
+        fun startUpdating(starcb:()->Unit) {
+
         }
     }
 }
