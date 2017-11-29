@@ -92,4 +92,20 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class VerticalFillRenderer(var view:VerticalFillDownCircleView,var time:Int = 0) {
+        var animator:VerticalFillAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = VerticalFillAnimator(VerticalFillController(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun startUpdating() {
+            animator?.startUpdating()
+        }
+    }
 }
