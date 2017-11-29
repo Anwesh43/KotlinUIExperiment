@@ -20,4 +20,19 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class VerticalFillDownCircle(var x:Float,var y:Float,var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(x,y)
+            paint.color = Color.GRAY
+            canvas.drawCircle(0f,0f,r,paint)
+            canvas.save()
+            val path = Path()
+            path.addRect(RectF(-r,-r,r,-r+2*r*scale),Path.Direction.CW)
+            canvas.clipPath(path)
+            canvas.drawCircle(0f,0f,r,paint)
+            canvas.restore()
+            canvas.restore()
+        }
+    }
 }
