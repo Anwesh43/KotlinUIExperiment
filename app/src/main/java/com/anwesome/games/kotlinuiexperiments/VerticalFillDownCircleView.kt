@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 29/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -108,6 +109,14 @@ class VerticalFillDownCircleView(ctx:Context):View(ctx) {
         }
         fun startUpdating() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):VerticalFillDownCircleView {
+            val view = VerticalFillDownCircleView(activity)
+            val size = DimensionsUtil.getDimension(activity)
+            activity.addContentView(view,ViewGroup.LayoutParams(size.x,size.x))
+            return view
         }
     }
 }
