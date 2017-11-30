@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 30/11/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -150,6 +151,13 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun startUpdating() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):AlternateLinePieView {
+            val view = AlternateLinePieView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
