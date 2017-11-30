@@ -41,7 +41,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     data class AlternateLineContainer(var w:Float,var h:Float,var n:Int) {
-        var j = 0
+        var state = AlternateLineContainerState(n)
         var lines:ConcurrentLinkedQueue<AlternateLine> = ConcurrentLinkedQueue()
         init {
             val gap = w/(n+1)
@@ -53,10 +53,14 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun draw(canvas:Canvas,paint:Paint) {
             if(n > 0) {
+                val j = state.j
                 val degGap = 360f/n
                 paint.strokeWidth = (lines.getAt(0)?.x?:10f)/10
                 canvas.save()
                 canvas.translate(w/2,h/10)
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(0f,0f,h/12,paint)
+                paint.style = Paint.Style.FILL
                 canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),j*degGap,degGap,true,paint)
                 canvas.restore()
                 canvas.save()
@@ -67,11 +71,14 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
                 canvas.restore()
             }
         }
-        fun update(stopcb:()->Unit) {
-
+        fun update(stopcb:(Int)->Unit) {
+            lines.getAt(state.j)?.update({
+                stopcb(state.j)
+                state.updateJOnStop()
+            })
         }
         fun startUpdating(startcb:()->Unit) {
-
+            lines.getAt(state.j)?.startUpdating(startcb)
         }
     }
     data class AlternateLineContainerState(var n:Int,var j:Int = 0,var dir:Int = 0,var prevDir:Int = 1) {
