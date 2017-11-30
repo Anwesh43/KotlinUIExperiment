@@ -10,13 +10,15 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = AlternateLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.startUpdating()
             }
         }
         return true
@@ -56,6 +58,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
                 val j = state.j
                 val degGap = 360f/n
                 paint.strokeWidth = (lines.getAt(0)?.x?:10f)/10
+                paint.color = Color.parseColor("#D84315")
                 canvas.save()
                 canvas.translate(w/2,h/10)
                 paint.style = Paint.Style.STROKE
