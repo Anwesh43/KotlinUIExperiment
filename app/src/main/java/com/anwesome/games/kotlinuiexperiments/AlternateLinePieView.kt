@@ -106,6 +106,33 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
             startcb()
         }
     }
+    data class AlternateLineAnimator(var container:AlternateLineContainer,var view:AlternateLinePieView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{ i ->
+                   animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun startUpdating() {
+            container.startUpdating{
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
 fun ConcurrentLinkedQueue<AlternateLinePieView.AlternateLine>.getAt(i:Int):AlternateLinePieView.AlternateLine? {
     var index = 0
