@@ -27,7 +27,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
     data class AlternateLine(var i:Int,var x:Float,var y:Float,var h:Float) {
         var state = AlternateLineState()
         fun draw(canvas:Canvas,paint:Paint) {
-            paint.color = Color.parseColor("#00E676")
+            paint.color = Color.parseColor("#b71c1c")
             canvas.save()
             canvas.translate(x,y)
             when(i%2) {
@@ -36,7 +36,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
             }
             canvas.restore()
         }
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
@@ -50,13 +50,14 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
             val gap = w/(n+1)
             var x = gap
             for(i in 0..n-1) {
-                lines.add(AlternateLine(i,x,0f,4*h/5))
+                lines.add(AlternateLine(i,x,0f,4*h/5-h/20))
                 x += gap
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
             if(n > 0) {
                 val j = state.j
+                val scale = (lines.getAt(j)?.state?.scale?:0f)
                 val degGap = 360f/n
                 paint.strokeWidth = (lines.getAt(0)?.x?:10f)/10
                 paint.color = Color.parseColor("#D84315")
@@ -65,7 +66,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
                 paint.style = Paint.Style.STROKE
                 canvas.drawCircle(0f,0f,h/12,paint)
                 paint.style = Paint.Style.FILL
-                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),j*degGap,degGap,true,paint)
+                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,j*degGap+degGap*scale,true,paint)
                 canvas.restore()
                 canvas.save()
                 canvas.translate(0f,h/5)
@@ -75,9 +76,9 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
                 canvas.restore()
             }
         }
-        fun update(stopcb:(Int)->Unit) {
-            lines.getAt(state.j)?.update({
-                stopcb(state.j)
+        fun update(stopcb:(Int,Float)->Unit) {
+            lines.getAt(state.j)?.update({scale ->
+                stopcb(state.j,scale)
                 state.updateJOnStop()
             })
         }
@@ -96,13 +97,13 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     data class AlternateLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             scale += 0.1f*dir
             if(Math.abs(scale - prevScale) > 1) {
                 scale = prevScale+dir
                 dir = 0f
                 prevScale = scale
-                stopcb()
+                stopcb(scale)
             }
         }
         fun startUpdating(startcb:()->Unit) {
@@ -114,7 +115,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         var animated = false
         fun update() {
             if(animated) {
-                container.update{ i ->
+                container.update{ i,scale ->
                    animated = false
                 }
                 try {
@@ -131,9 +132,11 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
             container.draw(canvas,paint)
         }
         fun startUpdating() {
-            container.startUpdating{
-                animated = true
-                view.postInvalidate()
+            if(!animated) {
+                container.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
             }
         }
     }
@@ -144,6 +147,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = AlternateLineAnimator(AlternateLineContainer(w,h,view.n),view)
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()
