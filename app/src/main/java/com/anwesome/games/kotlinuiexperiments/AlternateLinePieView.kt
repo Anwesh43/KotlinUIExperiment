@@ -67,6 +67,19 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
 
         }
     }
+    data class AlternateLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update() {
+            scale += 0.1f*dir
+            if(Math.abs(scale - prevScale) > 1) {
+                scale = prevScale+dir
+                dir = 0f
+                prevScale = scale
+            }
+        }
+        fun startUpdating() {
+            dir = 1f - 2*scale
+        }
+    }
 }
 fun ConcurrentLinkedQueue<AlternateLinePieView.AlternateLine>.getAt(i:Int):AlternateLinePieView.AlternateLine? {
     var index = 0
