@@ -74,6 +74,16 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
 
         }
     }
+    data class AlternateLineContainerState(var n:Int,var j:Int = 0,var dir:Int = 0,var prevDir:Int = 1) {
+        fun updateJOnStop() {
+            dir = 0
+            j += prevDir
+            if(j == n || j == -1) {
+                prevDir*=-1
+                j += prevDir
+            }
+        }
+    }
     data class AlternateLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
         fun update(stopcb:()->Unit) {
             scale += 0.1f*dir
