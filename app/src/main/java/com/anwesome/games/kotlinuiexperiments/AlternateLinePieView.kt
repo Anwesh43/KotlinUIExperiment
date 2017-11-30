@@ -133,6 +133,22 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
     }
+    data class AlternateLineRenderer(var view:AlternateLinePieView,var time:Int = 0) {
+        var animator:AlternateLineAnimator? = null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = AlternateLineAnimator(AlternateLineContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun startUpdating() {
+            animator?.startUpdating()
+        }
+    }
 }
 fun ConcurrentLinkedQueue<AlternateLinePieView.AlternateLine>.getAt(i:Int):AlternateLinePieView.AlternateLine? {
     var index = 0
