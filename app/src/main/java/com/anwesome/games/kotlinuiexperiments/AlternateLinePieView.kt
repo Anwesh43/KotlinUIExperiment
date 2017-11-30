@@ -20,4 +20,16 @@ class AlternateLinePieView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class AlternateLine(var i:Int,var x:Float,var y:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            paint.color = Color.parseColor("#00E676")
+            canvas.save()
+            canvas.translate(x,y)
+            when(i%2) {
+                0 -> canvas.drawLine(0f,0f,0f,h*scale,paint)
+                1 -> canvas.drawLine(0f,h,0f,h*(1-scale),paint)
+            }
+            canvas.restore()
+        }
+    }
 }
