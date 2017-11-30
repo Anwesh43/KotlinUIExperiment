@@ -232,6 +232,7 @@ class MainActivity : AppCompatActivity() {
 //        val view = VerticalFillDownCircleView.create(this)
 //        view.addScaleListener({createToast("scaled up")},{createToast("scaled down")})
         val view = AlternateLinePieView.create(this)
+        view.addLineSelectionListener({i -> createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
     }
 
     fun createTextView(text:String) {
