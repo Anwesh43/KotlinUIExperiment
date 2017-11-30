@@ -22,15 +22,22 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         return true
     }
     data class AlternateLine(var i:Int,var x:Float,var y:Float,var h:Float) {
-        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+        var state = AlternateLineState()
+        fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#00E676")
             canvas.save()
             canvas.translate(x,y)
             when(i%2) {
-                0 -> canvas.drawLine(0f,0f,0f,h*scale,paint)
-                1 -> canvas.drawLine(0f,h,0f,h*(1-scale),paint)
+                0 -> canvas.drawLine(0f,0f,0f,h*state.scale,paint)
+                1 -> canvas.drawLine(0f,h,0f,h*(1-state.scale),paint)
             }
             canvas.restore()
+        }
+        fun update(stopcb:()->Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating(startcb)
         }
     }
     data class AlternateLineContainer(var w:Float,var h:Float,var n:Int) {
@@ -55,7 +62,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
                 canvas.save()
                 canvas.translate(0f,h/5)
                 lines.forEach { line ->
-                    line.draw(canvas,paint,1f)
+                    line.draw(canvas,paint)
                 }
                 canvas.restore()
             }
@@ -68,16 +75,18 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     data class AlternateLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
-        fun update() {
+        fun update(stopcb:()->Unit) {
             scale += 0.1f*dir
             if(Math.abs(scale - prevScale) > 1) {
                 scale = prevScale+dir
                 dir = 0f
                 prevScale = scale
+                stopcb()
             }
         }
-        fun startUpdating() {
+        fun startUpdating(startcb:()->Unit) {
             dir = 1f - 2*scale
+            startcb()
         }
     }
 }
