@@ -12,9 +12,13 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = AlternateLineRenderer(this)
+    var lineSelectionListener:AlternateLineSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
+    }
+    fun addLineSelectionListener(selectionListener: (Int) -> Unit, unselectionListener: (Int) -> Unit) {
+        lineSelectionListener = AlternateLineSelectionListener(selectionListener, unselectionListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -116,7 +120,11 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
         fun update() {
             if(animated) {
                 container.update{ i,scale ->
-                   animated = false
+                    animated = false
+                    when(scale) {
+                        1f -> view.lineSelectionListener?.selectionListener?.invoke(i)
+                        0f -> view.lineSelectionListener?.unselectionListener?.invoke(i)
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -164,6 +172,7 @@ class AlternateLinePieView(ctx:Context,var n:Int = 6):View(ctx) {
             return view
         }
     }
+    data class AlternateLineSelectionListener(var selectionListener:(Int)->Unit,var unselectionListener:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<AlternateLinePieView.AlternateLine>.getAt(i:Int):AlternateLinePieView.AlternateLine? {
     var index = 0
