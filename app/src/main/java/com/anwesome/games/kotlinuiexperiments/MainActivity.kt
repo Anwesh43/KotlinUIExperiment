@@ -229,8 +229,9 @@ class MainActivity : AppCompatActivity() {
 //        view.addScaleUpDownListener({createToast("filled up")},{createToast("filled down")})
 //        val view = HorizontalBlockMoverView.create(this)
 //        view.addMovementListener({ i -> createToast("movement ended $i")},{i -> createToast("movement started $i")})
-        val view = VerticalFillDownCircleView.create(this)
-        view.addScaleListener({createToast("scaled up")},{createToast("scaled down")})
+//        val view = VerticalFillDownCircleView.create(this)
+//        view.addScaleListener({createToast("scaled up")},{createToast("scaled down")})
+        val view = AlternateLinePieView.create(this)
     }
 
     fun createTextView(text:String) {
