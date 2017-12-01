@@ -54,6 +54,7 @@ class StackRectsView(ctx:Context):View(ctx) {
         }
     }
     data class StackRectContainer(var w:Float,var h:Float,var n:Int) {
+        var state = StackRectContainerState(n)
         var stackRects:ConcurrentLinkedQueue<StackRect> = ConcurrentLinkedQueue()
         init {
             if(n > 0) {
@@ -66,22 +67,30 @@ class StackRectsView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            var deg = 30
+            val scale = stackRects.getAt(state.j)?.state?.scale?:0f
+            if(n > 0) {
+                deg = 360/n
+            }
             canvas.save()
             canvas.translate(w/10,h/2)
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,w/10,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-w/10,-w/10,w/10,w/10),0f,360f,true,paint)
+            canvas.drawArc(RectF(-w/10,-w/10,w/10,w/10),0f,deg*state.j+deg*scale,true,paint)
             canvas.restore()
             stackRects.forEach { stackRect ->
                 stackRect.draw(canvas,paint)
             }
         }
         fun update(stopcb:(Int,Float)->Unit) {
-
+            stackRects.getAt(state.j)?.update{ scale ->
+                stopcb(state.j,scale)
+                state.incrementCounter()
+            }
         }
         fun startUpdating(startcb:()->Unit) {
-
+            stackRects.getAt(state.j)?.startUpdating(startcb)
         }
     }
     data class StackRectContainerState(var n:Int,var j:Int = 0,var dir:Int = 0,var prevDir:Int = 1) {
@@ -94,4 +103,14 @@ class StackRectsView(ctx:Context):View(ctx) {
             }
         }
     }
+}
+fun ConcurrentLinkedQueue<StackRectsView.StackRect>.getAt(i:Int):StackRectsView.StackRect? {
+    var index = 0
+    this.forEach {
+        if(i == index) {
+            return it
+        }
+        index++
+    }
+    return null
 }
