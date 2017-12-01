@@ -21,17 +21,19 @@ class StackRectsView(ctx:Context):View(ctx) {
         return true
     }
     data class StackRect(var x:Float,var y:Float,var size:Float,var dest:Float,var py:Float=y) {
+        var state = StackRectState()
         fun draw(canvas:Canvas,paint:Paint) {
+            y = py+(dest-py)*state.scale
             canvas.save()
             canvas.translate(x,y)
             canvas.drawRoundRect(RectF(-size/2,-size/2,size/2,size/2),size/10,size/10,paint)
             canvas.restore()
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class StackRectState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
@@ -44,8 +46,9 @@ class StackRectsView(ctx:Context):View(ctx) {
                 stopcb(scale)
             }
         }
-        fun startUpdating() {
+        fun startUpdating(startcb:()->Unit) {
             dir = 1f - 2*scale
+            startcb()
         }
     }
 }
