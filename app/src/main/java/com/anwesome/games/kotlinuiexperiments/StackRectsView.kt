@@ -81,7 +81,17 @@ class StackRectsView(ctx:Context):View(ctx) {
 
         }
         fun startUpdating(startcb:()->Unit) {
-            
+
+        }
+    }
+    data class StackRectContainerState(var n:Int,var j:Int = 0,var dir:Int = 0,var prevDir:Int = 1) {
+        fun incrementCounter() {
+            j += prevDir
+            dir = 0
+            if(j == n || j == -1) {
+                prevDir *= -1
+                j+= prevDir
+            }
         }
     }
 }
