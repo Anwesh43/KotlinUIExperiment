@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 01/12/17.
  */
 
-class StackRectsView(ctx:Context):View(ctx) {
+class StackRectsView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -129,6 +129,22 @@ class StackRectsView(ctx:Context):View(ctx) {
                     view.postInvalidate()
                 }
             }
+        }
+    }
+    data class StackRectRenderer(var view:StackRectsView,var time:Int = 0) {
+        var animator:StackRectAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = StackRectAnimator(StackRectContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.startUpdating()
         }
     }
 }
