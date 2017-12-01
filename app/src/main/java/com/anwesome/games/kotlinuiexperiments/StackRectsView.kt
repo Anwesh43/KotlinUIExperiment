@@ -1,5 +1,6 @@
 package com.anwesome.games.kotlinuiexperiments
 
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -67,11 +68,13 @@ class StackRectsView(ctx:Context,var n:Int = 5):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#673ab7")
             var deg = 30
             val scale = stackRects.getAt(state.j)?.state?.scale?:0f
             if(n > 0) {
                 deg = 360/n
             }
+            paint.strokeWidth = Math.min(w,h)/50
             canvas.save()
             canvas.translate(w/10,h/2)
             paint.style = Paint.Style.STROKE
@@ -145,6 +148,13 @@ class StackRectsView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):StackRectsView {
+            val view = StackRectsView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
