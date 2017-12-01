@@ -231,8 +231,9 @@ class MainActivity : AppCompatActivity() {
 //        view.addMovementListener({ i -> createToast("movement ended $i")},{i -> createToast("movement started $i")})
 //        val view = VerticalFillDownCircleView.create(this)
 //        view.addScaleListener({createToast("scaled up")},{createToast("scaled down")})
-        val view = AlternateLinePieView.create(this)
-        view.addLineSelectionListener({i -> createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
+//        val view = AlternateLinePieView.create(this)
+//        view.addLineSelectionListener({i -> createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
+        val view = StackRectsView.create(this)
     }
 
     fun createTextView(text:String) {
