@@ -65,5 +65,23 @@ class StackRectsView(ctx:Context):View(ctx) {
                 }
             }
         }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.save()
+            canvas.translate(w/10,h/2)
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,w/10,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-w/10,-w/10,w/10,w/10),0f,360f,true,paint)
+            canvas.restore()
+            stackRects.forEach { stackRect ->
+                stackRect.draw(canvas,paint)
+            }
+        }
+        fun update(stopcb:(Int,Float)->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+            
+        }
     }
 }
