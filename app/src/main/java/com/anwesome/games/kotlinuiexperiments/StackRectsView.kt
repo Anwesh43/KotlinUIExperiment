@@ -34,4 +34,18 @@ class StackRectsView(ctx:Context):View(ctx) {
 
         }
     }
+    data class StackRectState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update(stopcb:(Float)->Unit) {
+            scale += dir*0.1f
+            if(Math.abs(scale - prevScale) > 1) {
+                scale = prevScale+dir
+                dir = 0f
+                prevScale = scale
+                stopcb(scale)
+            }
+        }
+        fun startUpdating() {
+            dir = 1f - 2*scale
+        }
+    }
 }
