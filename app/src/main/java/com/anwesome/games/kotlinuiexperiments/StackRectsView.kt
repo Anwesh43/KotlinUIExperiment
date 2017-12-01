@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * Created by anweshmishra on 01/12/17.
  */
 
-class StackRectsView(ctx:Context,var n:Int = 5):View(ctx) {
+class StackRectsView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = StackRectRenderer(this)
     override fun onDraw(canvas:Canvas) {
@@ -77,13 +77,16 @@ class StackRectsView(ctx:Context,var n:Int = 5):View(ctx) {
                 deg = 360/n
             }
             paint.strokeWidth = Math.min(w,h)/50
-            canvas.save()
-            canvas.translate(w/10,h/2)
-            paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0f,0f,w/10,paint)
-            paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-w/10,-w/10,w/10,w/10),0f,deg*state.j+deg*scale,true,paint)
-            canvas.restore()
+            for(i in 0..1) {
+                canvas.save()
+                canvas.translate(w / 10+(w-w/5)*(i), h / 2)
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(0f, 0f, w / 12, paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawArc(RectF(-w / 12, -w / 12, w / 12, w / 12), 0f, deg * state.j + deg * scale, true, paint)
+                canvas.restore()
+            }
+            paint.color = Color.parseColor("#f44336")
             stackRects.forEach { stackRect ->
                 stackRect.draw(canvas,paint)
             }
