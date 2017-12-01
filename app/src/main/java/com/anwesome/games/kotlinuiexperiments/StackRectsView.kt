@@ -103,6 +103,34 @@ class StackRectsView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class StackRectAnimator(var container:StackRectContainer,var view:StackRectsView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update({j,scale ->
+                    animated = false
+                })
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun startUpdating() {
+            if(!animated) {
+                container.startUpdating{
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
 fun ConcurrentLinkedQueue<StackRectsView.StackRect>.getAt(i:Int):StackRectsView.StackRect? {
     var index = 0
