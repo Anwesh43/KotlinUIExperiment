@@ -3,6 +3,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 01/12/17.
  */
@@ -49,6 +51,19 @@ class StackRectsView(ctx:Context):View(ctx) {
         fun startUpdating(startcb:()->Unit) {
             dir = 1f - 2*scale
             startcb()
+        }
+    }
+    data class StackRectContainer(var w:Float,var h:Float,var n:Int) {
+        var stackRects:ConcurrentLinkedQueue<StackRect> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                var size = (2*h/3)/n
+                var dest = h-size/2
+                for(i in 0..n-1) {
+                    stackRects.add(StackRect(w/2,-size/2,size,dest))
+                    dest -= size
+                }
+            }
         }
     }
 }
