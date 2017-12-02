@@ -30,6 +30,15 @@ class CrossPieView(ctx:Context):View(ctx) {
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*scale,true,paint)
             canvas.restore()
+            for(i in 0..1) {
+                canvas.save()
+                canvas.translate(w / 2, 3 * h / 5)
+                canvas.rotate(-45f-90f*i)
+                canvas.drawLine(0f, -w / 3, 0f, -w / 3 + 2 * w / 3 * scale)
+                canvas.restore()
+            }
         }
+    }
+    data class CrossPieContainer(var w:Float,var h:Float) {
     }
 }
