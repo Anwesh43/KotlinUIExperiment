@@ -20,4 +20,16 @@ class CrossPieView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class CrossPie(var w:Float,var h:Float) {
+        fun draw(canvas:Canvas,paint:Paint,scale:Float) {
+            canvas.save()
+            canvas.translate(w/2,h/10)
+            paint.strokeWidth = Math.min(w,h)/50
+            paint.style = Paint.Style.STROKE
+            canvas.drawCircle(0f,0f,h/10,paint)
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*scale,true,paint)
+            canvas.restore()
+        }
+    }
 }
