@@ -40,14 +40,26 @@ class CrossPieView(ctx:Context):View(ctx) {
         }
     }
     data class CrossPieContainer(var w:Float,var h:Float) {
+        var crossPie = CrossPie(w,h)
+        var state = CrossPieContainerState()
+        fun draw(canvas:Canvas,paint:Paint) {
+            crossPie.draw(canvas,paint,state.scale)
+        }
+        fun update(stopcb:(Float)->Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating(startcb)
+        }
     }
     data class CrossPieContainerState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
-        fun update(stopcb:(Int)->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             scale += dir*0.1f
             if(Math.abs(scale-prevScale) > 1) {
                 scale = prevScale+dir
                 dir = 0f
                 prevScale = scale
+                stopcb(scale)
             }
         }
         fun startUpdating(startcb:()->Unit) {
