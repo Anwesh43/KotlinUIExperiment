@@ -235,6 +235,7 @@ class MainActivity : AppCompatActivity() {
 //        view.addLineSelectionListener({i -> createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
         //val view = StackRectsView.create(this)
         val view = CrossPieView.create(this)
+        view.addOnSelectionListener({createToast("selected")},{createToast("unselected")})
     }
 
     fun createTextView(text:String) {
