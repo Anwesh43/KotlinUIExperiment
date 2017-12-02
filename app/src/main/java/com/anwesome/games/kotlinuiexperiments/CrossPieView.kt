@@ -34,11 +34,25 @@ class CrossPieView(ctx:Context):View(ctx) {
                 canvas.save()
                 canvas.translate(w / 2, 3 * h / 5)
                 canvas.rotate(-45f-90f*i)
-                canvas.drawLine(0f, -w / 3, 0f, -w / 3 + 2 * w / 3 * scale)
+                canvas.drawLine(0f, -w / 3, 0f, -w / 3 + 2 * w / 3 * scale,paint)
                 canvas.restore()
             }
         }
     }
     data class CrossPieContainer(var w:Float,var h:Float) {
+    }
+    data class CrossPieContainerState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
+        fun update(stopcb:(Int)->Unit) {
+            scale += dir*0.1f
+            if(Math.abs(scale-prevScale) > 1) {
+                scale = prevScale+dir
+                dir = 0f
+                prevScale = scale
+            }
+        }
+        fun startUpdating(startcb:()->Unit) {
+            dir = 1f-2*scale
+            startcb()
+        }
     }
 }
