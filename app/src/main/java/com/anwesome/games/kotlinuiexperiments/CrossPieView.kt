@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 02/12/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -113,6 +114,13 @@ class CrossPieView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             renderer?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):CrossPieView {
+            val view = CrossPieView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
