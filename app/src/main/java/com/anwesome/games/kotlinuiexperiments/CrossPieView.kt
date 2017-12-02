@@ -70,4 +70,31 @@ class CrossPieView(ctx:Context):View(ctx) {
             startcb()
         }
     }
+    data class CrossPieRenderer(var container:CrossPieContainer,var view:CrossPieView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                } catch(ex: Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
