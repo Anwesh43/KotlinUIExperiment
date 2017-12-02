@@ -24,11 +24,14 @@ class CrossPieView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(w/2,h/10)
+            paint.color = Color.parseColor("#ff9800")
             paint.strokeWidth = Math.min(w,h)/50
             paint.style = Paint.Style.STROKE
             canvas.drawCircle(0f,0f,h/10,paint)
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*scale,true,paint)
+            paint.strokeCap = Paint.Cap.ROUND
+            paint.color = Color.parseColor("#673ab7")
             canvas.restore()
             for(i in 0..1) {
                 canvas.save()
