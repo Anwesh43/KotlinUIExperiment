@@ -11,6 +11,7 @@ import android.graphics.*
 class CrossPieView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CrossPieController(view = this)
+    var onSelectionListener:OnCrossPieSelectionListener?=null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
     }
@@ -21,6 +22,9 @@ class CrossPieView(ctx:Context):View(ctx) {
             }
         }
         return true
+    }
+    fun addOnSelectionListener(selectionListener:()->Unit,unSelectionListener:()->Unit) {
+        onSelectionListener = OnCrossPieSelectionListener(selectionListener,unSelectionListener)
     }
     data class CrossPie(var w:Float,var h:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
@@ -76,8 +80,12 @@ class CrossPieView(ctx:Context):View(ctx) {
         var animated = false
         fun update() {
             if(animated) {
-                container.update {
+                container.update { scale ->
                     animated = false
+                    when(scale) {
+                        0f -> view.onSelectionListener?.onUnSelectionListener?.invoke()
+                        1f -> view.onSelectionListener?.onSelectionListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -123,4 +131,5 @@ class CrossPieView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class OnCrossPieSelectionListener(var onSelectionListener:()->Unit,var onUnSelectionListener:()->Unit)
 }
