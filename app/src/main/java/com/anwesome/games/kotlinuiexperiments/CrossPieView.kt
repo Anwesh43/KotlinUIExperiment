@@ -97,4 +97,21 @@ class CrossPieView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class CrossPieController(var view:CrossPieView,var time:Int = 0) {
+        var renderer:CrossPieRenderer?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                renderer = CrossPieRenderer(CrossPieContainer(w,h),view)
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            renderer?.draw(canvas,paint)
+            renderer?.update()
+            time++
+        }
+        fun handleTap() {
+            renderer?.handleTap()
+        }
+    }
 }
