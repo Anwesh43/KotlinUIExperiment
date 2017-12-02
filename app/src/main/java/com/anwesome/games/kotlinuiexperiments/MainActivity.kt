@@ -233,7 +233,8 @@ class MainActivity : AppCompatActivity() {
 //        view.addScaleListener({createToast("scaled up")},{createToast("scaled down")})
 //        val view = AlternateLinePieView.create(this)
 //        view.addLineSelectionListener({i -> createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
-        val view = StackRectsView.create(this)
+        //val view = StackRectsView.create(this)
+        val view = CrossPieView.create(this)
     }
 
     fun createTextView(text:String) {
