@@ -33,7 +33,7 @@ class CrossPieView(ctx:Context):View(ctx) {
             paint.color = Color.parseColor("#e53935")
             paint.strokeWidth = Math.min(w,h)/50
             paint.style = Paint.Style.STROKE
-            canvas.drawCircle(0f,0f,h/10,paint)
+            canvas.drawCircle(0f,0f,h/12,paint)
             paint.style = Paint.Style.FILL
             canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*scale,true,paint)
             paint.strokeCap = Paint.Cap.ROUND
