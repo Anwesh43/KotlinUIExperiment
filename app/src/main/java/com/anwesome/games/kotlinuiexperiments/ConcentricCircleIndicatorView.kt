@@ -8,7 +8,7 @@ import android.content.*
 import android.view.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
+class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -35,7 +35,8 @@ class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
             state.startUpdating(startcb)
         }
     }
-    data class ConcentricCircleContainer(var w:Float,var h:Float) {
+    data class ConcentricCircleContainer(var w:Float,var h:Float,var n:Int) {
+        var state = ConcentricCircleContainerState(n)
         var circles:ConcurrentLinkedQueue<ConcentricCircle> = ConcurrentLinkedQueue()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
@@ -47,10 +48,17 @@ class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(stopcb:(Float,Int)->Unit) {
-            
+            state.executeFn {  j ->
+                circles.at(j)?.update{ scale ->
+                    state.incrementCounter()
+                    stopcb(scale,j)
+                }
+            }
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.executeFn { j->
+                circles.at(j)?.startUpdating(startcb)
+            }
         }
     }
     data class ConcentricCircleState(var scale:Float = 0f,var dir:Float=0f,var prevScale:Float = 0f) {
@@ -80,4 +88,14 @@ class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
             cb(j)
         }
     }
+}
+fun ConcurrentLinkedQueue<ConcentricCircleIndicatorView.ConcentricCircle>.at(index:Int):ConcentricCircleIndicatorView.ConcentricCircle? {
+    var i = 0
+    this.forEach {
+        if(i == index) {
+            return it
+        }
+        i++
+    }
+    return null
 }
