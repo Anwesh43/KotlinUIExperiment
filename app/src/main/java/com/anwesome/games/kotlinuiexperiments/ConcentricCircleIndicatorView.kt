@@ -46,6 +46,16 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
                 circle.draw(canvas,paint)
             }
             canvas.restore()
+            state.executeFn { j ->
+                if(n > 0) {
+                    paint.color = Color.parseColor("#4caf50")
+                    paint.strokeWidth = h/40
+                    paint.strokeCap = Paint.Cap.ROUND
+                    val gap = (0.8f*w)/n
+                    val scale = circles.at(j)?.state?.scale ?: 0f
+                    canvas.drawLine(w / 10,h/10,w/10+gap*j+gap*scale,h/10,paint)
+                }
+            }
         }
         fun update(stopcb:(Float,Int)->Unit) {
             state.executeFn {  j ->
