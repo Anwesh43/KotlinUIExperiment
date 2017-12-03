@@ -20,4 +20,16 @@ class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
         }
         return true
     }
+    data class ConcentricCircle(var r:Float) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            paint.style = Paint.Style.STROKE
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,false,paint)
+        }
+        fun update(stopcb:(Float)->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+
+        }
+    }
 }
