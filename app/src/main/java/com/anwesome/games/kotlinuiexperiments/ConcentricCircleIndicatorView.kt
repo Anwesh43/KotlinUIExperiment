@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 03/12/17.
  */
+import android.app.Activity
 import android.graphics.*
 import android.content.*
 import android.view.*
@@ -146,6 +147,13 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
             animator?.startAnimation { startcb ->
                 container?.startUpdating(startcb)
             }
+        }
+    }
+    companion object {
+        fun create(activity:Activity):ConcentricCircleIndicatorView {
+            val view = ConcentricCircleIndicatorView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
