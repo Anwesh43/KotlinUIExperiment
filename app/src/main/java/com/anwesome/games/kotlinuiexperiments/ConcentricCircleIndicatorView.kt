@@ -98,6 +98,31 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
             cb(j)
         }
     }
+    data class ConcentricCirclAnimator(var view:ConcentricCircleIndicatorView) {
+        var animated = true
+        fun animate(cb:(()->Unit)->Unit) {
+            if(animated) {
+                cb{
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                }
+                catch(ex:Exception) {
+
+                }
+
+            }
+        }
+        fun startAnimation(cb:(()->Unit)->Unit) {
+            if(!animated) {
+                cb {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
 fun ConcurrentLinkedQueue<ConcentricCircleIndicatorView.ConcentricCircle>.at(index:Int):ConcentricCircleIndicatorView.ConcentricCircle? {
     var i = 0
