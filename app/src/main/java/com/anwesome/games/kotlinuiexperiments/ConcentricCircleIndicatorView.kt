@@ -22,16 +22,17 @@ class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
         return true
     }
     data class ConcentricCircle(var r:Float) {
+        var state = ConcentricCircleState()
         fun draw(canvas:Canvas,paint:Paint) {
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = r/12
-            canvas.drawArc(RectF(-r,-r,r,r),0f,360f,false,paint)
+            canvas.drawArc(RectF(-r,-r,r,r),0f,360f*state.scale,false,paint)
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class ConcentricCircleContainer(var w:Float,var h:Float) {
@@ -46,7 +47,7 @@ class ConcentricCircleIndicatorView(ctx:Context):View(ctx) {
             canvas.restore()
         }
         fun update(stopcb:(Float,Int)->Unit) {
-
+            
         }
         fun startUpdating(startcb:()->Unit) {
 
