@@ -40,6 +40,16 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
     data class ConcentricCircleContainer(var w:Float,var h:Float,var n:Int) {
         var state = ConcentricCircleContainerState(n)
         var circles:ConcurrentLinkedQueue<ConcentricCircle> = ConcurrentLinkedQueue()
+
+        init {
+            if(n>0) {
+                var gap = Math.min(w, h)/2*n
+                for (i in 0..n - 1) {
+                    circles.add(ConcentricCircle(gap*(i+1)))
+
+                }
+            }
+        }
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(w/2,h/2)
@@ -101,7 +111,7 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
         }
     }
     data class ConcentricCircleIndicatorAnimator(var view:ConcentricCircleIndicatorView) {
-        var animated = true
+        var animated = false
         fun animate(cb:(()->Unit)->Unit) {
             if(animated) {
                 cb{
