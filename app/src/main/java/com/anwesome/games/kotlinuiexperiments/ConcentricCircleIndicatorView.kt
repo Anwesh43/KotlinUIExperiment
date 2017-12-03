@@ -43,7 +43,7 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
 
         init {
             if(n>0) {
-                var gap = Math.min(w, h)/2*n
+                var gap = Math.min(w, h)/(3*n)
                 for (i in 0..n - 1) {
                     circles.add(ConcentricCircle(gap*(i+1)))
 
@@ -98,7 +98,7 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
             startcb()
         }
     }
-    data class ConcentricCircleContainerState(var n:Int,var j:Int = 0,var dir:Int = 0) {
+    data class ConcentricCircleContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
         fun incrementCounter() {
             j+=dir
             if(j == n || j == -1) {
@@ -119,6 +119,7 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
                 }
                 try {
                     Thread.sleep(50)
+                    view.invalidate()
                 }
                 catch(ex:Exception) {
 
