@@ -98,7 +98,7 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
             cb(j)
         }
     }
-    data class ConcentricCirclAnimator(var view:ConcentricCircleIndicatorView) {
+    data class ConcentricCircleIndicatorAnimator(var view:ConcentricCircleIndicatorView) {
         var animated = true
         fun animate(cb:(()->Unit)->Unit) {
             if(animated) {
@@ -120,6 +120,30 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
                     animated = true
                     view.postInvalidate()
                 }
+            }
+        }
+    }
+    data class ConcentricCircleIndicatorRenderer(var view:ConcentricCircleIndicatorView,var time:Int = 0) {
+        var animator = ConcentricCircleIndicatorAnimator(view)
+        var container:ConcentricCircleContainer?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                container = ConcentricCircleContainer(w,h,view.n)
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            container?.draw(canvas,paint)
+            animator?.animate { stopcb ->
+                container?.update{ scale,j ->
+                    stopcb()
+                }
+            }
+            time++
+        }
+        fun handleTap() {
+            animator?.startAnimation { startcb ->
+                container?.startUpdating(startcb)
             }
         }
     }
