@@ -12,8 +12,12 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = ConcentricCircleIndicatorRenderer(this)
+    var onSelectionListener:OnConcentricCircleSelectionListener? = null
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
+    }
+    fun addOnSelectionListener(selectionListener:(Int)->Unit,unSelectionListener:(Int)->Unit) {
+        onSelectionListener = OnConcentricCircleSelectionListener(selectionListener,unSelectionListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -150,6 +154,10 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
             animator?.animate { stopcb ->
                 container?.update{ scale,j ->
                     stopcb()
+                    when(scale) {
+                        0f -> view.onSelectionListener?.unSelectionListener?.invoke(j)
+                        1f -> view.onSelectionListener?.selectionListener?.invoke(j)
+                    }
                 }
             }
             time++
@@ -167,6 +175,7 @@ class ConcentricCircleIndicatorView(ctx:Context,var n:Int=5):View(ctx) {
             return view
         }
     }
+    data class OnConcentricCircleSelectionListener(var selectionListener:(Int)->Unit,var unSelectionListener:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<ConcentricCircleIndicatorView.ConcentricCircle>.at(index:Int):ConcentricCircleIndicatorView.ConcentricCircle? {
     var i = 0
