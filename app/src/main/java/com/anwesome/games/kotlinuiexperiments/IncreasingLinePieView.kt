@@ -70,10 +70,22 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
             }
         }
         fun update(stopcb:(Float,Int)->Unit) {
-
+            
         }
         fun startUpdating(startcb:()->Unit) {
 
+        }
+    }
+    data class IncreasingLineContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
+        fun incrementCounter(){
+            j+=dir
+            if(j == n || j == -1) {
+                dir*=-1
+                j+=dir
+            }
+        }
+        fun execFunc(cb:(Int)->Unit) {
+            cb(j)
         }
     }
 }
