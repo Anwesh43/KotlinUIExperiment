@@ -63,4 +63,22 @@ class RotateOverLineView(ctx:Context):View(ctx) {
             curr?.update()
         }
     }
+    data class RotateOverLineAnimator(var container:RotateOverLineContainer,var view:RotateOverLineView) {
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            container.update()
+            try {
+                Thread.sleep(50)
+                view.invalidate()
+            }
+            catch(ex:Exception) {
+
+            }
+        }
+        fun handleTap(x:Float,y:Float) {
+            container.addNewLine(x,y)
+        }
+    }
 }
