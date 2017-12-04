@@ -10,13 +10,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = IncreasingLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -147,6 +148,7 @@ class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
                 val h = canvas.height.toFloat()
                 animator = IncreasingLineAnimator(IncreasingLineContainer(w,h,view.n),view)
             }
+            canvas.drawColor(Color.parseColor("#212121"))
             animator?.draw(canvas,paint)
             animator?.update()
             time++
