@@ -81,4 +81,23 @@ class RotateOverLineView(ctx:Context):View(ctx) {
             container.addNewLine(x,y)
         }
     }
+    data class RotateOverLineRenderer(var time:Int = 0,var view:RotateOverLineView) {
+        var animator:RotateOverLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                paint.color = Color.parseColor("#0D47A1")
+                paint.strokeCap = Paint.Cap.ROUND
+                paint.strokeWidth = Math.min(w,h)/60
+                animator = RotateOverLineAnimator(RotateOverLineContainer(w, h), view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap(x:Float,y:Float) {
+            animator?.handleTap(x,y)
+        }
+    }
 }
