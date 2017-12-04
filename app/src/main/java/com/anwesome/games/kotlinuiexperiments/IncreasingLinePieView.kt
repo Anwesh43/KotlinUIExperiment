@@ -82,7 +82,7 @@ class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
                 paint.style = Paint.Style.STROKE
                 canvas.drawCircle(0f,0f,h/12,paint)
                 paint.style = Paint.Style.FILL
-                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),gap*j,gap*scale,true,paint)
+                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,gap*j+gap*scale,true,paint)
                 canvas.restore()
             }
         }
