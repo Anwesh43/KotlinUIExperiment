@@ -52,12 +52,13 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
         }
     }
     data class IncreasingLineContainer(var w:Float,var h:Float,var n:Int) {
+        var state = IncreasingLineContainerState(n)
         val lines:ConcurrentLinkedQueue<IncreasingLine> = ConcurrentLinkedQueue()
         init {
             if(n > 0) {
-                val gap = h/(n+1)
+                val gap = (4*h/5)/(n+1)
                 val x = w/10
-                var y = gap
+                var y = h/5+gap
                 for(i in 0..n - 1) {
                     lines.add(IncreasingLine(x,y,gap*(i+1)))
                     y += gap
@@ -65,15 +66,34 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
             }
         }
         fun draw(canvas:Canvas,paint:Paint) {
+            paint.color = Color.parseColor("#0D47A1")
+            paint.strokeWidth = Math.min(w,h)/60
+            paint.strokeCap = Paint.Cap.ROUND
             lines.forEach { line ->
                 line.draw(canvas,paint)
             }
+            state.execFunc { j ->
+                canvas.save()
+                canvas.translate(w/2,h/10)
+                var scale = lines.at(j)?.state?.scale?:0f
+                paint.style = Paint.Style.STROKE
+                canvas.drawCircle(0f,0f,h/12,paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*scale,true,paint)
+                canvas.restore()
+            }
         }
         fun update(stopcb:(Float,Int)->Unit) {
-            
+            state.execFunc { j ->
+                lines.at(j)?.update { scale ->
+                    stopcb(scale,j)
+                }
+            }
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.execFunc { j->
+                lines.at(j)?.startUpdating(startcb)
+            }
         }
     }
     data class IncreasingLineContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
@@ -85,7 +105,19 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
             }
         }
         fun execFunc(cb:(Int)->Unit) {
-            cb(j)
+            if(j < n) {
+                cb(j)
+            }
         }
     }
+}
+fun ConcurrentLinkedQueue<IncreasingLinePieView.IncreasingLine>.at(index:Int):IncreasingLinePieView.IncreasingLine? {
+    var i = 0
+    this.forEach {
+        if(i == index) {
+            return it
+        }
+        i++
+    }
+    return null
 }
