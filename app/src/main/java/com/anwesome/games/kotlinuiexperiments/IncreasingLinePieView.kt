@@ -58,12 +58,13 @@ class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
         val lines:ConcurrentLinkedQueue<IncreasingLine> = ConcurrentLinkedQueue()
         init {
             if(n > 0) {
-                val gap = (4*h/5)/(n+1)
+                val h_gap = (4*h/5)/(n+1)
+                val w_gap = (4*w/5)/(n+1)
                 val x = w/10
-                var y = h/5+gap
+                var y = h/5+h_gap
                 for(i in 0..n - 1) {
-                    lines.add(IncreasingLine(x,y,gap*(i+1)))
-                    y += gap
+                    lines.add(IncreasingLine(x,y,w_gap*(i+1)))
+                    y += h_gap
                 }
             }
         }
