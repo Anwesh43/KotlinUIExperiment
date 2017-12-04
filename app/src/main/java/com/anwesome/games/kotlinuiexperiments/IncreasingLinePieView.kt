@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 04/12/17.
  */
+import android.app.Activity
 import android.graphics.*
 import android.view.*
 import android.content.*
@@ -155,6 +156,13 @@ class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):IncreasingLinePieView {
+            val view = IncreasingLinePieView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
