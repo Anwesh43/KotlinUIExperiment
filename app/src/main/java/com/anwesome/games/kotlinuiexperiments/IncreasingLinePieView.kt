@@ -75,13 +75,14 @@ class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
                 line.draw(canvas,paint)
             }
             state.execFunc { j ->
+                val gap = 360f/n
                 canvas.save()
                 canvas.translate(w/2,h/10)
                 var scale = lines.at(j)?.state?.scale?:0f
                 paint.style = Paint.Style.STROKE
                 canvas.drawCircle(0f,0f,h/12,paint)
                 paint.style = Paint.Style.FILL
-                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),0f,360f*scale,true,paint)
+                canvas.drawArc(RectF(-h/12,-h/12,h/12,h/12),gap*j,gap*scale,true,paint)
                 canvas.restore()
             }
         }
