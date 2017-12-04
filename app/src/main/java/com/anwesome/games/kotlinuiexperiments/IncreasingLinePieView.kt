@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.graphics.*
 import android.view.*
 import android.content.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class IncreasingLinePieView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -48,6 +49,31 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
         fun startUpdating(startcb:()->Unit) {
             dir = 1f-2*scale
             startcb()
+        }
+    }
+    data class IncreasingLineContainer(var w:Float,var h:Float,var n:Int) {
+        val lines:ConcurrentLinkedQueue<IncreasingLine> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                val gap = h/(n+1)
+                val x = w/10
+                var y = gap
+                for(i in 0..n - 1) {
+                    lines.add(IncreasingLine(x,y,gap*(i+1)))
+                    y += gap
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            lines.forEach { line ->
+                line.draw(canvas,paint)
+            }
+        }
+        fun update(stopcb:(Float,Int)->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+
         }
     }
 }
