@@ -21,17 +21,18 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
         return true
     }
     data class IncreasingLine(var x:Float,var y:Float,var w:Float) {
+        var state = IncreasingLineState()
         fun draw(canvas:Canvas,paint:Paint) {
             canvas.save()
             canvas.translate(x,y)
-            canvas.drawLine(0f,0f,w,0f,paint)
+            canvas.drawLine(0f,0f,w*state.scale,0f,paint)
             canvas.restore()
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
-        fun startUpdating(stopcb:()->Unit) {
-
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating(startcb)
         }
     }
     data class IncreasingLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
