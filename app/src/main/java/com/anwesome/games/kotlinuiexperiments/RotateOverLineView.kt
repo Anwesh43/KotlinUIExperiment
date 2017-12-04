@@ -7,11 +7,12 @@ import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
+import android.util.Log
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class RotateOverLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val renderer = RotateOverLineRenderer(this)
+    val renderer = RotateOverLineRenderer(view = this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -44,14 +45,16 @@ class RotateOverLineView(ctx:Context):View(ctx) {
         var rotateOverLines:ConcurrentLinkedQueue<RotateOverLine> = ConcurrentLinkedQueue()
         var curr:RotateOverLine?=null
         fun addNewLine(x:Float,y:Float) {
+            val size = Math.min(w,h)/9
             if(rotateOverLines.size == 0) {
-                curr = RotateOverLine(x,y,Math.min(w,h)/9)
+                curr = RotateOverLine(x,y,size)
             }
             else {
-                val x = curr?.x?:0f + Math.cos((curr?.deg?:0f)*Math.PI/180).toFloat()
-                val y = curr?.y?:0f + Math.sin((curr?.deg?:0f)*Math.PI/180).toFloat()
+                val x1 = ((size)*Math.cos((curr?.deg?:0f)*Math.PI/180).toFloat()) + (curr?.x?:0f)
+                val y1 =  (size*Math.sin((curr?.deg?:0f)*Math.PI/180).toFloat())+ (curr?.y?:0f)
+                Log.d("xy:",""+x1+","+y1)
                 val deg = (((curr?.deg?:0f)-180)+360f)%360
-                curr = RotateOverLine(x,y,deg)
+                curr = RotateOverLine(x1,y1,size=size,deg=deg)
             }
             rotateOverLines.add(curr)
         }
