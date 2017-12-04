@@ -87,6 +87,7 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
             state.execFunc { j ->
                 lines.at(j)?.update { scale ->
                     stopcb(scale,j)
+                    state.incrementCounter()
                 }
             }
         }
@@ -107,6 +108,34 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
         fun execFunc(cb:(Int)->Unit) {
             if(j < n) {
                 cb(j)
+            }
+        }
+    }
+    data class IncreasingLineAnimator(var container:IncreasingLineContainer,var view:IncreasingLinePieView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{scale,j ->
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
             }
         }
     }
