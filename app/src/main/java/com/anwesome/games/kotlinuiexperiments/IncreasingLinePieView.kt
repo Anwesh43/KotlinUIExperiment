@@ -8,7 +8,7 @@ import android.view.*
 import android.content.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class IncreasingLinePieView(ctx:Context):View(ctx) {
+class IncreasingLinePieView(ctx:Context,var n:Int = 5):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -137,6 +137,22 @@ class IncreasingLinePieView(ctx:Context):View(ctx) {
                     view.postInvalidate()
                 }
             }
+        }
+    }
+    data class IncreasingLineRenderer(var view:IncreasingLinePieView,var time:Int = 0) {
+        var animator:IncreasingLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = IncreasingLineAnimator(IncreasingLineContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
         }
     }
 }
