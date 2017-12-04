@@ -236,8 +236,9 @@ class MainActivity : AppCompatActivity() {
         //val view = StackRectsView.create(this)
 //        val view = CrossPieView.create(this)
 //        view.addOnSelectionListener({createToast("selected")},{createToast("unselected")})
-        val view = ConcentricCircleIndicatorView.create(this)
-        view.addOnSelectionListener({i->createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
+//        val view = ConcentricCircleIndicatorView.create(this)
+//        view.addOnSelectionListener({i->createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
+        val view = IncreasingLinePieView.create(this)
     }
 
     fun createTextView(text:String) {
