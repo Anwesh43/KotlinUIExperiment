@@ -39,4 +39,16 @@ class CircleFourLineView(ctx:Context):View(ctx) {
             canvas.restore()
         }
     }
+    data class CircleFourLineContainer(var w:Float,var h:Float) {
+        var circleFourLine = CircleFourLine(w/2,h/2,Math.min(w,h)/3)
+        fun draw(canvas:Canvas,paint:Paint) {
+            circleFourLine.draw(canvas,paint,1f)
+        }
+        fun update(stopcb:()->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+
+        }
+    }
 }
