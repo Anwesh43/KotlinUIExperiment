@@ -94,4 +94,20 @@ class CircleFourLineView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class CircleFourLineRenderer(var view:CircleFourLineView,var time:Int = 0) {
+        var animator:CircleFourLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = CircleFourLineAnimator(CircleFourLineContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.handleTap()
+        }
+    }
 }
