@@ -9,13 +9,15 @@ import android.view.*
 
 class CircleFourLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = CircleFourLineRenderer(this)
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
@@ -101,6 +103,7 @@ class CircleFourLineView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = CircleFourLineAnimator(CircleFourLineContainer(w,h),view)
+                paint.color = Color.parseColor("#311B92")
             }
             animator?.draw(canvas,paint)
             animator?.update()
