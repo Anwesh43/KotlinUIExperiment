@@ -241,6 +241,7 @@ class MainActivity : AppCompatActivity() {
         //val view = IncreasingLinePieView.create(this)
 //        val view = RotateOverLineView.create(this)
         val view = CircleFourLineView.create(this)
+        view.addOnExpandListener({createToast("expanded")},{createToast("collapsed")})
     }
 
     fun createTextView(text:String) {
