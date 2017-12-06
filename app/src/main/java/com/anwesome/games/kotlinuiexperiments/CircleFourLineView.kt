@@ -40,15 +40,16 @@ class CircleFourLineView(ctx:Context):View(ctx) {
         }
     }
     data class CircleFourLineContainer(var w:Float,var h:Float) {
+        var state = CircleFourLineState()
         var circleFourLine = CircleFourLine(w/2,h/2,Math.min(w,h)/3)
         fun draw(canvas:Canvas,paint:Paint) {
-            circleFourLine.draw(canvas,paint,1f)
+            circleFourLine.draw(canvas,paint,state.scale)
         }
         fun update(stopcb:()->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class CircleFourLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
