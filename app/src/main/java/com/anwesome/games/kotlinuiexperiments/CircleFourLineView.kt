@@ -11,6 +11,10 @@ import android.view.*
 class CircleFourLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CircleFourLineRenderer(this)
+    var onExpandListener:CircleFourLineExpandListener?=null
+    fun addOnExpandListener(expandListener: () -> Unit,collapseListener: () -> Unit) {
+        onExpandListener = CircleFourLineExpandListener(expandListener,collapseListener)
+    }
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -48,7 +52,7 @@ class CircleFourLineView(ctx:Context):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             circleFourLine.draw(canvas,paint,state.scale)
         }
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
@@ -56,13 +60,13 @@ class CircleFourLineView(ctx:Context):View(ctx) {
         }
     }
     data class CircleFourLineState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
-        fun update(stopcb:()->Unit) {
+        fun update(stopcb:(Float)->Unit) {
             scale += dir*0.1f
             if(Math.abs(scale - prevScale) > 1) {
                 scale = prevScale+dir
                 dir = 0f
                 prevScale = scale
-                stopcb()
+                stopcb(scale)
             }
         }
         fun startUpdating(startcb:()->Unit) {
@@ -74,8 +78,12 @@ class CircleFourLineView(ctx:Context):View(ctx) {
         var animated = false
         fun update() {
             if(animated) {
-                container.update{
+                container.update{scale ->
                     animated = false
+                    when(scale) {
+                        1f -> view.onExpandListener?.expandListener?.invoke()
+                        0f -> view.onExpandListener?.collapseListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -123,4 +131,5 @@ class CircleFourLineView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class CircleFourLineExpandListener(var expandListener:()->Unit,var collapseListener:()->Unit)
 }
