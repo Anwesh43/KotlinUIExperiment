@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 06/12/17.
  */
+import android.app.Activity
 import android.graphics.*
 import android.content.*
 import android.view.*
@@ -111,6 +112,13 @@ class CircleFourLineView(ctx:Context):View(ctx) {
         }
         fun handleTap() {
             animator?.handleTap()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):CircleFourLineView {
+            val view = CircleFourLineView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
