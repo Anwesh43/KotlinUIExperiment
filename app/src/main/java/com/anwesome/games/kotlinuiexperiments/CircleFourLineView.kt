@@ -38,7 +38,7 @@ class CircleFourLineView(ctx:Context):View(ctx) {
             }
             canvas.drawCircle(0f,0f,r/5,paint)
             paint.style = Paint.Style.FILL
-            canvas.drawArc(RectF(-r/5,-r/5,r/5,r/5),0f,360f,true,paint)
+            canvas.drawArc(RectF(-r/5,-r/5,r/5,r/5),0f,360f*scale,true,paint)
             canvas.restore()
         }
     }
@@ -67,6 +67,7 @@ class CircleFourLineView(ctx:Context):View(ctx) {
         }
         fun startUpdating(startcb:()->Unit) {
             dir = 1f-2*scale
+            startcb()
         }
     }
     data class CircleFourLineAnimator(var container:CircleFourLineContainer,var view:CircleFourLineView) {
@@ -105,6 +106,7 @@ class CircleFourLineView(ctx:Context):View(ctx) {
                 val h = canvas.height.toFloat()
                 animator = CircleFourLineAnimator(CircleFourLineContainer(w,h),view)
                 paint.color = Color.parseColor("#311B92")
+                paint.strokeCap = Paint.Cap.ROUND
             }
             animator?.draw(canvas,paint)
             animator?.update()

@@ -239,7 +239,8 @@ class MainActivity : AppCompatActivity() {
 //        val view = ConcentricCircleIndicatorView.create(this)
 //        view.addOnSelectionListener({i->createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
         //val view = IncreasingLinePieView.create(this)
-        val view = RotateOverLineView.create(this)
+//        val view = RotateOverLineView.create(this)
+        val view = CircleFourLineView.create(this)
     }
 
     fun createTextView(text:String) {
