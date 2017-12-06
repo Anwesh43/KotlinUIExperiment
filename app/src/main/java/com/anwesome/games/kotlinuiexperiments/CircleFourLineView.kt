@@ -66,4 +66,32 @@ class CircleFourLineView(ctx:Context):View(ctx) {
             dir = 1f-2*scale
         }
     }
+    data class CircleFourLineAnimator(var container:CircleFourLineContainer,var view:CircleFourLineView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas: Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun handleTap() {
+            if(!animated) {
+                container.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
