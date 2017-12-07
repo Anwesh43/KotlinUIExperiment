@@ -99,5 +99,21 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class DirecArrowPieRenderer(var view:DirecArrowPieView,var time:Int = 0) {
+        var animator:DirecArrowPieAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = DirecArrowPieAnimator(DirecArowwPieContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun startUpdating() {
+            animator?.startUpdating()
+        }
+    }
 }
 
