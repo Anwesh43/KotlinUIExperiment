@@ -11,9 +11,13 @@ import java.util.concurrent.ConcurrentLinkedQueue
 val sideBoxColors:Array<String> = arrayOf("#311B92","#004D40","#BF360C","#4CAF50","#FFC107","#00E676","#880E4F","#448AFF")
 class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var onPositionSetListener:OnPositionSetListener?=null
     val renderer = SideBoxSquareRenderer(this)
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
+    }
+    fun addOnPositionListener(postionSetListener: (Int) -> Unit, postionResetListener: (Int) -> Unit) {
+        onPositionSetListener = OnPositionSetListener(postionSetListener,postionResetListener)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -111,6 +115,14 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             if(animated) {
                 container.update{scale,j->
                     animated = false
+                    when(scale) {
+                        0f -> {
+                            view.onPositionSetListener?.onPostionResetListener?.invoke(j)
+                        }
+                        1f -> {
+                            view.onPositionSetListener?.onPostionSetListener?.invoke(j)
+                        }
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -157,6 +169,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             return view
         }
     }
+    data class OnPositionSetListener(var onPostionSetListener:(Int)->Unit,var onPostionResetListener:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<SideBoxSquareView.SideBoxSquare>.at(i:Int):SideBoxSquareView.SideBoxSquare? {
     var index = 0
