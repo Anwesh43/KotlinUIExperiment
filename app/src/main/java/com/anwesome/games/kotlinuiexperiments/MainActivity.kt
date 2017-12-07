@@ -240,8 +240,9 @@ class MainActivity : AppCompatActivity() {
 //        view.addOnSelectionListener({i->createToast("selected ${i}")},{i -> createToast("unselected ${i}")})
         //val view = IncreasingLinePieView.create(this)
 //        val view = RotateOverLineView.create(this)
-        val view = CircleFourLineView.create(this)
-        view.addOnExpandListener({createToast("expanded")},{createToast("collapsed")})
+//        val view = CircleFourLineView.create(this)
+//        view.addOnExpandListener({createToast("expanded")},{createToast("collapsed")})
+        val view = DirecArrowPieView.create(this)
     }
 
     fun createTextView(text:String) {
