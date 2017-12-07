@@ -55,11 +55,12 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
     }
     data class DirecArowwPieContainer(var w:Float,var h:Float) {
         var pie = DirecArrowPie(w,h)
+        val state = DirecArowwPieContainerState()
         fun draw(canvas:Canvas,paint:Paint) {
-            pie.draw(canvas,paint,0f)
+            pie.draw(canvas,paint,state.scale)
         }
         fun update(stopcb:()->Unit) {
-
+            state.update(stopcb)
         }
     }
     data class DirecArowwPieContainerState(var scale:Float = 0f,var deg:Float = 0f) {
