@@ -61,8 +61,15 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
         fun update(stopcb:()->Unit) {
 
         }
-        fun startUpdating(startcb:()->Unit) {
-
+    }
+    data class DirecArowwPieContainerState(var scale:Float = 0f,var deg:Float = 0f) {
+        fun update(stopcb:()->Unit) {
+            deg += 10f
+            scale = Math.sin(deg*Math.PI/180).toFloat()
+            if(deg > 180) {
+                deg = 0f
+                scale = 1f
+            }
         }
     }
 }
