@@ -23,11 +23,11 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         return true
     }
-    data class SideBoxSquare(var i:Int,var dx:Float,var y:Float,var size:Float,var x:Float=-dx+2*dx*(i%2),var px:Float = x) {
+    data class SideBoxSquare(var i:Int,var dx:Float,var y:Float,var size:Float,var x:Float=-dx+4*dx*(i%2),var px:Float = x) {
         val state = SideBoxSquareState()
         fun draw(canvas: Canvas,paint:Paint) {
             paint.color = Color.parseColor(sideBoxColors[i])
-            x = px+(dx-px)
+            x = px+(dx-px)*state.scale
             canvas.save()
             canvas.translate(x,y)
             canvas.drawRoundRect(RectF(-size/2,-size/2,size/2,size/2),size/10,size/10,paint)
@@ -59,7 +59,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         val state = SideBoxSquareContainerState(n)
         var squares:ConcurrentLinkedQueue<SideBoxSquare> = ConcurrentLinkedQueue()
         init {
-            val size = Math.min(w,h)/3
+            val size = 4*Math.min(w,h)/5
             for(i in 0..n-1) {
                 squares.add(SideBoxSquare(i,w/2,h/2,size))
             }
@@ -83,6 +83,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             state.executeCb { j->
                 squares.at(j)?.update{scale->
                     stopcb(scale,j)
+                    state.incrementCounter()
                 }
             }
         }
