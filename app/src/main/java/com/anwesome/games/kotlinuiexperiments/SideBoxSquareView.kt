@@ -67,10 +67,22 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
         fun update(startcb:(Float,Int)->Unit) {
-
+            
         }
         fun startUpdating(stopcb:()->Unit) {
 
+        }
+    }
+    data class SideBoxSquareContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
+        fun incrementCounter() {
+            j += dir
+            if(j == n || j == -1) {
+                dir *= -1
+                j+=dir
+            }
+        }
+        fun executeCb(cb:(Int)->Unit) {
+            cb(j)
         }
     }
     data class SideBoxSquareAnimator(var container:SideBoxSquareContainer,var view:SideBoxSquareView) {
