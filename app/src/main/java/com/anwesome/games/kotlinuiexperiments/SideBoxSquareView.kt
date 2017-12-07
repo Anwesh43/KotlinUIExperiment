@@ -54,6 +54,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         }
     }
     data class SideBoxSquareContainer(var w:Float,var h:Float,var n:Int) {
+        val state = SideBoxSquareContainerState(n)
         var squares:ConcurrentLinkedQueue<SideBoxSquare> = ConcurrentLinkedQueue()
         init {
             val size = Math.min(w,h)/3
@@ -65,12 +66,28 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             squares.forEach { square ->
                 square.draw(canvas,paint)
             }
+            paint.color = Color.WHITE
+            paint.strokeWidth = Math.min(w,h)/50
+            paint.strokeCap = Paint.Cap.ROUND
+            state.executeCb { j->
+                if(n > 0) {
+                    val scale = squares?.at(j)?.state?.scale ?: 0f
+                    val gap = (8*w/10)/n
+                    canvas.drawLine(w / 10, h / 10, w/10+gap*(j+scale), h / 10, paint)
+                }
+            }
         }
-        fun update(startcb:(Float,Int)->Unit) {
-            
+        fun update(stopcb:(Float,Int)->Unit) {
+            state.executeCb { j->
+                squares.at(j)?.update{scale->
+                    stopcb(scale,j)
+                }
+            }
         }
-        fun startUpdating(stopcb:()->Unit) {
-
+        fun startUpdating(startcb:()->Unit) {
+            state.executeCb { j ->
+                squares.at(j)?.startUpdating(startcb)
+            }
         }
     }
     data class SideBoxSquareContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
