@@ -247,6 +247,11 @@ class MainActivity : AppCompatActivity() {
 //            createToast("clicked")
 //        }
         val view = SideBoxSquareView.create(this)
+        view.addOnPositionListener({j->
+            createToast("position set for $j")
+        },{j->
+            createToast("position reset for $j")
+        })
     }
 
     fun createTextView(text:String) {
