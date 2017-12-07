@@ -5,21 +5,20 @@ package com.anwesome.games.kotlinuiexperiments
  */
 import android.view.*
 import android.content.*
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.view.*
 
 class DirecArrowPieView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = DirecArrowPieRenderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        canvas.drawColor(Color.parseColor("#212121"))
+        renderer.render(canvas,paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.startUpdating()
             }
         }
         return true
