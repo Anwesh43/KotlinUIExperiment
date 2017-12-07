@@ -242,10 +242,11 @@ class MainActivity : AppCompatActivity() {
 //        val view = RotateOverLineView.create(this)
 //        val view = CircleFourLineView.create(this)
 //        view.addOnExpandListener({createToast("expanded")},{createToast("collapsed")})
-        val view = DirecArrowPieView.create(this)
-        view.addClickListener {
-            createToast("clicked")
-        }
+//        val view = DirecArrowPieView.create(this)
+//        view.addClickListener {
+//            createToast("clicked")
+//        }
+        val view = SideBoxSquareView.create(this)
     }
 
     fun createTextView(text:String) {
