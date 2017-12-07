@@ -72,11 +72,12 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
     }
     data class DirecArowwPieContainerState(var scale:Float = 0f,var deg:Float = 0f) {
         fun update(stopcb:()->Unit) {
-            deg += 10f
+            deg += 3f
             scale = Math.sin(deg*Math.PI/180).toFloat()
             if(deg > 180) {
                 deg = 0f
-                scale = 1f
+                scale = 0f
+                stopcb()
             }
         }
     }
@@ -89,9 +90,10 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
             if(animated) {
                 container.update {
                     animated = false
+                    view.clickListener?.clickListener?.invoke()
                 }
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(20)
                     view.invalidate()
                 }
                 catch(ex:Exception) {
