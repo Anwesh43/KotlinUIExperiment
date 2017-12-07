@@ -73,5 +73,31 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class DirecArrowPieAnimator(var container:DirecArowwPieContainer,var view:DirecArrowPieView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            if(animated) {
+                container.update {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun startUpdating() {
+            if(!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+    }
 }
 
