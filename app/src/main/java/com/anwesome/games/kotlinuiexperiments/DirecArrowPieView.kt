@@ -7,11 +7,11 @@ import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
-import android.view.*
 
 class DirecArrowPieView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = DirecArrowPieRenderer(this)
+    var clickListener:DirecArrowPieClickListener?=null
     override fun onDraw(canvas:Canvas) {
         canvas.drawColor(Color.parseColor("#212121"))
         renderer.render(canvas,paint)
@@ -24,16 +24,23 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
         }
         return true
     }
+    fun addClickListener(onClickListener:()->Unit) {
+        clickListener = DirecArrowPieClickListener(onClickListener)
+    }
     data class DirecArrowPie(var w:Float,var h:Float) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             canvas.save()
             canvas.translate(w/2,h/2)
             paint.style = Paint.Style.STROKE
             val r = Math.min(w,h)/5
+            paint.color = Color.GRAY
+            canvas.drawCircle(0f,0f,r,paint)
+            paint.color = Color.parseColor("#4A148C")
             canvas.drawArc(RectF(-r,-r,r,r),0f,360f*scale,false,paint)
             canvas.restore()
             paint.style = Paint.Style.FILL
             val size = Math.min(w,h)/10
+            paint.color = Color.GRAY
             for(i in 0..1) {
                 canvas.save()
                 canvas.translate(w/2,h/5+h/2*i)
@@ -106,6 +113,7 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = DirecArrowPieAnimator(DirecArowwPieContainer(w,h),view)
+                paint.strokeWidth = Math.min(w,h)/50
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -122,5 +130,6 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
             return view
         }
     }
+    data class DirecArrowPieClickListener(var clickListener:()->Unit)
 }
 
