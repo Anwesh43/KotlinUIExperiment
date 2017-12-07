@@ -73,6 +73,31 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
 
         }
     }
+    data class SideBoxSquareAnimator(var container:SideBoxSquareContainer,var view:SideBoxSquareView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{scale,j->
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun startUpdating() {
+            if(!animated) {
+                container.startUpdating{
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
 fun ConcurrentLinkedQueue<SideBoxSquareView.SideBoxSquare>.at(i:Int):SideBoxSquareView.SideBoxSquare? {
     var index = 0
