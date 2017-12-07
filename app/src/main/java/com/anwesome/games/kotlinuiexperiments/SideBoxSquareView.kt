@@ -20,6 +20,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         return true
     }
     data class SideBoxSquare(var i:Int,var dx:Float,var y:Float,var size:Float,var x:Float=(2*(i%2)-1)*dx,var px:Float = x) {
+        val state = SideBoxSquareState()
         fun draw(canvas: Canvas,paint:Paint) {
             paint.color = Color.parseColor(sideBoxColors[i])
             x = px+(dx-px)
@@ -29,10 +30,10 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             canvas.restore()
         }
         fun update(stopcb:(Float)->Unit) {
-
+            state.update(stopcb)
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class SideBoxSquareState(var scale:Float=0f,var dir:Float = 0f,var prevScale:Float = 0f) {
@@ -47,6 +48,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun startUpdating(startcb:()->Unit) {
             dir = 1f-2*scale
+            startcb()
         }
     }
 }
