@@ -118,6 +118,10 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
                 }
             }
         }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            container.draw(canvas,paint)
+        }
         fun startUpdating() {
             if(!animated) {
                 container.startUpdating{
