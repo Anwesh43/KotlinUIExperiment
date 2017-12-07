@@ -131,6 +131,22 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             }
         }
     }
+    data class SideBoxSquareRenderer(var view:SideBoxSquareView,var time:Int = 0) {
+        var animator:SideBoxSquareAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = SideBoxSquareAnimator(SideBoxSquareContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun startUpdating() {
+            animator?.startUpdating()
+        }
+    }
 }
 fun ConcurrentLinkedQueue<SideBoxSquareView.SideBoxSquare>.at(i:Int):SideBoxSquareView.SideBoxSquare? {
     var index = 0
