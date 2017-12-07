@@ -243,6 +243,9 @@ class MainActivity : AppCompatActivity() {
 //        val view = CircleFourLineView.create(this)
 //        view.addOnExpandListener({createToast("expanded")},{createToast("collapsed")})
         val view = DirecArrowPieView.create(this)
+        view.addClickListener {
+            createToast("clicked")
+        }
     }
 
     fun createTextView(text:String) {
