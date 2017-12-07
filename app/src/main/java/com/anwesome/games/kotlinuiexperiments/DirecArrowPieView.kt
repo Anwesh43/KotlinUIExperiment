@@ -53,5 +53,17 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class DirecArowwPieContainer(var w:Float,var h:Float) {
+        var pie = DirecArrowPie(w,h)
+        fun draw(canvas:Canvas,paint:Paint) {
+            pie.draw(canvas,paint,0f)
+        }
+        fun update(stopcb:()->Unit) {
+
+        }
+        fun startUpdating(startcb:()->Unit) {
+
+        }
+    }
 }
 
