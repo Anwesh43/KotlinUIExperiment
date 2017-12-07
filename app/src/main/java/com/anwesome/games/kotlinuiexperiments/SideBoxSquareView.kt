@@ -2,6 +2,8 @@ package com.anwesome.games.kotlinuiexperiments
 import android.graphics.*
 import android.content.*
 import android.view.*
+import java.util.concurrent.ConcurrentLinkedQueue
+
 /**
  * Created by anweshmishra on 08/12/17.
  */
@@ -19,7 +21,7 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         return true
     }
-    data class SideBoxSquare(var i:Int,var dx:Float,var y:Float,var size:Float,var x:Float=(2*(i%2)-1)*dx,var px:Float = x) {
+    data class SideBoxSquare(var i:Int,var dx:Float,var y:Float,var size:Float,var x:Float=-dx+2*dx*(i%2),var px:Float = x) {
         val state = SideBoxSquareState()
         fun draw(canvas: Canvas,paint:Paint) {
             paint.color = Color.parseColor(sideBoxColors[i])
@@ -51,4 +53,34 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
             startcb()
         }
     }
+    data class SideBoxSquareContainer(var w:Float,var h:Float,var n:Int) {
+        var squares:ConcurrentLinkedQueue<SideBoxSquare> = ConcurrentLinkedQueue()
+        init {
+            val size = Math.min(w,h)/3
+            for(i in 0..n-1) {
+                squares.add(SideBoxSquare(i,w/2,h/2,size))
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            squares.forEach { square ->
+                square.draw(canvas,paint)
+            }
+        }
+        fun update(startcb:(Float,Int)->Unit) {
+
+        }
+        fun startUpdating(stopcb:()->Unit) {
+
+        }
+    }
+}
+fun ConcurrentLinkedQueue<SideBoxSquareView.SideBoxSquare>.at(i:Int):SideBoxSquareView.SideBoxSquare? {
+    var index = 0
+    this.forEach {
+        if(i == index) {
+            return it
+        }
+        index++
+    }
+    return null
 }
