@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 07/12/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -112,6 +113,13 @@ class DirecArrowPieView(ctx:Context):View(ctx) {
         }
         fun startUpdating() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):DirecArrowPieView {
+            val view = DirecArrowPieView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
