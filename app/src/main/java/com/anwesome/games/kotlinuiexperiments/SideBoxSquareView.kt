@@ -1,4 +1,5 @@
 package com.anwesome.games.kotlinuiexperiments
+import android.app.Activity
 import android.graphics.*
 import android.content.*
 import android.view.*
@@ -146,6 +147,13 @@ class SideBoxSquareView(ctx:Context,var n:Int = 6):View(ctx) {
         }
         fun startUpdating() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):SideBoxSquareView {
+            val view = SideBoxSquareView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
