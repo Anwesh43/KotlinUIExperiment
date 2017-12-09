@@ -30,6 +30,7 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
             canvas.save()
             canvas.translate(x,py)
             canvas.drawLine(0f,0f,0f,y,paint)
+            canvas.drawCircle(0f,0f,h/5,paint)
             canvas.restore()
         }
     }
@@ -40,6 +41,7 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
                 scale = prevScale + dir
                 dir = 0f
                 prevScale = scale
+                stopcb(scale)
             }
         }
         fun startUpdating(startcb:()->Unit) {
@@ -100,6 +102,9 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
                 animator = EvenOddLineAnimator(EvenOddLineContainer(w,h,view.n),view)
+                paint.strokeWidth = Math.min(w,h)/50
+                paint.strokeCap = Paint.Cap.ROUND
+                paint.color = Color.parseColor("#01579B")
             }
             animator?.draw(canvas,paint)
             animator?.update()
