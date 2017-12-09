@@ -71,4 +71,24 @@ class EvenOddLineView(ctx:Context):View(ctx) {
             state.startUpdating(startcb)
         }
     }
+    data class EvenOddLineAnimator(var container:EvenOddLineContainer,var view:EvenOddLineView) {
+        var animated = false
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            container.draw(canvas,paint)
+        }
+        fun update() {
+            container.update{
+                animated = false
+            }
+        }
+        fun startUpdating() {
+            if(!animated) {
+                container.startUpdating{
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
 }
