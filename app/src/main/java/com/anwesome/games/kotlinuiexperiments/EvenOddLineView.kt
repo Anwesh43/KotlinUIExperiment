@@ -12,6 +12,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = EvenOddLineRenderer(this)
+    var onOddEvenListener:OnEvenOddListener?=null
+    fun addListener(onOddListener: () -> Unit,onEvenListener: () -> Unit) {
+        onOddEvenListener = OnEvenOddListener(onOddListener, onEvenListener)
+    }
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
     }
@@ -85,8 +89,12 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
         }
         fun update() {
             if(animated) {
-                container.update {
+                container.update { scale ->
                     animated = false
+                    when(scale) {
+                        0f -> view.onOddEvenListener?.onEvenListener?.invoke()
+                        1f -> view.onOddEvenListener?.onOddListener?.invoke()
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -132,4 +140,5 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
             return view
         }
     }
+    data class OnEvenOddListener(var onOddListener:()->Unit,var onEvenListener:()->Unit)
 }
