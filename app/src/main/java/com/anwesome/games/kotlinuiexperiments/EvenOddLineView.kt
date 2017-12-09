@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.view.*
 import android.content.*
 import android.graphics.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class EvenOddLineView(ctx:Context):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -42,6 +43,32 @@ class EvenOddLineView(ctx:Context):View(ctx) {
         fun startUpdating(startcb:()->Unit) {
             dir = 1f-2*scale
             startcb()
+        }
+    }
+    data class EvenOddLineContainer(var w:Float,var h:Float,var n:Int) {
+        var state = EvenOddLineState()
+        var lines:ConcurrentLinkedQueue<EvenOddLine> = ConcurrentLinkedQueue()
+        init {
+            if(n > 0) {
+                val gap = w/(n+1)
+                var x = gap
+                val y = 9*h/10
+                val h = 2*h/5
+                for(i in 0..n-1) {
+                    lines.add(EvenOddLine(i,x,y,h))
+                }
+            }
+        }
+        fun update(stopcb:(Float)->Unit) {
+            state.update(stopcb)
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            lines.forEach { line ->
+                line.draw(canvas,paint,state.scale)
+            }
+        }
+        fun startUpdating(startcb:()->Unit) {
+            state.startUpdating(startcb)
         }
     }
 }
