@@ -91,4 +91,20 @@ class EvenOddLineView(ctx:Context):View(ctx) {
             }
         }
     }
+    data class EvenOddLineRenderer(var view:EvenOddLineView,var time:Int = 0) {
+        var animator:EvenOddLineAnimator?=null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = EvenOddLineAnimator(EvenOddLineContainer(w,h),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun startUpdating() {
+            animator?.startUpdating()
+        }
+    }
 }
