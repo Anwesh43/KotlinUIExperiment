@@ -246,12 +246,13 @@ class MainActivity : AppCompatActivity() {
 //        view.addClickListener {
 //            createToast("clicked")
 //        }
-        val view = SideBoxSquareView.create(this)
-        view.addOnPositionListener({j->
-            createToast("position set for $j")
-        },{j->
-            createToast("position reset for $j")
-        })
+//        val view = SideBoxSquareView.create(this)
+//        view.addOnPositionListener({j->
+//            createToast("position set for $j")
+//        },{j->
+//            createToast("position reset for $j")
+//        })
+        val view = EvenOddLineView.create(this)
     }
 
     fun createTextView(text:String) {

@@ -30,7 +30,7 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
             canvas.save()
             canvas.translate(x,py)
             canvas.drawLine(0f,0f,0f,y,paint)
-            canvas.drawCircle(0f,0f,h/5,paint)
+            canvas.drawCircle(0f,0f,h/20,paint)
             canvas.restore()
         }
     }
@@ -60,6 +60,7 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
                 val h = 2*h/5
                 for(i in 0..n-1) {
                     lines.add(EvenOddLine(i,x,y,h))
+                    x += gap
                 }
             }
         }
@@ -82,8 +83,17 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
             container.draw(canvas,paint)
         }
         fun update() {
-            container.update{
-                animated = false
+            if(animated) {
+                container.update {
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch (ex:Exception) {
+
+                }
             }
         }
         fun startUpdating() {
