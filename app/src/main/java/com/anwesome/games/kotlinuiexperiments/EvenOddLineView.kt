@@ -26,11 +26,12 @@ class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
     data class EvenOddLine(var i:Int,var x:Float,var py:Float,var h:Float,var y:Float=py) {
         fun draw(canvas:Canvas,paint:Paint,scale:Float) {
             val j = i%2
-            y = - h*(j+(1-2*j)*scale)
+            val new_scale = (j+(1-2*j)*scale)
+            y = - h*new_scale
             canvas.save()
             canvas.translate(x,py)
             canvas.drawLine(0f,0f,0f,y,paint)
-            canvas.drawCircle(0f,0f,h/20,paint)
+            canvas.drawCircle(0f,y,(h/20)*new_scale,paint)
             canvas.restore()
         }
     }
