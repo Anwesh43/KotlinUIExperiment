@@ -3,12 +3,13 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 09/12/17.
  */
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class EvenOddLineView(ctx:Context):View(ctx) {
+class EvenOddLineView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -97,7 +98,7 @@ class EvenOddLineView(ctx:Context):View(ctx) {
             if(time == 0) {
                 val w = canvas.width.toFloat()
                 val h = canvas.height.toFloat()
-                animator = EvenOddLineAnimator(EvenOddLineContainer(w,h),view)
+                animator = EvenOddLineAnimator(EvenOddLineContainer(w,h,view.n),view)
             }
             animator?.draw(canvas,paint)
             animator?.update()
@@ -105,6 +106,13 @@ class EvenOddLineView(ctx:Context):View(ctx) {
         }
         fun startUpdating() {
             animator?.startUpdating()
+        }
+    }
+    companion object {
+        fun create(activity:Activity):EvenOddLineView {
+            val view = EvenOddLineView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
