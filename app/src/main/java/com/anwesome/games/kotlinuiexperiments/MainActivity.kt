@@ -255,6 +255,7 @@ class MainActivity : AppCompatActivity() {
 //        val view = EvenOddLineView.create(this)
 //        view.addListener({createToast("odd expanded")},{createToast("even selected")})
         val view = CircleDotOverView.create(this)
+        view.addListener({i->createToast("expanded $i")},{i->createToast("collapsed $i")})
     }
 
     fun createTextView(text:String) {
