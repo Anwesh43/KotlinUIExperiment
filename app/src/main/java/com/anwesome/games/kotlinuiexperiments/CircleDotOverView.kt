@@ -96,6 +96,35 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             }
         }
     }
+    data class CircleDotOverAnimator(var container:CircleDotContainer,var view:CircleDotOverView) {
+        var animated = false
+        fun update() {
+            if(animated) {
+                container.update{j,scale ->
+                    animated = false
+                }
+                try {
+                    Thread.sleep(50)
+                    view.invalidate()
+                }
+                catch(ex:Exception) {
+
+                }
+            }
+        }
+        fun draw(canvas:Canvas,paint:Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            container.draw(canvas,paint)
+        }
+        fun startUpdating() {
+            if(animated) {
+                container.startUpdating {
+                    animated = true
+                    view.postInvalidate()
+                }
+            }
+        }
+    }
     data class CircleDotContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
         fun update() {
             j += dir
