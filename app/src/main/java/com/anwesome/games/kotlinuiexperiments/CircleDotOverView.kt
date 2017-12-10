@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
-
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
         when(event.action) {
@@ -123,6 +122,22 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
                     view.postInvalidate()
                 }
             }
+        }
+    }
+    data class CircleDotRenderer(var view:CircleDotOverView,var time:Int = 0) {
+        var animator:CircleDotOverAnimator ?= null
+        fun render(canvas:Canvas,paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width.toFloat()
+                val h = canvas.height.toFloat()
+                animator = CircleDotOverAnimator(CircleDotContainer(w,h,view.n),view)
+            }
+            animator?.draw(canvas,paint)
+            animator?.update()
+            time++
+        }
+        fun handleTap() {
+            animator?.startUpdating()
         }
     }
     data class CircleDotContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
