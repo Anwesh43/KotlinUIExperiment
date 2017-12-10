@@ -84,4 +84,16 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
 
         }
     }
+    data class CircleDotContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
+        fun update() {
+            j += dir
+            if(j == n || j == -1) {
+                dir*=-1
+                j += dir
+            }
+        }
+        fun executeFn(cb:(Int)->Unit) {
+            cb(j)
+        }
+    }
 }
