@@ -13,6 +13,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = CircleDotRenderer(this)
+    var circleDotExpandListener:CircleDotExpandListener?=null
+    fun addListener(expandListener:(Int)->Unit,collapseListener:(Int)->Unit) {
+        circleDotExpandListener = CircleDotExpandListener(expandListener,collapseListener)
+    }
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas,paint)
     }
@@ -117,6 +121,10 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             if(animated) {
                 container.update{j,scale ->
                     animated = false
+                    when(scale) {
+                        0f -> view.circleDotExpandListener?.onCollapseListener?.invoke(j)
+                        1f -> view.circleDotExpandListener?.onExpandListener?.invoke(j)
+                    }
                 }
                 try {
                     Thread.sleep(50)
@@ -175,6 +183,7 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             return view
         }
     }
+    data class CircleDotExpandListener(var onExpandListener:(Int)->Unit,var onCollapseListener:(Int)->Unit)
 }
 fun ConcurrentLinkedQueue<CircleDotOverView.CircleDot>.at(i:Int):CircleDotOverView.CircleDot? {
     var index = 0
