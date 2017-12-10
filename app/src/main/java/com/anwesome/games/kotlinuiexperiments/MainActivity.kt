@@ -251,9 +251,10 @@ class MainActivity : AppCompatActivity() {
 //            createToast("position set for $j")
 //        },{j->
 //            createToast("position reset for $j")
-//        })
-        val view = EvenOddLineView.create(this)
-        view.addListener({createToast("odd expanded")},{createToast("even selected")})
+////        })
+//        val view = EvenOddLineView.create(this)
+//        view.addListener({createToast("odd expanded")},{createToast("even selected")})
+        val view = CircleDotOverView.create(this)
     }
 
     fun createTextView(text:String) {

@@ -6,6 +6,7 @@ package com.anwesome.games.kotlinuiexperiments
 import android.app.Activity
 import android.content.*
 import android.graphics.*
+import android.util.Log
 import android.view.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -25,18 +26,22 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
     }
     data class CircleDot(var i:Int,var x:Float,var y:Float,var r:Float,var size:Float,var deg:Float) {
         val state = CircleDotState()
-        fun draw(canvas:Canvas,paint:Paint) {
-            val new_deg = deg*i
-            val update_deg = deg*state.scale
-            canvas.save()
-            canvas.translate(x,y)
-            canvas.rotate(new_deg+update_deg)
-            paint.style = Paint.Style.FILL
-            canvas.drawCircle(size,0f,r,paint)
-            canvas.restore()
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = r/2
-            canvas.drawArc(RectF(-size,-size,size,size),new_deg,update_deg,false,paint)
+        fun draw(canvas:Canvas,paint:Paint,j:Int) {
+            if(j >= i) {
+                val new_deg = deg * i
+                val update_deg = deg*state.scale
+                canvas.save()
+                canvas.translate(x, y)
+                canvas.save()
+                canvas.rotate(new_deg+update_deg)
+                paint.style = Paint.Style.FILL
+                canvas.drawCircle(size, 0f, r, paint)
+                canvas.restore()
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = r / 2
+                canvas.drawArc(RectF(-size, -size, size, size), new_deg, update_deg, false, paint)
+                canvas.restore()
+            }
         }
         fun update(stopcb:(Int,Float)->Unit) {
             state.update{scale ->
@@ -78,18 +83,26 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
         fun draw(canvas:Canvas,paint:Paint) {
             paint.color = Color.parseColor("#4A148C")
             dots.forEach { dot ->
-                dot.draw(canvas,paint)
+                dot.draw(canvas,paint,state.j)
             }
             paint.color = Color.parseColor("#00E676")
             state.executeFn { j ->
-                val scale = dots.at(j)?.state?.scale?:0f
-                canvas.drawLine(w/10,4*h/5,w/10+(4*w/5)*scale,4*h/5,paint)
+                if(n > 0) {
+                    val gap = (4*w/5)/n
+                    val scale = dots.at(j)?.state?.scale ?: 0f
+                    Log.d("scale",""+scale)
+                    paint.strokeCap = Paint.Cap.ROUND
+                    canvas.drawLine(w / 10, 4 * h / 5, w / 10 +gap*j+ gap * scale, 4 * h / 5, paint)
+                }
             }
         }
         fun update(stopcb:(Int,Float)->Unit) {
             state.executeFn {j ->
-               dots.at(j)?.update(stopcb)
-                state.update()
+                dots.at(j)?.update{j,scale ->
+                    stopcb(j,scale)
+                    state.update()
+                }
+
             }
         }
         fun startUpdating(startcb:()->Unit) {
@@ -119,7 +132,7 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             container.draw(canvas,paint)
         }
         fun startUpdating() {
-            if(animated) {
+            if(!animated) {
                 container.startUpdating {
                     animated = true
                     view.postInvalidate()
