@@ -20,9 +20,10 @@ class CircleDotOverView(ctx:Context):View(ctx) {
         return true
     }
     data class CircleDot(var i:Int,var x:Float,var y:Float,var r:Float,var deg:Float) {
+        val state = CircleDotState()
         fun draw(canvas:Canvas,paint:Paint) {
             val new_deg = deg*i
-            val update_deg = deg
+            val update_deg = deg*state.scale
             canvas.save()
             canvas.translate(x,y)
             canvas.rotate(new_deg+update_deg)
@@ -34,10 +35,12 @@ class CircleDotOverView(ctx:Context):View(ctx) {
             canvas.drawArc(RectF(-r,-r,r,r),new_deg,update_deg,false,paint)
         }
         fun update(stopcb:(Int,Float)->Unit) {
-
+            state.update{scale ->
+                stopcb(i,scale)
+            }
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.startUpdating(startcb)
         }
     }
     data class CircleDotState(var scale:Float = 0f,var dir:Float = 0f,var prevScale:Float = 0f) {
