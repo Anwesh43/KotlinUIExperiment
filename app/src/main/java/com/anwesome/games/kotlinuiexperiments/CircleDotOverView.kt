@@ -3,6 +3,7 @@ package com.anwesome.games.kotlinuiexperiments
 /**
  * Created by anweshmishra on 10/12/17.
  */
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -152,6 +153,13 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
         }
         fun executeFn(cb:(Int)->Unit) {
             cb(j)
+        }
+    }
+    companion object {
+        fun create(activity:Activity):CircleDotOverView {
+            val view = CircleDotOverView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
