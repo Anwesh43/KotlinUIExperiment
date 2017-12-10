@@ -21,7 +21,7 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
         }
         return true
     }
-    data class CircleDot(var i:Int,var x:Float,var y:Float,var r:Float,var deg:Float) {
+    data class CircleDot(var i:Int,var x:Float,var y:Float,var r:Float,var size:Float,var deg:Float) {
         val state = CircleDotState()
         fun draw(canvas:Canvas,paint:Paint) {
             val new_deg = deg*i
@@ -30,11 +30,11 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             canvas.translate(x,y)
             canvas.rotate(new_deg+update_deg)
             paint.style = Paint.Style.FILL
-            canvas.drawCircle(0f,0f,r,paint)
+            canvas.drawCircle(size,0f,r,paint)
             canvas.restore()
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = r/7
-            canvas.drawArc(RectF(-r,-r,r,r),new_deg,update_deg,false,paint)
+            paint.strokeWidth = r/2
+            canvas.drawArc(RectF(-size,-size,size,size),new_deg,update_deg,false,paint)
         }
         fun update(stopcb:(Int,Float)->Unit) {
             state.update{scale ->
@@ -62,12 +62,14 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
     }
     data class CircleDotContainer(var w:Float,var h:Float,var n:Int) {
         val dots:ConcurrentLinkedQueue<CircleDot> = ConcurrentLinkedQueue()
+        val state = CircleDotContainerState(n)
         init {
             if(n>0) {
                 val deg = 360f/n
-                val r = (2*Math.PI*Math.min(w,h)/3).toFloat()/(n*7)
+                val size = Math.min(w,h)/3
+                val r = (2*Math.PI*size).toFloat()/(n*7)
                 for(i in 0..n) {
-                    dots.add(CircleDot(i,w/2,h/2,r,deg))
+                    dots.add(CircleDot(i,w/2,h/2,r,size,deg))
                 }
             }
         }
@@ -76,12 +78,22 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             dots.forEach { dot ->
                 dot.draw(canvas,paint)
             }
+            paint.color = Color.parseColor("#00E676")
+            state.executeFn { j ->
+                val scale = dots.at(j)?.state?.scale?:0f
+                canvas.drawLine(w/10,4*h/5,w/10+(4*w/5)*scale,4*h/5,paint)
+            }
         }
         fun update(stopcb:(Int,Float)->Unit) {
-
+            state.executeFn {j ->
+               dots.at(j)?.update(stopcb)
+                state.update()
+            }
         }
         fun startUpdating(startcb:()->Unit) {
-
+            state.executeFn { j->
+                dots.at(j)?.startUpdating(startcb)
+            }
         }
     }
     data class CircleDotContainerState(var n:Int,var j:Int = 0,var dir:Int = 1) {
@@ -96,4 +108,14 @@ class CircleDotOverView(ctx:Context,var n:Int = 10):View(ctx) {
             cb(j)
         }
     }
+}
+fun ConcurrentLinkedQueue<CircleDotOverView.CircleDot>.at(i:Int):CircleDotOverView.CircleDot? {
+    var index = 0
+    this.forEach { it ->
+        if(i == index) {
+            return it
+        }
+        index++
+    }
+    return null
 }
